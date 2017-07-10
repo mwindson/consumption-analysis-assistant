@@ -1,0 +1,43 @@
+width = 1440px
+height = 768px
+.main
+  min-width width
+  min-height height
+  position absolute
+  top 0
+  bottom 0
+  left 0
+  right 0
+  display flex
+
+  .left-part
+    flex 1 0 576px
+    background linear-gradient(135deg, #0D9AB7, #124D90)
+    padding 18px
+    display flex
+    flex-direction column
+    .top
+      height 30px
+      display flex
+      .logo
+        width 30px
+      .title
+        margin-left 11px
+        font-size 18px
+        color white
+    .search
+      height 82px
+      display flex
+      align-items center
+      justify-content center
+      > input
+        width 576px
+        height 46px
+        margin 0
+        border-radius 4px
+        box-shadow #000000 0 1px 3px 0
+    .graph
+      width 100%
+      flex 1 0 auto
+  .right-part
+    flex 0 0 572px
