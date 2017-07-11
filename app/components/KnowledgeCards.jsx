@@ -53,7 +53,7 @@ export default class KnowledgeCards extends React.Component {
         </div>
         <div className="card">
           {data[chosen].map((d, i) => (
-            <Car d key={i} title={d.title} type={d.type}/>
+            <Card d key={i} title={d.title} type={d.type}/>
           ))}
         </div>
       </div>

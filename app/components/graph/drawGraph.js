@@ -13,67 +13,67 @@ let data = {
       "id": 1,
       "name": "所属公司",
       "type": 'news',
-      "value": 5
+      "value": 1
     },
     {
       "id": 2,
       "name": "新闻列表",
       "type": 'news',
-      "value": 5
+      "value": 1
     },
     {
       "id": 3,
       "name": "手机",
       "type": 'store_type',
-      "value": 10
+      "value": 2
     },
     {
       "id": 4,
       "name": "笔记本",
       "type": 'store_type',
-      "value": 10
+      "value": 2
     },
     {
       "id": 5,
       "name": "家用电器",
       "type": 'store_type',
-      "value": 10
+      "value": 2
     },
     {
       "id": 6,
       "name": "华为",
       "type": 'related_brand',
-      "value": 15
+      "value": 3
     },
     {
       "id": 7,
       "name": "魅族",
       "type": 'related_brand',
-      "value": 15,
+      "value": 3,
     },
     {
       "id": 8,
       "name": "雷军",
       "type": 'person',
-      "value": 20,
+      "value": 4,
     },
     {
       "id": 9,
       "name": "小米4",
-      "type": 'person',
-      "value": 20,
+      "type": 'product',
+      "value": 5,
     },
     {
       "id": 10,
       "name": "小米NOTE",
-      "type": 'person',
-      "value": 20,
+      "type": 'product',
+      "value": 5,
     },
     {
       "id": 11,
       "name": "林斌",
       "type": 'person',
-      "value": 20,
+      "value": 4,
     }
   ],
   "links": [
@@ -124,25 +124,59 @@ let data = {
   ]
 }
 
+
 export function drawGraph() {
-  let WIDTH = 750, HEIGHT = 750
   let svg = d3.select('.graph-svg')
+  let width = svg.style('width').replace('px', ''), height = svg.style('height').replace('px', '')
+  svg.append('g')
+    .attr('class', 'graph-g')
+    .attr('width', width)
+    .attr('height', height)
+  let graph = d3.selectAll('g')
+  // .attr('transform',`translate(${},${})`)
   let simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(d => d.id).distance(250))
-    .force("charge", d3.forceManyBody().strength(d => {
-      console.log(d)
-      return d.value * (-50)
+    // .force("charge", d3.forceManyBody().strength(-1))
+    .force("collide", d3.forceCollide().radius(40))
+    // .force("center", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
+    .force('x', d3.forceX(d => {
+      if (d.value === 0) {
+        return width / 2
+      } else if (d.value === 1) {
+        return width * 0.1
+      } else if (d.value === 2) {
+        return width * 0.5
+      } else if (d.value === 3) {
+        return width
+      } else if (d.value === 4) {
+        return width * 0.7
+      } else {
+        return width * 0.3
+      }
     }))
-    .force("center", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
-
-  let link = svg.selectAll(".link")
+    .force('Y', d3.forceY(d => {
+      if (d.value === 0) {
+        return height / 2
+      } else if (d.value === 1) {
+        return height * 0.5
+      } else if (d.value === 2) {
+        return height * 0.1
+      } else if (d.value === 3) {
+        return height * 0.5
+      } else if (d.value === 4) {
+        return height
+      } else {
+        return height * 0.8
+      }
+    }))
+  let link = graph.selectAll(".link")
     .data(data.links, d => d.target.id)
   link = link.enter()
     .append("line")
     .attr('stroke', '#aaa')
     .attr('stroke-width', 3)
 
-  let node = svg.selectAll(".node")
+  let node = graph.selectAll(".node")
     .data(data.nodes, d => d.id)
 
   node = node.enter()
@@ -175,6 +209,10 @@ export function drawGraph() {
     .append('circle')
     .attr('r', 37)
     .attr('fill', 'url(#personGradient)')
+  node.filter(d => d.type === 'product')
+    .append('circle')
+    .attr('r', 52)
+    .attr('fill', 'url(#productGradient)')
 
   node.append("text")
     .attr("text-anchor", "middle")
@@ -183,32 +221,21 @@ export function drawGraph() {
     .attr('pointer-events', 'none')
     .attr('font-size', 14)
 
-
   simulation.nodes(data.nodes)
   simulation.force("link").links(data.links)
-
 
   for (let i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
     simulation.tick()
   }
 
+  node.attr("transform", d => `translate(${d.x}, ${d.y})`)
+
   link
-    .attr("x1", d => {
-      let distance = Math.sqrt((d.target.y - d.source.y) * (d.target.y - d.source.y) +
-        (d.target.x - d.source.x) * (d.target.x - d.source.x))
-      let x_distance = (d.target.x - d.source.x) / distance * 78
-      return d.source.x + x_distance
-    })
-    .attr("y1", function (d) {
-      let distance = Math.sqrt((d.target.y - d.source.y) * (d.target.y - d.source.y) +
-        (d.target.x - d.source.x) * (d.target.x - d.source.x))
-      let y_distance = (d.target.y - d.source.y) / distance * 78
-      return d.source.y + y_distance
-    })
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
     .attr("x2", d => d.target.x)
     .attr("y2", d => d.target.y)
     .attr('cursor', 'pointer')
-
-  node
-    .attr("transform", d => `translate(${d.x}, ${d.y})`)
 }
+
+

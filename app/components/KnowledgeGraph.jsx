@@ -1,17 +1,34 @@
 import React from 'react'
 import 'style/KnowledgeGraph.styl'
 import {drawGraph} from 'components/graph/drawGraph'
-
+import {bindingZoom, zoomClick, zoomReset} from 'components/graph/zoomClick'
+import {ResetIcon, ZoomInIcon, ZoomOutIcon} from 'components/Icons'
+import * as d3 from 'd3'
 export default class KnowledgeGraph extends React.Component {
+  constructor(props) {
+    super(props)
+    this.svgElement = null
+  }
+
   componentDidMount() {
     drawGraph()
+    this.svgElement = d3.select('.graph-svg')
+    bindingZoom(this.svgElement)
+  }
+
+  handleButtonClick = (type) => {
+    if (type === 'reset') {
+      zoomReset(this.svgElement)
+    } else {
+      zoomClick(this.svgElement, type)
+    }
   }
 
   render() {
     return (
       <div className="knowledge-graph">
         <div className="diagram">
-          <svg className="graph-svg" style={{width: '100%', height: '100%'}}>
+          <svg className="graph-svg">
             <defs>
               <linearGradient id="brandGradient" x1="0" x2="0" y1="0" y2="1">
                 <stop offset="0%" stopColor="#D4C9C9" stopOpacity="0.4"/>
@@ -33,11 +50,17 @@ export default class KnowledgeGraph extends React.Component {
                 <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4"/>
                 <stop offset="100%" stopColor="#2095FF"/>
               </linearGradient>
+              <linearGradient id="personGradient" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4"/>
+                <stop offset="100%" stopColor="#EA8484"/>
+              </linearGradient>
             </defs>
           </svg>
         </div>
         <div className="tools">
-          tool
+          <div className="reset" onClick={() => this.handleButtonClick('reset')}><ResetIcon/></div>
+          <div className="zoom-in" onClick={() => this.handleButtonClick('zoom_in')}><ZoomInIcon/></div>
+          <div className="zoom-out" onClick={() => this.handleButtonClick('zoom_out')}><ZoomOutIcon/></div>
         </div>
       </div>
     )
