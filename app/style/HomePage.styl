@@ -11,7 +11,7 @@ height = 768px
   display flex
 
   .left-part
-    flex 1 0 576px
+    width 60%
     background linear-gradient(135deg, #0D9AB7, #124D90)
     padding 18px
     display flex
@@ -30,14 +30,24 @@ height = 768px
       display flex
       align-items center
       justify-content center
-      > input
+      .input
         width 576px
         height 46px
         margin 0
         border-radius 4px
         box-shadow #000000 0 1px 3px 0
+        position relative
+        > input
+          width 100%
+          height 100%
+          font-size 24px
+        > svg
+          position absolute
+          left 20px
+          top 14px
+          pointer-events none
     .graph
       width 100%
       flex 1 0 600px
   .right-part
-    flex 0 0 572px
+    width 40%

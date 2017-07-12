@@ -7,20 +7,21 @@ export default class Card extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
+    content: PropTypes.array.isRequired,
   }
 
   render() {
-    const {title, type} = this.props
+    const {title, type, content} = this.props
     return (
       <div>
         {type === 'intro' ? (<div className="intro">
             <div className="title">{title}</div>
             <div className="detail">
               <div className="img">
-                image
+                <img src={content[0].url}/>
               </div>
               <div className="text">
-                这是文本这是文本这是文本这是文本这是文本这是文本这是文本这是文本这是文本这是文本这是文本这是文本这是文本这是文本
+                {content[0].text}
               </div>
             </div>
           </div>
@@ -28,33 +29,20 @@ export default class Card extends React.Component {
           <div className="related">
             <div className="title">{title}</div>
             <div className="list">
-              <div className="item">
-                <div className={classNames("img", type)}>
-                  image
+              {content.map((item, i) => (
+                <div key={i} className="item">
+                  <div className={classNames("img", type)}>
+                    <img src={item.url}/>
+                  </div>
+                  <div className="text">
+                    {item.text}
+                  </div>
                 </div>
-                <div className="text">
-                  这是文本
-                </div>
-              </div>
-              <div className="item">
-                <div className={classNames("img", type)}>
-                  image
-                </div>
-                <div className="text">
-                  这是文本
-                </div>
-              </div>
-              <div className="item">
-                <div className={classNames("img", type)}>
-                  image
-                </div>
-                <div className="text">
-                  这是文本
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-        )}
+        )
+        }
       </div>
     )
   }
