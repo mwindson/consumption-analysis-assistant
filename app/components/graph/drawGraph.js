@@ -80,46 +80,69 @@ let data = {
     {
       "source": 0,
       "target": 1,
+      "type": 'news',
+      "strength": 1,
     },
     {
       "source": 0,
       "target": 2,
+      "type": 'news',
+      "strength": 1,
+
     },
     {
       "source": 0,
       "target": 3,
+      "type": 'store_type',
+      "strength": 2,
     },
     {
       "source": 0,
       "target": 4,
+      "type": 'store_type',
+      "strength": 2,
     },
     {
       "source": 0,
       "target": 5,
+      "type": 'store_type',
+      "strength": 3,
     },
     {
       "source": 0,
       "target": 6,
+      "type": 'related_brand',
+      "strength": 3,
     },
     {
       "source": 0,
       "target": 7,
+      "type": 'related_brand',
+      "strength": 4,
     },
     {
       "source": 0,
       "target": 8,
+      "type": 'person',
+      "strength": 4,
     },
     {
       "source": 0,
       "target": 9,
+      "type": 'product',
+      "strength": 5,
     },
     {
       "source": 0,
       "target": 10,
+      "type": 'product',
+      "strength": 5,
     },
     {
       "source": 0,
       "target": 11,
+      "type": 'person',
+      "strength": 5,
     }
   ]
 }
@@ -128,12 +151,10 @@ let data = {
 export function drawGraph() {
   let svg = d3.select('.graph-svg')
   let width = svg.style('width').replace('px', ''), height = svg.style('height').replace('px', '')
-  svg.append('g')
-    .attr('class', 'graph-g')
+  let graph = svg.select('.graph-g')
     .attr('width', width)
     .attr('height', height)
-  let graph = d3.selectAll('g')
-  // .attr('transform',`translate(${},${})`)
+  graph.selectAll('*').remove()
   let simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(d => d.id).distance(250))
     // .force("charge", d3.forceManyBody().strength(-1))
@@ -173,8 +194,8 @@ export function drawGraph() {
     .data(data.links, d => d.target.id)
   link = link.enter()
     .append("line")
-    .attr('stroke', '#aaa')
-    .attr('stroke-width', 3)
+    .attr('stroke', 'rgba(255,255,255,0.51)')
+    .attr('stroke-width', d => d.strength)
 
   let node = graph.selectAll(".node")
     .data(data.nodes, d => d.id)
@@ -219,7 +240,8 @@ export function drawGraph() {
     .text(d => d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
-    .attr('font-size', 14)
+    .attr('font-size', 18)
+    .attr('fill', '#125091')
 
   simulation.nodes(data.nodes)
   simulation.force("link").links(data.links)
@@ -231,11 +253,67 @@ export function drawGraph() {
   node.attr("transform", d => `translate(${d.x}, ${d.y})`)
 
   link
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y)
+    .attr("x1", d => {
+      const distance = calDistance(d.source, d.target)
+      const x_distance = (d.target.x - d.source.x) / distance * 78
+      return d.source.x + x_distance
+    })
+    .attr("y1", d => {
+      const distance = calDistance(d.source, d.target)
+      const y_distance = (d.target.y - d.source.y) / distance * 78
+      return d.source.y + y_distance
+    })
+    .attr("x2", d => {
+      const distance = calDistance(d.source, d.target)
+      let x_distance
+      if (d.type === 'store_type') {
+        x_distance = (d.target.x - d.source.x) / distance * 55
+      } else if (d.type === 'person') {
+        x_distance = (d.target.x - d.source.x) / distance * 37
+      } else if (d.type === 'product') {
+        x_distance = (d.target.x - d.source.x) / distance * 52
+      } else if (d.type === 'news') {
+        if (d.source.x === d.target.x) {
+          x_distance = 0
+        } else {
+          const tan = Math.abs((d.source.y - d.target.y) / (d.source.x - d.target.x))
+          x_distance = (d.source.x > d.target.x ? -1 : 1) * (tan >= 34 / 148 ? 17 / tan : 74)
+        }
+      } else {
+        const distance = calDistance(d.source, d.target)
+        const cos = Math.abs((d.source.x - d.target.x) / distance)
+        x_distance = (d.source.x > d.target.x ? -1 : 1) * 66 * cos
+      }
+      return d.target.x - x_distance
+    })
+    .attr("y2", d => {
+      const distance = calDistance(d.source, d.target)
+      let y_distance
+      if (d.type === 'store_type') {
+        y_distance = (d.target.y - d.source.y) / distance * 55
+      } else if (d.type === 'person') {
+        y_distance = (d.target.y - d.source.y) / distance * 37
+      } else if (d.type === 'product') {
+        y_distance = (d.target.y - d.source.y) / distance * 52
+      } else if (d.type === 'news') {
+        if (d.source.x === d.target.x) {
+          y_distance = 17
+        } else {
+          const tan = Math.abs((d.source.y - d.target.y) / (d.source.x - d.target.x))
+          y_distance = (d.source.y > d.target.y ? -1 : 1) * (tan >= 34 / 148 ? 17 : tan * 74)
+        }
+      } else {
+        const distance = calDistance(d.source, d.target)
+        const sin = Math.abs((d.source.y - d.target.y) / distance)
+        y_distance = (d.source.y > d.target.y ? -1 : 1) * sin * 25
+      }
+      return d.target.y - y_distance
+    })
     .attr('cursor', 'pointer')
 }
 
+function calDistance(source, target) {
+  return Math.sqrt((target.y - source.y) * (target.y - source.y) +
+    (target.x - source.x) * (target.x - source.x))
+}
 

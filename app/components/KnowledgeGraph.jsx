@@ -14,6 +14,15 @@ export default class KnowledgeGraph extends React.Component {
     drawGraph()
     this.svgElement = d3.select('.graph-svg')
     bindingZoom(this.svgElement)
+    window.addEventListener('resize', drawGraph)
+  }
+
+  shouldCompopnentUpdate() {
+    return false
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', drawGraph)
   }
 
   handleButtonClick = (type) => {
@@ -55,6 +64,7 @@ export default class KnowledgeGraph extends React.Component {
                 <stop offset="100%" stopColor="#EA8484"/>
               </linearGradient>
             </defs>
+            <g className="graph-g"/>
           </svg>
         </div>
         <div className="tools">
