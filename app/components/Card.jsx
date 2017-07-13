@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import 'style/Card.styl'
-import {highLightNode} from 'components/graph/highLightNode'
+import {setHighLight, exitHighLight} from 'components/graph/highLightNode'
 
 export default class Card extends React.Component {
   static propTypes = {
@@ -12,9 +12,12 @@ export default class Card extends React.Component {
     moreLink: PropTypes.func.isRequired,
   }
 
-  handleHover = (event) => {
-    event.stopPropagation()
-    highLightNode(event.target.id)
+  handleHover = (id) => {
+    setHighLight(id)
+  }
+
+  handleLeave = (id) => {
+    exitHighLight(id)
   }
 
   render() {
@@ -26,7 +29,8 @@ export default class Card extends React.Component {
     }
     return (
       <div>
-        {type === 'intro' ? (<div className="intro" id={type} onMouseOver={this.handleHover}>
+        {type === 'intro' || type === 'company' || type === 'store_type' ? (
+          <div className="intro" onMouseOver={() => this.handleHover(type)} onMouseLeave={() => this.handleLeave(type)}>
             <div className="title">{title}</div>
             <div className="detail">
               <div className="img">
@@ -38,7 +42,8 @@ export default class Card extends React.Component {
             </div>
           </div>
         ) : (
-          <div className="related" id={type}>
+          <div className="related" onMouseOver={() => this.handleHover(type)}
+               onMouseLeave={() => this.handleLeave(type)}>
             <div className="title">
               {title}
               {content.length > size[type] ?

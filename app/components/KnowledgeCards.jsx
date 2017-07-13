@@ -11,8 +11,8 @@ const data = {
     {title: '重大事件', type: 'intro', content: [{url: 'static/image/logo.png', text: 'text'}]},
   ],
   knowledge: [{title: '品牌信息', type: 'intro', content: [{url: 'static/image/logo.png', text: '品牌信息介绍'}]},
-    {title: '企业信息', type: 'intro', content: [{url: 'static/image/company.png', text: '企业信息介绍'}]},
-    {title: '业态', type: 'intro', content: [{url: 'static/image/store_type.png', text: '经营业态介绍'}]},
+    {title: '企业信息', type: 'company', content: [{url: 'static/image/company.png', text: '企业信息介绍'}]},
+    {title: '业态', type: 'store_type', content: [{url: 'static/image/store_type.png', text: '经营业态介绍'}]},
     {
       title: '相关人物',
       type: 'person',
@@ -354,7 +354,7 @@ export default class KnowledgeCards extends React.Component {
   }
 
   render() {
-    const {chosen, expand, type} = this.state
+    const {chosen, expand} = this.state
     return (
       <div className="cards">
         <div className="tabs-part">
