@@ -1,28 +1,44 @@
 import React from 'react'
-import 'style/KnowledgeGraph.styl'
+import PropTypes from 'prop-types'
+import * as d3 from 'd3'
 import {drawGraph} from 'components/graph/drawGraph'
 import {bindingZoom, zoomClick, zoomReset} from 'components/graph/zoomClick'
 import {ResetIcon, ZoomInIcon, ZoomOutIcon} from 'components/Icons'
-import * as d3 from 'd3'
+import 'style/KnowledgeGraph.styl'
+
 export default class KnowledgeGraph extends React.Component {
+  static propTypes = {
+    data: PropTypes.any.isRequired,
+  }
+
   constructor(props) {
     super(props)
     this.svgElement = null
   }
 
   componentDidMount() {
-    drawGraph()
+    drawGraph(this.props.data)
+    window.addEventListener('resize', () => {
+      drawGraph(this.props.data)
+    })
     this.svgElement = d3.select('.graph-svg')
     bindingZoom(this.svgElement)
-    window.addEventListener('resize', drawGraph)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data !== this.props.data) {
+      // console.log(this.props.data)
+      drawGraph(nextProps.data)
+    }
   }
 
   shouldCompopnentUpdate() {
     return false
   }
 
+
   componentWillUnmount() {
-    window.removeEventListener('resize', drawGraph)
+    window.removeEventListener('resize')
   }
 
   handleButtonClick = (type) => {
@@ -66,6 +82,9 @@ export default class KnowledgeGraph extends React.Component {
             </defs>
             <g className="graph-g"/>
           </svg>
+          <div className="tooltip">
+            tooltip
+          </div>
         </div>
         <div className="tools">
           <div className="reset" onClick={() => this.handleButtonClick('reset')}><ResetIcon/></div>

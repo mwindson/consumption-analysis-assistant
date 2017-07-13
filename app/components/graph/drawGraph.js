@@ -148,18 +148,19 @@ let data = {
 }
 
 
-export function drawGraph() {
+export function drawGraph(data) {
   let svg = d3.select('.graph-svg')
   let width = svg.style('width').replace('px', ''), height = svg.style('height').replace('px', '')
   let graph = svg.select('.graph-g')
     .attr('width', width)
     .attr('height', height)
+  graph.attr('opacity', 0)
   graph.selectAll('*').remove()
   let simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(d => d.id).distance(250))
+    .force("link", d3.forceLink().id(d => d.id).distance(d3.randomUniform(250, 300)))
     // .force("charge", d3.forceManyBody().strength(-1))
-    .force("collide", d3.forceCollide().radius(40))
-    // .force("center", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
+    .force("collide", d3.forceCollide().radius(45))
+    .force("center", d3.forceCenter(width / 2, height / 2))
     .force('x', d3.forceX(d => {
       if (d.value === 0) {
         return width / 2
@@ -194,6 +195,7 @@ export function drawGraph() {
     .data(data.links, d => d.target.id)
   link = link.enter()
     .append("line")
+    .attr('class', 'line')
     .attr('stroke', 'rgba(255,255,255,0.51)')
     .attr('stroke-width', d => d.strength)
 
@@ -202,6 +204,7 @@ export function drawGraph() {
 
   node = node.enter()
     .append("g")
+    .attr('class', 'node')
 
   node
     .filter(d => d.type === 'center')
@@ -316,6 +319,26 @@ export function drawGraph() {
       return d.target.y - y_distance
     })
     .attr('cursor', 'pointer')
+  graph
+    .transition('enter')
+    .duration(1000)
+    .attr('opacity', 1)
+
+  let nodes = svg.selectAll('.node')
+  let tooltip = d3.select('.tooltip')
+  nodes.filter(d => d.type !== 'center')
+    .on('mouseover', () => {
+      d3.select(d3.event.target)
+        .attr('stroke', 'red')
+        .attr('stroke-width', 3)
+      tooltip.transition().duration(500).style('opacity', 1)
+    })
+    .on('mouseout', () => {
+      d3.select(d3.event.target)
+        .attr('stroke', null)
+        .attr('stroke-width', null)
+      tooltip.transition().duration(100).style('opacity', 0)
+    })
 }
 
 function calDistance(source, target) {
