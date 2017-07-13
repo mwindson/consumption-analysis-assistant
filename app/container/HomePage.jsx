@@ -154,6 +154,8 @@ export default class HomePage extends React.Component {
     editing: false,
     inputValue: "",
     data: {},
+    lineId: 0,
+    relation_type: 'center',
   }
 
   componentWillMount() {
@@ -174,6 +176,9 @@ export default class HomePage extends React.Component {
   handleDataChange = (data) => {
     this.setState({data})
   }
+  handleLineClick = (id, type) => {
+    this.setState({lineId: id, relation_type: type})
+  }
 
   render() {
     const {editing, inputValue, data} = this.state
@@ -193,11 +198,12 @@ export default class HomePage extends React.Component {
             </div>
           </div>
           <div className="graph">
-            <KnowledgeGraph data={data}/>
+            <KnowledgeGraph data={data} handleLineClick={this.handleLineClick}/>
           </div>
         </div>
         <div className="right-part">
-          <KnowledgeCards changeData={this.handleDataChange} data={this.state.data}/>
+          <KnowledgeCards changeData={this.handleDataChange} data={this.state.data} lineId={this.state.lineId}
+                          relation_type={this.state.relation_type} lineReset={this.handleLineClick}/>
         </div>
       </div>
     )

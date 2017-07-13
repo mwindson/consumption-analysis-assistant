@@ -148,7 +148,7 @@ let data = {
 }
 
 
-export function drawGraph(data) {
+export function drawGraph(data, lineClick) {
   let svg = d3.select('.graph-svg')
   let width = svg.style('width').replace('px', ''), height = svg.style('height').replace('px', '')
   let graph = svg.select('.graph-g')
@@ -157,7 +157,7 @@ export function drawGraph(data) {
   graph.attr('opacity', 0)
   graph.selectAll('*').remove()
   let simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(d => d.id).distance(d3.randomUniform(250, 300)))
+    .force("link", d3.forceLink().id(d => d.id).distance(250))
     // .force("charge", d3.forceManyBody().strength(-1))
     .force("collide", d3.forceCollide().radius(45))
     .force("center", d3.forceCenter(width / 2, height / 2))
@@ -198,6 +198,8 @@ export function drawGraph(data) {
     .attr('class', 'line')
     .attr('stroke', 'rgba(255,255,255,0.51)')
     .attr('stroke-width', d => d.strength)
+    .attr('cursor', 'pointer')
+    .attr('id', d => d.target)
 
   let node = graph.selectAll(".node")
     .data(data.nodes, d => d.id)
@@ -206,6 +208,8 @@ export function drawGraph(data) {
     .append("g")
     .attr('class', 'node')
 
+  node.filter(d => d.type !== 'center')
+    .attr('cursor', 'pointer')
   node
     .filter(d => d.type === 'center')
     .append('circle')
@@ -318,7 +322,7 @@ export function drawGraph(data) {
       }
       return d.target.y - y_distance
     })
-    .attr('cursor', 'pointer')
+
   graph
     .transition('enter')
     .duration(1000)
@@ -339,6 +343,29 @@ export function drawGraph(data) {
         .attr('stroke-width', null)
       tooltip.transition().duration(100).style('opacity', 0)
     })
+
+  link.on('mouseover', () => {
+    d3.select(d3.event.target)
+      .attr('stroke', 'rgba(255,255,255,0.8)')
+      .attr('stroke-width', d => d.strength + 3)
+    tooltip.transition().duration(500).style('opacity', 1)
+  })
+    .on('mouseout', () => {
+      d3.select(d3.event.target)
+        .attr('stroke', 'rgba(255,255,255,0.51)')
+        .attr('stroke-width', d => d.strength)
+      tooltip.transition().duration(100).style('opacity', 0)
+    })
+
+  //线段点击事件
+  svg.on('click', () => {
+    let selection = d3.select(d3.event.target)
+    if (selection.attr('class') === 'line') {
+      lineClick(selection.datum().target.id, selection.datum().target.type)
+    } else {
+      lineClick(0, 'center')
+    }
+  })
 }
 
 function calDistance(source, target) {

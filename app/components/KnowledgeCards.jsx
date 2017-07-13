@@ -155,155 +155,13 @@ let newGraphData = {
     }
   ]
 }
-let graphData = {
-  "nodes": [
-    {
-      "id": 0,
-      "name": "小米",
-      "type": 'center',
-      "value": 0
-    },
-    {
-      "id": 1,
-      "name": "所属公司",
-      "type": 'news',
-      "value": 1
-    },
-    {
-      "id": 2,
-      "name": "新闻列表",
-      "type": 'news',
-      "value": 1
-    },
-    {
-      "id": 3,
-      "name": "手机",
-      "type": 'store_type',
-      "value": 2
-    },
-    {
-      "id": 4,
-      "name": "笔记本",
-      "type": 'store_type',
-      "value": 2
-    },
-    {
-      "id": 5,
-      "name": "家用电器",
-      "type": 'store_type',
-      "value": 2
-    },
-    {
-      "id": 6,
-      "name": "华为",
-      "type": 'related_brand',
-      "value": 3
-    },
-    {
-      "id": 7,
-      "name": "魅族",
-      "type": 'related_brand',
-      "value": 3,
-    },
-    {
-      "id": 8,
-      "name": "雷军",
-      "type": 'person',
-      "value": 4,
-    },
-    {
-      "id": 9,
-      "name": "小米4",
-      "type": 'product',
-      "value": 5,
-    },
-    {
-      "id": 10,
-      "name": "小米NOTE",
-      "type": 'product',
-      "value": 5,
-    },
-    {
-      "id": 11,
-      "name": "林斌",
-      "type": 'person',
-      "value": 4,
-    }
-  ],
-  "links": [
-    {
-      "source": 0,
-      "target": 1,
-      "type": 'news',
-      "strength": 1,
-    },
-    {
-      "source": 0,
-      "target": 2,
-      "type": 'news',
-      "strength": 1,
-
-    },
-    {
-      "source": 0,
-      "target": 3,
-      "type": 'store_type',
-      "strength": 2,
-    },
-    {
-      "source": 0,
-      "target": 4,
-      "type": 'store_type',
-      "strength": 2,
-    },
-    {
-      "source": 0,
-      "target": 5,
-      "type": 'store_type',
-      "strength": 3,
-    },
-    {
-      "source": 0,
-      "target": 6,
-      "type": 'related_brand',
-      "strength": 3,
-    },
-    {
-      "source": 0,
-      "target": 7,
-      "type": 'related_brand',
-      "strength": 4,
-    },
-    {
-      "source": 0,
-      "target": 8,
-      "type": 'person',
-      "strength": 4,
-    },
-    {
-      "source": 0,
-      "target": 9,
-      "type": 'product',
-      "strength": 5,
-    },
-    {
-      "source": 0,
-      "target": 10,
-      "type": 'product',
-      "strength": 5,
-    },
-    {
-      "source": 0,
-      "target": 11,
-      "type": 'person',
-      "strength": 5,
-    }
-  ]
-}
 export default class KnowledgeCards extends React.Component {
   static propTypes = {
     changeData: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
+    lineId: PropTypes.number.isRequired,
+    relation_type: PropTypes.string.isRequired,
+    lineReset: PropTypes.func.isRequired,
   }
   state = {
     chosen: "knowledge",
@@ -328,13 +186,36 @@ export default class KnowledgeCards extends React.Component {
   }
   backClick = () => {
     const {expand, chosen, cardData} = this.state
-    this.setState({expand: expand.set(chosen, "")})
-    this.setState({type: ""})
-    this.setState({cardData: this.props.data})
-    this.props.changeData(cardData)
+    if (expand.get(chosen) !== "") {
+      this.setState({expand: expand.set(chosen, "")})
+      this.setState({type: ""})
+      this.setState({cardData: this.props.data})
+      this.props.changeData(cardData)
+    } else {
+      this.props.lineReset(0, 'center')
+    }
   }
 
   renderExpandCard() {
+    const {chosen, type} = this.state
+    const expandData = fromJS(data[chosen]).find(d => d.get('type') === type).get('content')
+    return (
+      <div className="item-list">
+        {expandData.map((item, i) => (
+          <div key={i} className="item">
+            <div className={classNames("img", type)}>
+              <img src={item.get('url')}/>
+            </div>
+            <div className="text">
+              {item.get('text')}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  renderRealtionship() {
     const {chosen, type} = this.state
     const expandData = fromJS(data[chosen]).find(d => d.get('type') === type).get('content')
     return (
@@ -372,10 +253,10 @@ export default class KnowledgeCards extends React.Component {
             情感分析
           </div>
         </div>
-        {expand.get(chosen) !== "" ? (
+        {expand.get(chosen) !== "" || this.props.relation_type !== 'center' ? (
           <div className="expand-card">
             <div className="back" onClick={this.backClick}>返回</div>
-            {this.renderExpandCard()}
+            {expand.get(chosen) !== "" ? this.renderExpandCard : this.renderRealtionship}
           </div>
         ) : (
           <div className="card">

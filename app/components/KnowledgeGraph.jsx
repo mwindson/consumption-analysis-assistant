@@ -8,16 +8,21 @@ import 'style/KnowledgeGraph.styl'
 
 export default class KnowledgeGraph extends React.Component {
   static propTypes = {
-    data: PropTypes.any.isRequired,
+    data: PropTypes.object.isRequired,
+    handleLineClick: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props)
+    this.state = {
+      lineId: 0,
+    }
     this.svgElement = null
   }
 
+
   componentDidMount() {
-    drawGraph(this.props.data)
+    drawGraph(this.props.data, this.handleLineClick)
     window.addEventListener('resize', () => {
       drawGraph(this.props.data)
     })
@@ -27,15 +32,13 @@ export default class KnowledgeGraph extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
-      // console.log(this.props.data)
-      drawGraph(nextProps.data)
+      drawGraph(nextProps.data, this.handleLineClick)
     }
   }
 
   shouldCompopnentUpdate() {
     return false
   }
-
 
   componentWillUnmount() {
     window.removeEventListener('resize')
@@ -47,6 +50,10 @@ export default class KnowledgeGraph extends React.Component {
     } else {
       zoomClick(this.svgElement, type)
     }
+  }
+
+  handleLineClick = (id, type) => {
+    this.props.handleLineClick(id, type)
   }
 
   render() {
