@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import * as d3 from 'd3'
 import 'style/KnowledgeCards.styl'
 import {fromJS, Map} from 'immutable'
 import classNames from 'classnames'
@@ -166,44 +167,60 @@ export default class KnowledgeCards extends React.Component {
   state = {
     chosen: "knowledge",
     expand: Map({hot: "", knowledge: "", stock: "", analysis: ""}),
-    type: "",
     cardData: {},
   }
+
+  componentWillReceiveProps(nextProps) {
+    const {expand, chosen} = this.state
+    if (nextProps.relation_type !== this.props.relation_type) {
+      if (nextProps.relation_type !== "center") {
+        this.setState({expand: expand.set(chosen, "relation_ship")})
+      } else {
+        this.setState({expand: Map({hot: "", knowledge: "", stock: "", analysis: ""})})
+      }
+    }
+  }
+
   handleClick = (tab) => {
     const {expand, cardData, chosen} = this.state
     if (expand.get(tab) === "" & expand.get(chosen) !== "" || expand.get(tab) !== "" & expand.get(chosen) === "") {
-      this.setState({cardData: this.props.data})
-      this.props.changeData(cardData)
+      if (expand.get(tab) !== "relation_ship" && expand.get(chosen) !== "relation_ship") {
+        this.setState({cardData: this.props.data})
+        this.props.changeData(cardData)
+      }
     }
     this.setState({chosen: tab})
   }
   handleMoreLink = (type) => {
     const {expand, chosen} = this.state
     this.setState({expand: expand.set(chosen, type)})
-    this.setState({type: type})
     this.setState({cardData: this.props.data})
     this.props.changeData(newGraphData)
   }
   backClick = () => {
     const {expand, chosen, cardData} = this.state
-    if (expand.get(chosen) !== "") {
+    if (expand.get(chosen) !== "relation_ship") {
       this.setState({expand: expand.set(chosen, "")})
-      this.setState({type: ""})
       this.setState({cardData: this.props.data})
       this.props.changeData(cardData)
     } else {
+      this.setState({expand: expand.set(chosen, "")})
+      d3.selectAll('.line')
+        .attr('stroke', 'rgba(255,255,255,0.51)')
+        .attr('stroke-width', d => d.strength)
+        .attr('clicked', false)
       this.props.lineReset(0, 'center')
     }
   }
 
   renderExpandCard() {
-    const {chosen, type} = this.state
-    const expandData = fromJS(data[chosen]).find(d => d.get('type') === type).get('content')
+    const {chosen, expand} = this.state
+    const expandData = fromJS(data[chosen]).find(d => d.get('type') === expand.get(chosen)).get('content')
     return (
       <div className="item-list">
         {expandData.map((item, i) => (
           <div key={i} className="item">
-            <div className={classNames("img", type)}>
+            <div className={classNames("img", expand.get(chosen))}>
               <img src={item.get('url')}/>
             </div>
             <div className="text">
@@ -216,20 +233,9 @@ export default class KnowledgeCards extends React.Component {
   }
 
   renderRealtionship() {
-    const {chosen, type} = this.state
-    const expandData = fromJS(data[chosen]).find(d => d.get('type') === type).get('content')
     return (
       <div className="item-list">
-        {expandData.map((item, i) => (
-          <div key={i} className="item">
-            <div className={classNames("img", type)}>
-              <img src={item.get('url')}/>
-            </div>
-            <div className="text">
-              {item.get('text')}
-            </div>
-          </div>
-        ))}
+        relation_ship
       </div>
     )
   }
@@ -253,10 +259,10 @@ export default class KnowledgeCards extends React.Component {
             情感分析
           </div>
         </div>
-        {expand.get(chosen) !== "" || this.props.relation_type !== 'center' ? (
+        {expand.get(chosen) !== '' ? (
           <div className="expand-card">
             <div className="back" onClick={this.backClick}>返回</div>
-            {expand.get(chosen) !== "" ? this.renderExpandCard : this.renderRealtionship}
+            {expand.get(chosen) !== "relation_ship" ? this.renderExpandCard() : this.renderRealtionship()}
           </div>
         ) : (
           <div className="card">

@@ -1,154 +1,7 @@
 import * as d3 from 'd3'
 import 'style/graph.styl'
 
-let data = {
-  "nodes": [
-    {
-      "id": 0,
-      "name": "小米",
-      "type": 'center',
-      "value": 0
-    },
-    {
-      "id": 1,
-      "name": "所属公司",
-      "type": 'news',
-      "value": 1
-    },
-    {
-      "id": 2,
-      "name": "新闻列表",
-      "type": 'news',
-      "value": 1
-    },
-    {
-      "id": 3,
-      "name": "手机",
-      "type": 'store_type',
-      "value": 2
-    },
-    {
-      "id": 4,
-      "name": "笔记本",
-      "type": 'store_type',
-      "value": 2
-    },
-    {
-      "id": 5,
-      "name": "家用电器",
-      "type": 'store_type',
-      "value": 2
-    },
-    {
-      "id": 6,
-      "name": "华为",
-      "type": 'related_brand',
-      "value": 3
-    },
-    {
-      "id": 7,
-      "name": "魅族",
-      "type": 'related_brand',
-      "value": 3,
-    },
-    {
-      "id": 8,
-      "name": "雷军",
-      "type": 'person',
-      "value": 4,
-    },
-    {
-      "id": 9,
-      "name": "小米4",
-      "type": 'product',
-      "value": 5,
-    },
-    {
-      "id": 10,
-      "name": "小米NOTE",
-      "type": 'product',
-      "value": 5,
-    },
-    {
-      "id": 11,
-      "name": "林斌",
-      "type": 'person',
-      "value": 4,
-    }
-  ],
-  "links": [
-    {
-      "source": 0,
-      "target": 1,
-      "type": 'news',
-      "strength": 1,
-    },
-    {
-      "source": 0,
-      "target": 2,
-      "type": 'news',
-      "strength": 1,
-
-    },
-    {
-      "source": 0,
-      "target": 3,
-      "type": 'store_type',
-      "strength": 2,
-    },
-    {
-      "source": 0,
-      "target": 4,
-      "type": 'store_type',
-      "strength": 2,
-    },
-    {
-      "source": 0,
-      "target": 5,
-      "type": 'store_type',
-      "strength": 3,
-    },
-    {
-      "source": 0,
-      "target": 6,
-      "type": 'related_brand',
-      "strength": 3,
-    },
-    {
-      "source": 0,
-      "target": 7,
-      "type": 'related_brand',
-      "strength": 4,
-    },
-    {
-      "source": 0,
-      "target": 8,
-      "type": 'person',
-      "strength": 4,
-    },
-    {
-      "source": 0,
-      "target": 9,
-      "type": 'product',
-      "strength": 5,
-    },
-    {
-      "source": 0,
-      "target": 10,
-      "type": 'product',
-      "strength": 5,
-    },
-    {
-      "source": 0,
-      "target": 11,
-      "type": 'person',
-      "strength": 5,
-    }
-  ]
-}
-
-
-export function drawGraph(data, lineClick) {
+export function drawGraph(data, lineClick, nodeClick) {
   let svg = d3.select('.graph-svg')
   let width = svg.style('width').replace('px', ''), height = svg.style('height').replace('px', '')
   let graph = svg.select('.graph-g')
@@ -158,7 +11,7 @@ export function drawGraph(data, lineClick) {
   graph.selectAll('*').remove()
   let simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(d => d.id).distance(250))
-    // .force("charge", d3.forceManyBody().strength(-1))
+    // .force("charge", d3.forceManyBody().strength(-1000))
     .force("collide", d3.forceCollide().radius(45))
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force('x', d3.forceX(d => {
@@ -200,6 +53,7 @@ export function drawGraph(data, lineClick) {
     .attr('stroke-width', d => d.strength)
     .attr('cursor', 'pointer')
     .attr('id', d => d.target)
+    .attr('clicked', false)
 
   let node = graph.selectAll(".node")
     .data(data.nodes, d => d.id)
@@ -351,9 +205,12 @@ export function drawGraph(data, lineClick) {
     tooltip.transition().duration(500).style('opacity', 1)
   })
     .on('mouseout', () => {
-      d3.select(d3.event.target)
-        .attr('stroke', 'rgba(255,255,255,0.51)')
-        .attr('stroke-width', d => d.strength)
+      let clicked = d3.select(d3.event.target).attr('clicked')
+      if (clicked === 'false') {
+        d3.select(d3.event.target)
+          .attr('stroke', 'rgba(255,255,255,0.51)')
+          .attr('stroke-width', d => d.strength)
+      }
       tooltip.transition().duration(100).style('opacity', 0)
     })
 
@@ -361,10 +218,24 @@ export function drawGraph(data, lineClick) {
   svg.on('click', () => {
     let selection = d3.select(d3.event.target)
     if (selection.attr('class') === 'line') {
+      selection
+        .attr('stroke', 'rgba(255,255,255,0.8)')
+        .attr('stroke-width', d => d.strength + 3)
+        .attr('clicked', true)
       lineClick(selection.datum().target.id, selection.datum().target.type)
     } else {
+      d3.selectAll('.line')
+        .attr('stroke', 'rgba(255,255,255,0.51)')
+        .attr('stroke-width', d => d.strength)
+        .attr('clicked', false)
       lineClick(0, 'center')
     }
+  })
+
+  // 节点点击事件
+  node.on('click', () => {
+    let selection = d3.select(d3.event.target)
+    nodeClick(selection.datum().name)
   })
 }
 

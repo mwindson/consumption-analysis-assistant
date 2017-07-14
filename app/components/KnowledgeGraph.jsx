@@ -9,7 +9,8 @@ import 'style/KnowledgeGraph.styl'
 export default class KnowledgeGraph extends React.Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
-    handleLineClick: PropTypes.func.isRequired,
+    lineClick: PropTypes.func.isRequired,
+    nodeClick: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -22,9 +23,9 @@ export default class KnowledgeGraph extends React.Component {
 
 
   componentDidMount() {
-    drawGraph(this.props.data, this.handleLineClick)
+    drawGraph(this.props.data, this.handleLineClick, this.handleNodeClick)
     window.addEventListener('resize', () => {
-      drawGraph(this.props.data)
+      drawGraph(this.props.data, this.handleLineClick, this.handleNodeClick)
     })
     this.svgElement = d3.select('.graph-svg')
     bindingZoom(this.svgElement)
@@ -32,16 +33,18 @@ export default class KnowledgeGraph extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
-      drawGraph(nextProps.data, this.handleLineClick)
+      drawGraph(nextProps.data, this.handleLineClick, this.handleNodeClick)
     }
   }
 
-  shouldCompopnentUpdate() {
-    return false
+  shouldCompopnentUpdate(nextProps, nextState) {
+    if (nextProps.data !== this.props.data) {
+      return false
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize')
+    window.removeEventListener('resize', drawGraph)
   }
 
   handleButtonClick = (type) => {
@@ -53,7 +56,10 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   handleLineClick = (id, type) => {
-    this.props.handleLineClick(id, type)
+    this.props.lineClick(id, type)
+  }
+  handleNodeClick = (name) => {
+    this.props.nodeClick(name)
   }
 
   render() {

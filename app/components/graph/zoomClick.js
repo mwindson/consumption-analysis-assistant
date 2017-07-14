@@ -12,7 +12,6 @@ export function zoomClick(svgElement, type) {
   const scale = type === 'zoom_in' ? 2 : 0.5
   zoom.scaleBy(g, scale)
   let transform = d3.zoomTransform(g.node())
-  console.log(transform)
   svgElement.transition()
     .duration(750)
     .call(zoom.transform, transform)
