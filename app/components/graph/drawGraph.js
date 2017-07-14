@@ -132,6 +132,18 @@ export function drawGraph(data, lineClick, nodeClick) {
     })
     .attr("x2", d => {
       const distance = calDistance(d.source, d.target)
+      const x_distance = (d.target.x - d.source.x) / distance * 78
+      return d.source.x + x_distance
+    })
+    .attr("y2", d => {
+      const distance = calDistance(d.source, d.target)
+      const y_distance = (d.target.y - d.source.y) / distance * 78
+      return d.source.y + y_distance
+    })
+  link.transition()
+    .duration(1500)
+    .attr("x2", d => {
+      const distance = calDistance(d.source, d.target)
       let x_distance
       if (d.type === 'store_type') {
         x_distance = (d.target.x - d.source.x) / distance * 55
