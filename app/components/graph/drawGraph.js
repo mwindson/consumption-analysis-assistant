@@ -109,6 +109,7 @@ export function drawGraph(data, lineClick, nodeClick) {
     .attr('pointer-events', 'none')
     .attr('font-size', 18)
     .attr('fill', '#125091')
+    .attr('transform','translate(0,5)')
 
   simulation.nodes(data.nodes)
   simulation.force("link").links(data.links)
