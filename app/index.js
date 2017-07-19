@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import App from 'container/App'
+import App from 'containers/App'
 
 ReactDOM.render(
   <App />,

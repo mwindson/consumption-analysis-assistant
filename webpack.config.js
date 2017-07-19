@@ -8,8 +8,9 @@ const isProduction = process.env.NODE_ENV === 'production'
 module.exports = {
   entry: {
     main: [
-      __dirname + "/app/index.js"
-    ]
+      'babel-polyfill',
+      `${__dirname}/app/index.js`,
+    ],
   },
 
   context: __dirname,
@@ -19,7 +20,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build', packageInfo.version),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/',
   },
 
   module: {
@@ -40,10 +41,10 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               plugins: ['transform-react-jsx', 'transform-class-properties'],
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     ],
   },
 
@@ -61,13 +62,12 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
-        template: __dirname + '/app/index.tmpl.html',
-      }
-    )
+      template: `${__dirname}/app/index.tmpl.html`,
+    }),
   ],
 
   devServer: {
     host: '0.0.0.0',
-    contentBase: './app'
-  }
+    contentBase: './app',
+  },
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import 'style/Card.styl'
-import {setHighLight, exitHighLight} from 'components/graph/highLightNode'
+import { setHighLight, exitHighLight } from 'components/graph/highLightNode'
 
 export default class Card extends React.Component {
   static propTypes = {
@@ -21,7 +21,7 @@ export default class Card extends React.Component {
   }
 
   render() {
-    const {title, type, content} = this.props
+    const { title, type, content } = this.props
     const size = {
       person: 5,
       store: 3,
@@ -34,7 +34,7 @@ export default class Card extends React.Component {
             <div className="title">{title}</div>
             <div className="detail">
               <div className="img">
-                <img src={content[0].url}/>
+                <img src={content[0].url} />
               </div>
               <div className="text">
                 {content[0].text}
@@ -42,26 +42,27 @@ export default class Card extends React.Component {
             </div>
           </div>
         ) : (
-          <div className="related" onMouseOver={() => this.handleHover(type)}
-               onMouseLeave={() => this.handleLeave(type)}>
+          <div
+            className="related"
+            onMouseOver={() => this.handleHover(type)}
+            onMouseLeave={() => this.handleLeave(type)}
+          >
             <div className="title">
               {title}
               {content.length > size[type] ?
                 <div className="more-link" onClick={() => this.props.moreLink(type)}>more</div> : null}
             </div>
             <div className="list">
-              {content.map((item, i) => (
-                i < size[type] ?
-                  (<div key={i} className="item">
-                      <div className={classNames("img", type)}>
-                        <img src={item.url}/>
-                      </div>
-                      <div className="text">
-                        {item.text}
-                      </div>
-                    </div>
-                  ) : null
-              ))}
+              {content.map((item, i) => (i < size[type] ? (
+                <div key={i} className="item">
+                  <div className={classNames('img', type)}>
+                    <img src={item.url} alt={item.text} />
+                  </div>
+                  <div className="text">
+                    {item.text}
+                  </div>
+                </div>
+              ) : null))}
             </div>
           </div>
         )

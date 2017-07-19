@@ -1,10 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+import { Provider } from 'react-redux'
+import store from 'store'
 import {
   BrowserRouter as Router,
   Route,
   Link,
 } from 'react-router-dom'
 import HomePage from './HomePage'
+
 const BasicExample = () => (
   <Router>
     <div>
@@ -14,9 +17,9 @@ const BasicExample = () => (
         <li><Link to="/topics">Topics</Link></li>
       </ul>
       <hr />
-      <Route exact path="/" component={Home}/>
-      <Route path="/about" component={About}/>
-      <Route path="/topics" component={Topics}/>
+      <Route exact path="/" component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/topics" component={Topics} />
     </div>
   </Router>
 )
@@ -30,7 +33,7 @@ const About = () => (
     <h2>About</h2>
   </div>
 )
-const Topics = ({match}) => (
+const Topics = ({ match }) => (
   <div>
     <h2>Topics</h2>
     <ul>
@@ -45,15 +48,20 @@ const Topics = ({match}) => (
         <h3>Please select a topic.</h3>
       )}
     />
-    <Route path={`${match.url}/:topicId`} component={Topic}/>
+    <Route path={`${match.url}/:topicId`} component={Topic} />
   </div>
 )
-const Topic = ({match}) => (
+const Topic = ({ match }) => (
   <div>
     <h3>{match.params.topicId}</h3>
   </div>
 )
-export default class App extends Component {
+export default () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+)
+class App extends Component {
   render() {
     return (
       <HomePage />
