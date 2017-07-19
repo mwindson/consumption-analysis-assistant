@@ -158,7 +158,6 @@ let newGraphData = {
 }
 export default class KnowledgeCards extends React.Component {
   static propTypes = {
-    changeData: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
     lineId: PropTypes.number.isRequired,
     relation_type: PropTypes.string.isRequired,
@@ -186,7 +185,6 @@ export default class KnowledgeCards extends React.Component {
     if (expand.get(tab) === "" & expand.get(chosen) !== "" || expand.get(tab) !== "" & expand.get(chosen) === "") {
       if (expand.get(tab) !== "relation_ship" && expand.get(chosen) !== "relation_ship") {
         this.setState({cardData: this.props.data})
-        this.props.changeData(cardData)
       }
     }
     this.setState({chosen: tab})
@@ -195,14 +193,12 @@ export default class KnowledgeCards extends React.Component {
     const {expand, chosen} = this.state
     this.setState({expand: expand.set(chosen, type)})
     this.setState({cardData: this.props.data})
-    this.props.changeData(newGraphData)
   }
   backClick = () => {
     const {expand, chosen, cardData} = this.state
     if (expand.get(chosen) !== "relation_ship") {
       this.setState({expand: expand.set(chosen, "")})
       this.setState({cardData: this.props.data})
-      this.props.changeData(cardData)
     } else {
       this.setState({expand: expand.set(chosen, "")})
       d3.selectAll('.line')

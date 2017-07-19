@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
-import {drawGraph} from 'components/graph/drawGraph'
+import {drawGraph, updateGraph} from 'components/graph/drawGraph'
 import {bindingZoom, zoomClick, zoomReset} from 'components/graph/zoomClick'
 import {ResetIcon, ZoomInIcon, ZoomOutIcon} from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
@@ -10,31 +10,32 @@ export default class KnowledgeGraph extends React.Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
     lineClick: PropTypes.func.isRequired,
-    nodeClick: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props)
     this.state = {
       lineId: 0,
+      currentNodeId: 0,
     }
     this.svgElement = null
   }
 
 
   componentDidMount() {
-    drawGraph(this.props.data, this.handleLineClick, this.handleNodeClick)
+    drawGraph(this.props.data, this.state.currentNodeId, this.handleLineClick, this.handleNodeClick, this.hasClicked)
     window.addEventListener('resize', () => {
-      drawGraph(this.props.data, this.handleLineClick, this.handleNodeClick)
+      drawGraph(this.props.data, this.state.currentNodeId, this.handleLineClick, this.handleNodeClick, this.hasClicked)
     })
     this.svgElement = d3.select('.graph-svg')
     bindingZoom(this.svgElement)
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.data !== this.props.data) {
-      drawGraph(nextProps.data, this.handleLineClick, this.handleNodeClick)
-    }
+    // if (nextProps.currentNodeId !== this.props.currentNodeId) {
+    //   // drawGraph(nextProps.data, this.handleLineClick, this.handleNodeClick)
+    //   updateGraph(nextProps.currentNodeId, this.handleLineClick)
+    // }
   }
 
   shouldCompopnentUpdate(nextProps, nextState) {
@@ -58,8 +59,11 @@ export default class KnowledgeGraph extends React.Component {
   handleLineClick = (id, type) => {
     this.props.lineClick(id, type)
   }
-  handleNodeClick = (name) => {
-    this.props.nodeClick(name)
+  handleNodeClick = (id) => {
+    this.setState({currentNodeId: id})
+  }
+  hasClicked = (id) => {
+    return this.state.currentNodeId !== id
   }
 
   render() {

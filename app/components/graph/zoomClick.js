@@ -25,6 +25,7 @@ export function zoomReset(svg) {
 
 function zoomed() {
   let g = d3.select(this).select('.graph-g')
+  console.log(d3.event.transform)
   g.attr("transform", d3.event.transform)
   zoom.transform(g, d3.event.transform)
 }
