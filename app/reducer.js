@@ -14,7 +14,7 @@ export default function reducer(state = initialState, action) {
     return state.set('nodeData', nodeData).set('linkData', linkData)
   } else if (action.type === A.UPDATE_CENTER_ID) {
     const { centerId } = action
-    return state.set('currentCenterId', centerId)
+    return state.set('centerId', centerId)
   } else if (action.type === A.CHANGE_CURRENT_CENTER_ID) {
     const { currentCenterId } = action
     return state.set('currentCenterId', currentCenterId)

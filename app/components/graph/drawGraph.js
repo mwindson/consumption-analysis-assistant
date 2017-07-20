@@ -9,6 +9,7 @@ let node,
 let simulation
 let graph,
   svg
+
 export function drawGraph(nodeData, linkData, nodeId, lineClick, nodeClick, hasClicked) {
   svg = d3.select('.graph-svg')
   const width = svg.style('width').replace('px', '')
@@ -22,11 +23,11 @@ export function drawGraph(nodeData, linkData, nodeId, lineClick, nodeClick, hasC
   // 设定力度图的参数
   simulation = d3.forceSimulation()
     .force('link', d3.forceLink().id(d => d.id).distance(100))
-    .force('charge', d3.forceManyBody().strength(-1))
+    // .force('charge', d3.forceManyBody().strength(-100))
     .force('collide', d3.forceCollide().radius(50))
     .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('x', d3.forceX(width / 2))
-    .force('y', d3.forceY(height / 2))
+  // .force('x', d3.forceX(width / 2))
+  // .force('y', d3.forceY(height / 2))
   // 绑定线段数据
   allLinks = graph
     .append('g')
@@ -80,11 +81,11 @@ export function drawGraph(nodeData, linkData, nodeId, lineClick, nodeClick, hasC
 
   graph
     .transition()
-    .duration(2000)
+    .duration(1000)
     .attr('opacity', 1)
 
   const newLinkData = fromJS(linkData).filter(ele => ele.get('source').get('id') === nodeId || ele.get('target').get('id') === nodeId)
-  updateGraph(linkData, newLinkData.toJS(), nodeId, lineClick)
+  updateGraph(nodeData, linkData, newLinkData.toJS(), nodeId, lineClick)
 
   // 线段点击事件
   svg.on('click', () => {
@@ -110,7 +111,7 @@ export function drawGraph(nodeData, linkData, nodeId, lineClick, nodeClick, hasC
     if (hasClicked(id)) {
       nodeClick(id)
       const nextData = fromJS(linkData).filter(ele => ele.get('source').get('id') === id || ele.get('target').get('id') === id)
-      updateGraph(linkData, nextData.toJS(), nodeId, lineClick)
+      updateGraph(nodeData, linkData, nextData.toJS(), nodeId, lineClick)
     }
   })
   node.call(d3.drag()
@@ -118,6 +119,7 @@ export function drawGraph(nodeData, linkData, nodeId, lineClick, nodeClick, hasC
     .on('drag', dragged)
     .on('end', dragended))
 }
+
 function tick() {
   node.attr('transform', d => `translate(${d.x}, ${d.y})`)
 
@@ -167,6 +169,7 @@ function tick() {
       })
   }
 }
+
 function calDistance(source, target) {
   return Math.sqrt(
     ((target.y - source.y) * (target.y - source.y)) +
@@ -182,7 +185,6 @@ function dragstarted(d) {
 
 function dragged(d) {
   d.fx = d3.event.x
-
   d.fy = d3.event.y
 }
 
@@ -192,7 +194,7 @@ function dragended(d) {
   d.fy = null
 }
 
-export function updateGraph(linkData, currentData, nodeId) {
+export function updateGraph(nodeData, linkData, currentData, nodeId) {
   // 隐藏不相关节点和文字
   node.filter(d => currentData.find(ele => ele.target.id === d.id || ele.source.id === d.id) === undefined)
     .selectAll('text')

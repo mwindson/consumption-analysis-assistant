@@ -5,7 +5,7 @@ import * as d3 from 'd3'
 import { connect } from 'react-redux'
 import * as A from 'actions'
 import { drawGraph } from 'components/graph/drawGraph'
-import { bindingZoom, zoomClick, zoomReset } from 'components/graph/zoomClick'
+import { zoomClick, zoomReset } from 'components/graph/zoomClick'
 import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
 
@@ -29,6 +29,7 @@ export default class KnowledgeGraph extends React.Component {
       currentNodeId: 0,
     }
     this.svgElement = null
+    this.graphZoom = null
   }
 
   componentWillMount() {
@@ -36,11 +37,17 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   componentDidMount() {
+    const { nodeData, linkData, currentCenterId } = this.props
     // window.addEventListener('resize', () => {
-    //   drawGraph(this.props.data, this.state.currentNodeId, this.handleLineClick, this.handleNodeClick, this.hasClicked)
+    //   drawGraph(
+    //     nodeData, linkData, currentCenterId,
+    //     this.handleLineClick, this.handleNodeClick, this.hasClicked
+    //   )
     // })
     this.svgElement = d3.select('.graph-svg')
-    bindingZoom(this.svgElement)
+    this.graphZoom = d3.zoom().scaleExtent([0.5, 8])
+    this.graphZoom.on('zoom', this.zoomed)
+    this.svgElement.call(this.graphZoom)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,23 +62,23 @@ export default class KnowledgeGraph extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', drawGraph)
-  }
-
-  shouldCompopnentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.data !== this.props.data) {
       return false
     }
-    return false
+    return true
   }
 
+  zoomed = () => {
+    const g = d3.select('.graph-g')
+    g.attr('transform', d3.event.transform)
+  }
 
   handleButtonClick = (type) => {
     if (type === 'reset') {
-      zoomReset(this.svgElement)
+      zoomReset(this.svgElement, this.graphZoom)
     } else {
-      zoomClick(this.svgElement, type)
+      zoomClick(this.svgElement, this.graphZoom, type)
     }
   }
 
