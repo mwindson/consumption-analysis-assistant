@@ -4,12 +4,16 @@ import * as A from 'actions'
 const initialState = Map({
   nodeData: List(),
   linkData: List(),
+  cardData: Map(),
   centerId: 0,
   currentCenterId: 0,
   hoverId: 0,
 })
 export default function reducer(state = initialState, action) {
-  if (action.type === A.UPDATE_NODES_AND_LINKS_DATA) {
+  if (action.type === A.UPDATE_CARD_DATA) {
+    const { cardData } = action
+    return state.set('cardData', cardData)
+  } else if (action.type === A.UPDATE_NODES_AND_LINKS_DATA) {
     const { nodeData, linkData } = action
     return state.set('nodeData', nodeData).set('linkData', linkData)
   } else if (action.type === A.UPDATE_CENTER_ID) {
