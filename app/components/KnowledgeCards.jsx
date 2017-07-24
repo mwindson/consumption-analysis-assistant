@@ -3,9 +3,12 @@ import PropTypes from 'prop-types'
 import { fromJS, Map } from 'immutable'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import Cards from 'components/Cards'
+import NewsCards from 'components/cards/NewsTab'
+import BrandTrendCards from 'components/cards/BrandTrendTab'
+import RelatedBrandCards from 'components/cards/RelatedBrandTab'
 import * as A from 'actions'
 import 'style/KnowledgeCards.styl'
+import BrandKnowledgeTab from './cards/BrandKnowledgeTab'
 
 const mapStateToProps = state => state.toJS()
 
@@ -52,7 +55,23 @@ export default class KnowledgeCards extends React.Component {
               {tabMap.get(k)}
             </div>))}
         </div>
-        <Cards data={fromJS(cardData[chosen])} type={chosen} />
+        {chosen === 'hot' ?
+          <NewsCards
+            wordList={fromJS(cardData[chosen]).get('keywords')}
+            newsList={fromJS(cardData[chosen]).get('newsList')}
+          /> : null}
+        {chosen === 'trend' ?
+          <BrandTrendCards
+            comments={fromJS(cardData[chosen]).get('comments')}
+            emotion={fromJS(cardData[chosen]).get('emotion')}
+            trendData={fromJS(cardData[chosen]).get('trend')}
+          /> : null}
+        {chosen === 'related' ? <RelatedBrandCards brandList={fromJS(cardData[chosen])} /> : null}
+        {chosen === 'knowledge' ?
+          <BrandKnowledgeTab
+            cards={fromJS(cardData[chosen]).get('cards')}
+            lists={fromJS(cardData[chosen]).get('lists')}
+          /> : null}
       </div>
     )
   }

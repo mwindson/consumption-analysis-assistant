@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { ArrowRight } from 'components/Icons'
@@ -27,7 +26,7 @@ export default class NewsCards extends React.Component {
     const { selectedKeyword } = this.state
     const currentNewsList = selectedKeyword === '' ? newsList : newsList.filter(x => x.get('keywords').includes(selectedKeyword))
     return (
-      <div>
+      <div className="cards">
         <div className="news-card">
           <div className="title">更多关键词</div>
           <div className="content">
@@ -38,8 +37,8 @@ export default class NewsCards extends React.Component {
                 onClick={() => this.handleWordClick(word)}
               >
                 {word}
-              </div>)
-            )}
+              </div>))
+            }
           </div>
         </div>
         {currentNewsList.toArray().map((news, i) => (

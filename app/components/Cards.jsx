@@ -4,7 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import classNames from 'classnames'
 import 'style/Card.styl'
 import { setHighLight, exitHighLight } from 'components/graph/highLightNode'
-import NewsCards from 'components/cards/NewsCards'
+import NewsCards from 'components/cards/NewsTab'
 
 export default class Cards extends React.Component {
   static propTypes = {
