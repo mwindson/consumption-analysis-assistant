@@ -8,6 +8,8 @@ const initialState = Map({
   centerId: 0,
   currentCenterId: 0,
   hoverId: 0,
+  id: '0',
+  name: '0',
 })
 export default function reducer(state = initialState, action) {
   if (action.type === A.UPDATE_CARD_DATA) {
@@ -25,6 +27,9 @@ export default function reducer(state = initialState, action) {
   } else if (action.type === A.CHANGE_HOVER_ID) {
     const { hoverId } = action
     return state.set('hoverId', hoverId)
+  } else if (action.type === A.UPDATE_WS_DATA) {
+    const { id, name } = action
+    return state.set('id', id).set('name', name)
   } else {
     return state
   }
