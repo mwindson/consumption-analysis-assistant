@@ -22,17 +22,17 @@ export default class ListCard extends React.Component {
 
 
   componentDidMount() {
-    this.setItemNum(this.props.type)
-    window.addEventListener('resize', () => this.setItemNum(this.props.type))
+    this.setItemNum()
+    window.addEventListener('resize', this.setItemNum)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', () => this.setItemNum(this.props.type))
+    window.removeEventListener('resize', this.setItemNum)
   }
 
-  setItemNum(type) {
+  setItemNum = () => {
     const width = document.querySelector('.list').clientWidth
-    const itemWidth = document.querySelector(`div.item.${type}`).clientWidth + 30
+    const itemWidth = document.querySelector(`div.item.${this.props.type}`).clientWidth + 30
     this.setState({ itemNum: Math.floor(width / itemWidth) })
   }
 

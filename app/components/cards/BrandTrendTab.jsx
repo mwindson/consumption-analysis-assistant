@@ -19,7 +19,7 @@ export default class BrandTrendCards extends React.Component {
         <div className="trend-card">
           <div className="title">图表走势</div>
           <LineChart
-            width={600}
+            width={580}
             height={300}
             data={trendData.toJS()}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

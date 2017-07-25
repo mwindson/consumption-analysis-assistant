@@ -14,11 +14,12 @@ const mapStateToProps = state => state.toJS()
 
 @connect(mapStateToProps)
 export default class KnowledgeCards extends React.Component {
-  static propTypes = {
-    cardData: PropTypes.object.isRequired,
-    // callback
-    dispatch: PropTypes.func.isRequired,
-  }
+  // todo react-redux 有bug
+  // static propTypes = {
+  //   cardData: PropTypes.object.isRequired,
+  //   // callback
+  //   dispatch: PropTypes.func.isRequired,
+  // }
   state = {
     chosen: 'knowledge',
   }

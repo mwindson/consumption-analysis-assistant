@@ -22,8 +22,8 @@ export default function reducer(state = initialState, action) {
     const { centerId } = action
     return state.set('centerId', centerId)
   } else if (action.type === A.CHANGE_CURRENT_CENTER_ID) {
-    const { currentCenterId } = action
-    return state.set('currentCenterId', currentCenterId)
+    const { id } = action
+    return state.set('currentCenterId', id)
   } else if (action.type === A.CHANGE_HOVER_ID) {
     const { hoverId } = action
     return state.set('hoverId', hoverId)

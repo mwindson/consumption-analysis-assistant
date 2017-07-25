@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import { is } from 'immutable'
 import * as d3 from 'd3'
 import { connect } from 'react-redux'
 import * as A from 'actions'
@@ -9,64 +10,53 @@ import { zoomClick, zoomReset } from 'components/graph/zoomClick'
 import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
 
-const mapStateToProps = state => state.toJS()
+const mapStateToProps = state => state.toObject()
 
 @connect(mapStateToProps)
 export default class KnowledgeGraph extends React.Component {
+  // todo react-redux 有bug
   static propTypes = {
-    nodeData: ImmutablePropTypes.list.isRequired,
-    linkData: ImmutablePropTypes.list.isRequired,
-    currentCenterId: PropTypes.number.isRequired,
-    lineClick: PropTypes.func.isRequired,
-    // callback
-    dispatch: PropTypes.func.isRequired,
+    // nodeData: ImmutablePropTypes.list.isRequired,
+    // linkData: ImmutablePropTypes.list.isRequired,
+    // currentCenterId: PropTypes.number.isRequired,
+    // lineClick: PropTypes.func.isRequired,
+    // // callback
+    // dispatch: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      lineId: 0,
       currentNodeId: 0,
     }
     this.svgElement = null
     this.graphZoom = null
   }
 
-  componentWillMount() {
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA })
-  }
-
   componentDidMount() {
     const { nodeData, linkData, currentCenterId } = this.props
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA })
+    this.svgElement = d3.select('.graph-svg')
     // window.addEventListener('resize', () => {
     //   drawGraph(
     //     nodeData, linkData, currentCenterId,
     //     this.handleLineClick, this.handleNodeClick, this.hasClicked
     //   )
     // })
-    this.svgElement = d3.select('.graph-svg')
-    this.graphZoom = d3.zoom().scaleExtent([0.5, 8])
-    this.graphZoom.on('zoom', this.zoomed)
-    this.svgElement.call(this.graphZoom)
+    // this.graphZoom = d3.zoom().scaleExtent([0.5, 8])
+    // this.graphZoom.on('zoom', this.zoomed)
+    // this.svgElement.call(this.graphZoom)
   }
 
   componentWillReceiveProps(nextProps) {
     const { nodeData, linkData, currentCenterId } = this.props
-    if ((nextProps.nodeData !== nodeData) || (nextProps.linkData !== linkData)) {
+    if (!is(nextProps.nodeData, nodeData) || !is(nextProps.linkData, linkData)) {
       // drawGraph(nextProps.data, this.handleLineClick, this.handleNodeClick)
       // updateGraph(nextProps.currentNodeId, this.handleLineClick)
-      drawGraph(
-        nextProps.nodeData, nextProps.linkData, currentCenterId, this.handleLineClick,
-        this.handleNodeClick, this.hasClicked,
+      drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, currentCenterId,
+        this.handleNodeClick,
       )
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.data !== this.props.data) {
-      return false
-    }
-    return true
   }
 
   zoomed = () => {
@@ -82,12 +72,8 @@ export default class KnowledgeGraph extends React.Component {
     }
   }
 
-  handleLineClick = (id, type) => {
-    this.props.lineClick(id, type)
-  }
-  handleNodeClick = (id) => {
-    this.setState({ currentNodeId: id })
-  }
+  handleNodeClick = id => this.props.dispatch({ type: A.CHANGE_CURRENT_CENTER_ID, id })
+  handleNodeHover = id => this.props.dispatch({ type: A.CHANGE_HOVER_ID, id })
   hasClicked = id => this.state.currentNodeId !== id
 
   render() {
@@ -121,7 +107,10 @@ export default class KnowledgeGraph extends React.Component {
                 <stop offset="100%" stopColor="#EA8484" />
               </linearGradient>
             </defs>
-            <g className="graph-g" />
+            <g className="graph-g">
+              <g className="node-group" />
+              <g className="line-group" />
+            </g>
           </svg>
           <div className="tooltip">
             tooltip
