@@ -34,7 +34,6 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   componentDidMount() {
-    // this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA })
     this.svgElement = d3.select('.graph-svg')
     // window.addEventListener('resize', () => {
     //   drawGraph(
@@ -55,7 +54,7 @@ export default class KnowledgeGraph extends React.Component {
       )
     }
     if (nextProps.graphType !== graphType) {
-      drawLines(centerId, nextProps.graphType)
+      drawLines(centerId, nextProps.graphType, false)
       updateNodes(this.svgElement, nodeData, linkData, centerId, this.handleNodeClick, nextProps.graphType)
       restart()
     }
@@ -75,12 +74,9 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   handleNodeClick = (id) => {
-    // this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id })
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, keyword: id })
-    // this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'all' })
   }
   handleNodeHover = id => this.props.dispatch({ type: A.CHANGE_HOVER_ID, id })
-  hasClicked = id => this.state.currentNodeId !== id
 
   render() {
     return (
@@ -96,7 +92,7 @@ export default class KnowledgeGraph extends React.Component {
                 <stop offset="0%" stopColor="#D4C9C9" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#FFFFFF" />
               </linearGradient>
-              <linearGradient id="newsGradient" x1="0" x2="1" y1="0" y2="0">
+              <linearGradient id="companyGradient" x1="0" x2="1" y1="0" y2="0">
                 <stop offset="0%" stopColor="#F1D237" />
                 <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.43" />
               </linearGradient>
@@ -107,10 +103,6 @@ export default class KnowledgeGraph extends React.Component {
               <linearGradient id="personGradient" x1="0" x2="0" y1="0" y2="1">
                 <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#2095FF" />
-              </linearGradient>
-              <linearGradient id="personGradient" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#EA8484" />
               </linearGradient>
             </defs>
             <g className="graph-g">

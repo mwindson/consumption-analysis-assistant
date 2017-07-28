@@ -40,7 +40,7 @@ export default class RelatedBrandCards extends React.Component {
   render() {
     const { cardData } = this.props
     const { num } = this.state
-    if (!cardData) {
+    if (cardData.isEmpty()) {
       return (<div className="cards" />)
     }
     const brandList = cardData.map(i => Map({

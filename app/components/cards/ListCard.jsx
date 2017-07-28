@@ -71,10 +71,11 @@ export default class ListCard extends React.Component {
             </div>
           ))}
         </div>
-        {list.size > itemNum ?
+        {/*{list.size > itemNum ?*/}
           <div className="expand" onClick={this.handleExpand}>
             {expand ? <div><ArrowTop />收起</div> : <div><ArrowBottom />展开</div>}
-          </div> : null}
+          </div>
+        {/*{: null}*/}
       </div>
     )
   }

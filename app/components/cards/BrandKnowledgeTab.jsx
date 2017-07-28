@@ -17,26 +17,30 @@ export default class BrandKnowledgeTab extends React.Component {
       persons: '相关人物',
     }
     const { cardData } = this.props
-    if (!cardData) {
+    if (cardData.isEmpty()) {
       return null
     }
-    const company = Map({
-      title: titles.company,
-      imgUrl: '',
-      name: cardData.get('company').get('name'),
-      desc: '',
-    })
+    let cards = List()
     const brand = Map({
       title: titles.brand,
       imgUrl: '',
       name: cardData.get('brand').get('name'),
       desc: cardData.get('brand').get('description'),
     })
-    const cards = List([brand, company])
+    cards = cards.push(brand)
+    if (cardData.get('company')) {
+      const company = Map({
+        title: titles.company,
+        imgUrl: '',
+        name: cardData.get('company').get('name'),
+        desc: '',
+      })
+      cards = cards.push(company)
+    }
     const lists = List([Map({
       title: '相关人物',
       list: cardData.get('persons').map(i => Map({ url: '', text: i.get('name') })),
-      type: 'person',
+      type: 'Person',
     })])
     return (
       <div className="cards">

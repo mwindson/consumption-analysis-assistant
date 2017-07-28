@@ -13,7 +13,10 @@ export default class HomePage extends React.Component {
   state = {
     editing: false,
     inputValue: '',
-    hasResult: true,
+  }
+
+  componentDidMount() {
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, keyword: '美的Midea' })
   }
 
   handleFocus = () => {
@@ -39,7 +42,7 @@ export default class HomePage extends React.Component {
   }
 
   render() {
-    const { editing, inputValue, hasResult } = this.state
+    const { editing, inputValue } = this.state
     return (
       <div className="main">
         <div className="left-part">
@@ -59,7 +62,7 @@ export default class HomePage extends React.Component {
                 onKeyDown={this.handleSearch}
               />
               {!editing && inputValue === '' ? <SearchIcon /> : null}
-              {!hasResult ? <div className="no-result">暂无对应搜索结果</div> : null}
+              {this.props.noResult ? <div className="no-result">暂无对应搜索结果</div> : null}
             </div>
           </div>
           <div className="graph">

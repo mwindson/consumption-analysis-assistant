@@ -6,10 +6,11 @@ const initialState = Map({
   linkData: Set(),
   cardData: Map(),
   centerId: 'maigoo:美的Midea',
-  hoverId: 0,
+  currentCenterId: '',
   // 关系图与中心点相连的关系点的类型 -- all,person,product,related_brand
   graphType: 'all',
   tab: 'knowledge',
+  noResult: false,
 })
 export default function reducer(state = initialState, action) {
   if (action.type === A.UPDATE_CARD_DATA) {
@@ -18,16 +19,13 @@ export default function reducer(state = initialState, action) {
   } else if (action.type === A.UPDATE_NODES_AND_LINKS_DATA) {
     const { nodeData, linkData } = action
     return state.set('nodeData', nodeData)
-      .set('linkData', linkData)
+      .set('linkData', linkData).set('noResult', false)
   } else if (action.type === A.UPDATE_CENTER_ID) {
     const { centerId } = action
     return state.set('centerId', centerId)
   } else if (action.type === A.CHANGE_CURRENT_CENTER_ID) {
     const { id } = action
     return state.set('currentCenterId', id)
-  } else if (action.type === A.CHANGE_HOVER_ID) {
-    const { hoverId } = action
-    return state.set('hoverId', hoverId)
   } else if (action.type === A.UPDATE_GRAPH_TYPE) {
     const { graphType } = action
     return state.set('graphType', graphType)
@@ -36,6 +34,8 @@ export default function reducer(state = initialState, action) {
   } else if (action.type === A.CHANGE_TAB) {
     const { tab } = action
     return state.set('tab', tab)
+  } else if (action.type === A.RETURN_NO_RESULT) {
+    return state.set('noResult', true)
   } else {
     return state
   }

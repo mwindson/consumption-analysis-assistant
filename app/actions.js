@@ -18,3 +18,5 @@ export const CLEAR_CARD_DATA = 'CLEAR_CARD_DATA'
 export const UPDATE_GRAPH_TYPE = 'UPDATE_GRAPH_TYPE'
 
 export const CHANGE_TAB = 'CHANGE_TAB'
+
+export const RETURN_NO_RESULT = 'RETURN_NO_RESULT'
