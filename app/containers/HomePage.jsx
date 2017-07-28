@@ -1,20 +1,19 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import KnowledgeCards from 'components/KnowledgeCards'
 import KnowledgeGraph from 'components/KnowledgeGraph'
+import * as A from 'actions'
 import { LogoIcon, SearchIcon } from 'components/Icons'
 import 'style/HomePage.styl'
 
+const mapStateToProps = state => state.toObject()
+
+@connect(mapStateToProps)
 export default class HomePage extends React.Component {
   state = {
     editing: false,
     inputValue: '',
-    lineId: 0,
-    relation_type: 'center',
     hasResult: true,
-  }
-
-  componentWillMount() {
-    this.setState({ currentName: 0 })
   }
 
   handleFocus = () => {
@@ -31,19 +30,16 @@ export default class HomePage extends React.Component {
   handleDataChange = (data) => {
     this.setState({ data })
   }
-  handleLineClick = (id, type) => {
-    this.setState({ lineId: id, relation_type: type })
-  }
 
   handleSearch = (event) => {
     if (event.keyCode === 13) {
       // todo 修改成与现有数据格式匹配
-      this.setState({ hasResult: false })
+      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, keyword: this.state.inputValue })
     }
   }
 
   render() {
-    const { editing, inputValue, hasResult, relation_type, lineId } = this.state
+    const { editing, inputValue, hasResult } = this.state
     return (
       <div className="main">
         <div className="left-part">
@@ -67,11 +63,11 @@ export default class HomePage extends React.Component {
             </div>
           </div>
           <div className="graph">
-            <KnowledgeGraph lineClick={this.handleLineClick} />
+            <KnowledgeGraph />
           </div>
         </div>
         <div className="right-part">
-          <KnowledgeCards lineId={lineId} relation_type={relation_type} lineReset={this.handleLineClick} />
+          <KnowledgeCards />
         </div>
       </div>
     )

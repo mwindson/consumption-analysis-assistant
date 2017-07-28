@@ -1,16 +1,43 @@
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import { List, Map } from 'immutable'
+import { connect } from 'react-redux'
 import CommonCard from 'components/cards/CommonCard'
 import ListCard from 'components/cards/ListCard'
 
+const mapStateToProps = state => state.toObject()
+
+@connect(mapStateToProps)
 export default class BrandKnowledgeTab extends React.Component {
-  static propTypes = {
-    cards: ImmutablePropTypes.list.isRequired,
-    lists: ImmutablePropTypes.list.isRequired,
-  }
 
   render() {
-    const { cards, lists } = this.props
+    const titles = {
+      company: '企业信息',
+      brand: '品牌信息',
+      persons: '相关人物',
+    }
+    const { cardData } = this.props
+    if (!cardData) {
+      return null
+    }
+    const company = Map({
+      title: titles.company,
+      imgUrl: '',
+      name: cardData.get('company').get('name'),
+      desc: '',
+    })
+    const brand = Map({
+      title: titles.brand,
+      imgUrl: '',
+      name: cardData.get('brand').get('name'),
+      desc: cardData.get('brand').get('description'),
+    })
+    const cards = List([brand, company])
+    const lists = List([Map({
+      title: '相关人物',
+      list: cardData.get('persons').map(i => Map({ url: '', text: i.get('name') })),
+      type: 'person',
+    })])
     return (
       <div className="cards">
         {cards.toArray().map((data, i) => (
@@ -19,7 +46,7 @@ export default class BrandKnowledgeTab extends React.Component {
             imgUrl={data.get('imgUrl')}
             title={data.get('title')}
             name={data.get('name')}
-            content={data.get('text')}
+            content={data.get('desc')}
             hasExpand
           />))}
         {lists.toArray().map((l, i) => (

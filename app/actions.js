@@ -12,6 +12,9 @@ export const CHANGE_HOVER_ID = 'CHANGE_HOVER_ID'
 // 更新中心节点对应卡片的数据
 export const FETCH_CARD_DATA = 'FETCH_CARD_DATA'
 export const UPDATE_CARD_DATA = 'UPDATE_CARD_DATA'
+export const CLEAR_CARD_DATA = 'CLEAR_CARD_DATA'
 
-// websocket更新数据
-export const UPDATE_WS_DATA = 'UPDATE_WS_DATA'
+// 更改关系图的展示种类 --- all,person,product,related_brand
+export const UPDATE_GRAPH_TYPE = 'UPDATE_GRAPH_TYPE'
+
+export const CHANGE_TAB = 'CHANGE_TAB'

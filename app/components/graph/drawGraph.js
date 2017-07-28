@@ -3,18 +3,23 @@ import { fromJS } from 'immutable'
 import 'style/graph.styl'
 
 let nodes
+let node
 let links
 let link
 let force
 let hoverLinks
+let text
 
 // 绘图函数
-export function drawGraph(svg, nodeData, linkData, centerId, nodeClick) {
+export function drawGraph(svg, nodeData, linkData, centerId, nodeClick, type) {
   const width = svg.style('width').replace('px', '')
   const height = svg.style('height').replace('px', '')
+  const scale = d3.scaleLinear()
+    .domain([0, 1])
+    .range([50, 0])
   force = d3.forceSimulation()
-    .force('link', d3.forceLink().id(d => d.id).distance(d => d.distance))
-    .force('charge', d3.forceManyBody().strength(-1000))
+    .force('link', d3.forceLink().id(d => d.id).distance(d => scale(d.score)))
+    .force('charge', d3.forceManyBody().strength(-1000).distanceMin(50).distanceMax(150))
     .force('collide', d3.forceCollide().radius(50))
     .force('center', d3.forceCenter(width / 2, height / 2))
   links = svg
@@ -23,9 +28,9 @@ export function drawGraph(svg, nodeData, linkData, centerId, nodeClick) {
     .data(linkData.toJS())
     .enter()
   drawNodes(svg, nodeData)
-  updateNodes(svg, nodeData, linkData, centerId, nodeClick)
-  drawLines(centerId)
-  restart(nodeData, linkData)
+  updateNodes(svg, nodeData, linkData, centerId, nodeClick, type)
+  drawLines(centerId, type)
+  restart()
   svg.select('.graph-g')
     .transition()
     .duration(1000)
@@ -33,6 +38,7 @@ export function drawGraph(svg, nodeData, linkData, centerId, nodeClick) {
 }
 
 function drawNodes(svg, nodeData) {
+  if (nodes) nodes.remove()
   nodes = svg
     .select('.node-group')
     .selectAll('.node')
@@ -40,24 +46,35 @@ function drawNodes(svg, nodeData) {
   nodes = nodes.enter()
     .append('g')
     .attr('class', 'node')
-    .attr('id', d => `node_${d.id}`)
+    .attr('id', d => d.id)
   nodes
     .append('circle')
     .attr('id', d => d.type)
     .attr('r', 37)
     .attr('fill', 'url(#brandGradient)')
+  nodes
+    .append('text')
+    .attr('text-anchor', 'middle')
+    .text('')
 }
 
-function drawLines(centerId) {
+export function drawLines(centerId, type) {
   // 显示A和B1的连线
   if (link) {
+    console.log(link)
     link.remove()
-    link = links
-      .filter(d => d.distance === 100 && (d.source.id === centerId || d.target.id === centerId))
-      .append('line')
+    if (type === 'all') {
+      link = links
+        .filter(d => d.score === 1 && d.source === centerId)
+        .append('line')
+    } else {
+      link = links
+        .filter(d => d.source.id === centerId && d.target.type === type)
+        .append('line')
+    }
   } else {
     link = links
-      .filter(d => d.distance === 100 && (d.source === centerId || d.target === centerId))
+      .filter(d => d.score === 1 && d.source === centerId)
       .append('line')
   }
   link.attr('class', 'line-show')
@@ -65,59 +82,69 @@ function drawLines(centerId) {
     .attr('stroke-width', 3)
 }
 
-function updateNodes(svg, nodeData, linkData, centerId, nodeClick) {
+export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) {
   // 隐藏B2类
   nodes
     .attr('class', 'node-hidden')
     .attr('type', 'B2')
-    .classed('hidden', true)
+    .attr('opacity', 0.3)
   // 显示当前中心点的A类和B1类的点
   nodes.filter(d => d.id === centerId)
     .attr('type', 'A')
     .attr('class', 'node-show')
-    .classed('hidden', false)
-  nodes.filter(d => linkData.filter(x => x.get('distance') === 100 && ((x.get('source') === centerId
-    && x.get('target') === d.id) || (x.get('target') === centerId
-    && x.get('source') === d.id))).size !== 0)
-    .attr('type', 'B1')
-    .attr('class', 'node-show')
-    .classed('hidden', false)
+    .attr('opacity', 1)
+  if (type === 'all') {
+    nodes.filter(d => linkData.filter(x => x.get('score') === 1 && x.get('source') === centerId
+      && x.get('target') === d.id).size !== 0)
+      .attr('type', 'B1')
+      .attr('class', 'node-show')
+      .attr('opacity', 1)
+  } else {
+    nodes.filter(d => linkData.filter(x => x.get('source') === centerId && x.get('target') === d.id).size !== 0
+      && d.type === type)
+      .attr('type', 'B1')
+      .attr('class', 'node-show')
+      .attr('opacity', 1)
+  }
   // 显示和删除文字
   d3.selectAll('.node-show')
-    .append('text')
-    .attr('text-anchor', 'middle')
+    .selectAll('text')
     .text(d => d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
-    .attr('font-size', 18)
+    .attr('font-size', 14)
     .attr('fill', '#125091')
     .attr('transform', 'translate(0,5)')
   d3.selectAll('.node-hidden')
     .selectAll('text')
-    .remove()
+    .text('')
   // 更新节点点击和拖动事件
   const tooltip = d3.select('.tooltip')
-  nodes.on('click', () => {
-    const id = d3.select(d3.event.target).datum().id
-    if (id !== centerId) {
-      nodeClick(id)
-      drawLines(id)
-      updateNodes(svg, nodeData, linkData, id, nodeClick)
-      restart()
-    }
-  })
-    .on('mouseover', () => {
-      const node = d3.select(d3.event.target).datum()
-      const id = node.id
-      hoverOn(linkData, centerId, id)
-      d3.select(d3.event.target)
-        .classed('highlight', true)
-      tooltip
-        .style('left', `${node.x + 35}px`)
-        .style('top', `${node.y - 70}px`)
-        .transition().duration(500)
-        .style('opacity', 0.8)
+  nodes
+    .filter(d => d.type === 'Brand')
+    .attr('cursor', 'pointer')
+    .on('click', () => {
+      const id = d3.select(d3.event.target).datum().id
+      if (id !== centerId) {
+        hoverLinks.remove()
+        nodeClick(id)
+        // drawLines(id, 'all')
+        // updateNodes(svg, nodeData, linkData, id, nodeClick, 'all')
+        // restart()
+      }
     })
+  nodes.on('mouseover', () => {
+    const n = d3.select(d3.event.target).datum()
+    const id = n.id
+    hoverOn(linkData, centerId, id)
+    d3.select(d3.event.target)
+      .classed('highlight', true)
+    tooltip
+      .style('left', `${n.x + 35}px`)
+      .style('top', `${n.y - 70}px`)
+      .transition().duration(500)
+      .style('opacity', 0.8)
+  })
     .on('mouseout', () => {
       hoverLeave()
       d3.select(d3.event.target)
@@ -130,29 +157,28 @@ function updateNodes(svg, nodeData, linkData, centerId, nodeClick) {
     .on('end', dragEnd))
 }
 
+// todo 不同类型的节点hover时情况不一
 function hoverOn(linkData, centerId, currentId) {
   // 透明现有线段和点
   d3.selectAll('.line-show')
-    .classed('hidden', true)
+    .attr('opacity', 0)
   d3.selectAll('.node-show')
-    .classed('hover', false)
-    .classed('hidden', true)
+    .attr('opacity', 0.3)
   // 显示相关联的节点
   nodes
     .filter(d => d.id === currentId || linkData.filter(x => x.get('target') === d.id && x.get('source') === currentId).size !== 0)
-    .classed('hidden', false)
-    .classed('hover', true)
-    .append('text')
+    .attr('opacity', 1)
+    .selectAll('text')
     .attr('text-anchor', 'middle')
     .text(d => d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
-    .attr('font-size', 18)
+    .attr('font-size', 14)
     .attr('fill', '#125091')
     .attr('transform', 'translate(0,5)')
   // 绘制临时连接线
   hoverLinks = links
-    .filter(d => d.source.id === currentId || d.target.id === currentId)
+    .filter(d => d.source.id === currentId)
     .append('line')
     .attr('class', 'line-hover')
     .attr('stroke', 'rgba(255,255,255,0.5)')
@@ -178,15 +204,13 @@ function hoverOn(linkData, centerId, currentId) {
 function hoverLeave() {
   // 恢复现有线段和点
   d3.selectAll('.line-show')
-    .classed('hidden', false)
+    .attr('opacity', 1)
   d3.selectAll('.node-show')
-    .classed('hover', true)
-    .classed('hidden', false)
+    .attr('opacity', 1)
   d3.selectAll('.node-hidden')
-    .classed('hover', false)
-    .classed('hidden', true)
+    .attr('opacity', 0.3)
     .selectAll('text')
-    .remove()
+    .text('')
   // 删除hover时临时显示的线
   hoverLinks.remove()
 }
@@ -236,7 +260,7 @@ function calDistance(source, target) {
   return Math.sqrt(((target.y - source.y) * (target.y - source.y)) + ((target.x - source.x) * (target.x - source.x)))
 }
 
-function restart() {
+export function restart() {
   force.nodes(nodes.data()).on('tick', tick)
   force.force('link').links(links.data())
   force.alpha(0.3).restart()

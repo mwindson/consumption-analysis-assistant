@@ -37,6 +37,7 @@ export default class CommonCard extends React.Component {
           <div className="intro">
             <div className="name">{name}</div>
             <div className="text">
+              {/*<div dangerouslySetInnerHTML={{ __html: content }} />*/}
               {expand ? content : this.handleTextTruncate(content)}
             </div>
           </div>

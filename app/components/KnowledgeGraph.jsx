@@ -5,7 +5,7 @@ import { is } from 'immutable'
 import * as d3 from 'd3'
 import { connect } from 'react-redux'
 import * as A from 'actions'
-import { drawGraph } from 'components/graph/drawGraph'
+import { drawGraph, drawLines, restart, updateNodes } from 'components/graph/drawGraph'
 import { zoomClick, zoomReset } from 'components/graph/zoomClick'
 import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
@@ -34,8 +34,7 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   componentDidMount() {
-    const { nodeData, linkData, currentCenterId } = this.props
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA })
+    // this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA })
     this.svgElement = d3.select('.graph-svg')
     // window.addEventListener('resize', () => {
     //   drawGraph(
@@ -43,19 +42,22 @@ export default class KnowledgeGraph extends React.Component {
     //     this.handleLineClick, this.handleNodeClick, this.hasClicked
     //   )
     // })
-    // this.graphZoom = d3.zoom().scaleExtent([0.5, 8])
-    // this.graphZoom.on('zoom', this.zoomed)
-    // this.svgElement.call(this.graphZoom)
+    this.graphZoom = d3.zoom().scaleExtent([0.5, 8])
+    this.graphZoom.on('zoom', this.zoomed)
+    this.svgElement.call(this.graphZoom)
   }
 
   componentWillReceiveProps(nextProps) {
-    const { nodeData, linkData, currentCenterId } = this.props
+    const { nodeData, linkData, centerId, graphType } = this.props
     if (!is(nextProps.nodeData, nodeData) || !is(nextProps.linkData, linkData)) {
-      // drawGraph(nextProps.data, this.handleLineClick, this.handleNodeClick)
-      // updateGraph(nextProps.currentNodeId, this.handleLineClick)
-      drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, currentCenterId,
-        this.handleNodeClick,
+      drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, centerId,
+        this.handleNodeClick, graphType,
       )
+    }
+    if (nextProps.graphType !== graphType) {
+      drawLines(centerId, nextProps.graphType)
+      updateNodes(this.svgElement, nodeData, linkData, centerId, this.handleNodeClick, nextProps.graphType)
+      restart()
     }
   }
 
@@ -72,7 +74,11 @@ export default class KnowledgeGraph extends React.Component {
     }
   }
 
-  handleNodeClick = id => this.props.dispatch({ type: A.CHANGE_CURRENT_CENTER_ID, id })
+  handleNodeClick = (id) => {
+    // this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id })
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, keyword: id })
+    // this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'all' })
+  }
   handleNodeHover = id => this.props.dispatch({ type: A.CHANGE_HOVER_ID, id })
   hasClicked = id => this.state.currentNodeId !== id
 
