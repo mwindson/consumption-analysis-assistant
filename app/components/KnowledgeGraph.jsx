@@ -50,13 +50,13 @@ export default class KnowledgeGraph extends React.Component {
     const { nodeData, linkData, centerId, graphType } = this.props
     if (!is(nextProps.nodeData, nodeData) || !is(nextProps.linkData, linkData)) {
       drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, centerId,
-        this.handleNodeClick, graphType,
+        this.handleNodeClick, graphType, !nodeData.isEmpty(),
       )
     }
     if (nextProps.graphType !== graphType) {
       drawLines(centerId, nextProps.graphType, false)
       updateNodes(this.svgElement, nodeData, linkData, centerId, this.handleNodeClick, nextProps.graphType)
-      restart()
+      restart(centerId)
     }
   }
 
@@ -76,7 +76,6 @@ export default class KnowledgeGraph extends React.Component {
   handleNodeClick = (id) => {
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, keyword: id })
   }
-  handleNodeHover = id => this.props.dispatch({ type: A.CHANGE_HOVER_ID, id })
 
   render() {
     return (
@@ -106,8 +105,8 @@ export default class KnowledgeGraph extends React.Component {
               </linearGradient>
             </defs>
             <g className="graph-g">
-              <g className="node-group" />
               <g className="line-group" />
+              <g className="node-group" />
             </g>
           </svg>
           <div className="tooltip">

@@ -18,8 +18,7 @@ export default function reducer(state = initialState, action) {
     return state.set('cardData', cardData)
   } else if (action.type === A.UPDATE_NODES_AND_LINKS_DATA) {
     const { nodeData, linkData } = action
-    return state.set('nodeData', nodeData)
-      .set('linkData', linkData).set('noResult', false)
+    return state.set('nodeData', nodeData).set('linkData', linkData).set('noResult', false)
   } else if (action.type === A.UPDATE_CENTER_ID) {
     const { centerId } = action
     return state.set('centerId', centerId)

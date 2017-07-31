@@ -38,6 +38,7 @@ export default class HomePage extends React.Component {
     if (event.keyCode === 13) {
       // todo 修改成与现有数据格式匹配
       this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, keyword: this.state.inputValue })
+      this.props.dispatch({ type: A.CHANGE_TAB, tab: 'knowledge' })
     }
   }
 

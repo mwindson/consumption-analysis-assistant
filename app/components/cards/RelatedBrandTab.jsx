@@ -2,6 +2,7 @@ import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
+import * as A from 'actions'
 import CommonCard from 'components/cards/CommonCard'
 
 const mapStateToProps = state => state.toObject()
@@ -19,12 +20,14 @@ export default class RelatedBrandCards extends React.Component {
   }
 
   componentDidMount() {
+    this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'Brand' })
     this.cards = document.getElementsByClassName('cards')[0]
     this.cards.addEventListener('scroll', this.onScroll)
   }
 
   componentWillUnmount() {
     this.cards.removeEventListener('scroll', this.onScroll)
+    this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'all' })
   }
 
   onScroll = () => {

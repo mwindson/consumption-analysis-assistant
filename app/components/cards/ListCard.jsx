@@ -43,9 +43,11 @@ export default class ListCard extends React.Component {
   }
 
   setItemNum = () => {
-    const width = document.querySelector('.list').clientWidth
-    const itemWidth = document.querySelector(`div.item.${this.props.type}`).clientWidth + 30
-    this.setState({ itemNum: Math.floor(width / itemWidth) })
+    if (!this.props.list.isEmpty()) {
+      const width = document.querySelector('.list').clientWidth
+      const itemWidth = document.querySelector(`div.item.${this.props.type}`).clientWidth + 30
+      this.setState({ itemNum: Math.floor(width / itemWidth) })
+    }
   }
 
   // todo 关系图需要以该类变换
@@ -71,11 +73,11 @@ export default class ListCard extends React.Component {
             </div>
           ))}
         </div>
-        {/*{list.size > itemNum ?*/}
+        {list.size > itemNum ?
           <div className="expand" onClick={this.handleExpand}>
             {expand ? <div><ArrowTop />收起</div> : <div><ArrowBottom />展开</div>}
           </div>
-        {/*{: null}*/}
+          : null}
       </div>
     )
   }

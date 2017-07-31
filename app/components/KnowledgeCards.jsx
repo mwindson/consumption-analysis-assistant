@@ -173,9 +173,6 @@ export default class KnowledgeCards extends React.Component {
 
   render() {
     const { cardData, tab: chosen } = this.props
-    if (fromJS(cardData).isEmpty()) {
-      return null
-    }
     return (
       <div className="knowledge-cards">
         <div className="tabs-part">

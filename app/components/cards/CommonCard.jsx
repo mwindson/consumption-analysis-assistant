@@ -15,16 +15,31 @@ export default class CommonCard extends React.Component {
 
   state = {
     expand: false,
-    truncated: this.props.content.length >= 120,
+    truncated: false,
+  }
+
+  componentDidMount() {
+    const content = document.getElementById('text')
+    if (content.clientHeight > 120) {
+      content.style.height = '120px'
+      content.style.overflowY = 'hidden'
+      this.setState({ truncated: true })
+    }
   }
 
   handleExpand = () => {
     // todo 关系图需要以该类变换
     // this.setState({ truncated: !this.state.truncated })
     this.setState({ expand: !this.state.expand })
+    const content = document.getElementById('text')
+    if (!this.state.expand) {
+      content.style.height = 'auto'
+      content.style.overflowY = 'auto'
+    } else {
+      content.style.height = '120px'
+      content.style.overflowY = 'hidden'
+    }
   }
-
-  handleTextTruncate = (text) => text.length >= 120 ? `${text.toString().substr(0, 120)}...` : text
 
   render() {
     const { title, imgUrl, name, content, hasExpand } = this.props
@@ -37,8 +52,8 @@ export default class CommonCard extends React.Component {
           <div className="intro">
             <div className="name">{name}</div>
             <div className="text">
-              {/*<div dangerouslySetInnerHTML={{ __html: content }} />*/}
-              {expand ? content : this.handleTextTruncate(content)}
+              <div id="text" dangerouslySetInnerHTML={{ __html: content }} />
+              {/*{expand ? content : this.handleTextTruncate(content)}*/}
             </div>
           </div>
         </div>

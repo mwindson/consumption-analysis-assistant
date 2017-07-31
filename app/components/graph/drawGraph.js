@@ -9,19 +9,35 @@ let link
 let force
 let hoverLinks
 let text
+let width
+let height
+
+const chosenNodeColor = {
+  Brand: '#4AF7FF',
+  Company: '#F1D237',
+  Person: '#2095FF',
+}
+
+const nodeColor = {
+  Brand: 'url(#brandGradient)',
+  Company: 'url(#companyGradient)',
+  Person: 'url(#personGradient)',
+}
 
 // 绘图函数
-export function drawGraph(svg, nodeData, linkData, centerId, nodeClick, type) {
-  const width = svg.style('width').replace('px', '')
-  const height = svg.style('height').replace('px', '')
+export function drawGraph(svg, nodeData, linkData, centerId, nodeClick, type, firstLoad) {
+  width = svg.style('width').replace('px', '')
+  height = svg.style('height').replace('px', '')
   const scale = d3.scaleLinear()
     .domain([0, 1])
-    .range([200, 0])
+    .range([300, 150])
   force = d3.forceSimulation()
-    .force('link', d3.forceLink().id(d => d.id).distance(d => scale(d.score)))
-    .force('charge', d3.forceManyBody().strength(-1000).distanceMin(50).distanceMax(200))
-    .force('collide', d3.forceCollide().radius(60))
+    .force('link', d3.forceLink().id(d => d.id).distance(d => d.source.id === centerId ? 100 : 500))
+    .force('charge', d3.forceManyBody())
+    .force('collide', d3.forceCollide().radius(50))
     .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('x', d3.forceX())
+    .force('y', d3.forceY())
   links = svg
     .select('.line-group')
     .selectAll('.line')
@@ -29,16 +45,11 @@ export function drawGraph(svg, nodeData, linkData, centerId, nodeClick, type) {
     .enter()
   drawNodes(svg, nodeData)
   updateNodes(svg, nodeData, linkData, centerId, nodeClick, type)
-  drawLines(centerId, type)
-  restart()
+  drawLines(centerId, type, firstLoad)
+  restart(centerId)
 }
 
 function drawNodes(svg, nodeData) {
-  const nodeColor = {
-    Brand: 'url(#brandGradient)',
-    Company: 'url(#companyGradient)',
-    Person: 'url(#personGradient)',
-  }
   if (nodes) nodes.remove()
   nodes = svg
     .select('.node-group')
@@ -90,6 +101,7 @@ export function drawLines(centerId, type, first = true) {
 }
 
 export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) {
+
   // 隐藏C类
   nodes
     .attr('class', 'node-hidden')
@@ -104,11 +116,11 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
   // 更新当前中心点的A类
   nodes.filter(d => d.id === centerId)
     .attr('type', 'A')
-    .attr('fill', '#4AF7FF')
     .attr('class', 'node-show')
     .attr('opacity', 1)
     .selectAll('circle')
     .attr('r', 50)
+    .attr('fill', d => chosenNodeColor[d.type])
   // 更新当前中心点的B1类
   if (type === 'all') {
     nodes.filter(d => linkData.filter(x => x.get('score') === 1 && x.get('source') === centerId
@@ -147,25 +159,26 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .on('click', () => {
       const id = d3.select(d3.event.target).datum().id
       hoverLinks.remove()
+      hoverLinks = null
       if (id !== centerId) {
         nodeClick(id)
-        // drawLines(id, 'all')
-        // updateNodes(svg, nodeData, linkData, id, nodeClick, 'all')
-        // restart()
       }
     })
-  nodes.on('mouseover', () => {
-    const n = d3.select(d3.event.target).datum()
-    const id = n.id
-    hoverOn(linkData, centerId, id)
-    d3.select(d3.event.target)
-      .classed('highlight', true)
-    tooltip
-      .style('left', `${n.x + 35}px`)
-      .style('top', `${n.y - 70}px`)
-      .transition().duration(500)
-      .style('opacity', 0.8)
-  })
+  nodes
+    .on('mouseover', () => {
+      const n = d3.select(d3.event.target).datum()
+      const id = n.id
+      hoverOn(linkData, centerId, id)
+      d3.select(d3.event.target)
+        .classed('highlight', true)
+      tooltip
+        .html(`<p>${n.name}</p>`)
+        .style('left', `${n.x + 60}px`)
+        .style('top', `${n.y - 70}px`)
+        .transition()
+        .duration(500)
+        .style('opacity', 0.8)
+    })
     .on('mouseout', () => {
       hoverLeave()
       d3.select(d3.event.target)
@@ -178,7 +191,6 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .on('end', dragEnd))
 }
 
-// todo 不同类型的节点hover时情况不一
 function hoverOn(linkData, centerId, currentId) {
   // 透明现有线段和点
   d3.selectAll('.line-show')
@@ -196,8 +208,8 @@ function hoverOn(linkData, centerId, currentId) {
     relatedNode = nodes
       .filter(d => d.id === currentId || linkData.filter(x => (x.get('target') === d.id && x.get('source') === currentId
         && x.get('score') === 1)).size !== 0)
-  } else if (hoverNode.attr('type') === 'B1') {
-    link.filter(d => d.source.id === centerId && d.target.id === currentId)
+  } else if (hoverNode.attr('type') === 'B1' || hoverNode.attr('type') === 'B2') {
+    link.filter(d => (d.source.id === centerId && d.target.id === currentId) || (d.source.id === currentId && d.target.id === centerId))
       .attr('opacity', 1)
     hoverLinks = links
       .filter(d => (d.source.id === currentId && d.score === 1) || (d.target.id === currentId && d.source.id === centerId))
@@ -211,15 +223,14 @@ function hoverOn(linkData, centerId, currentId) {
         && x.get('score') === 1)).size !== 0)
   } else {
     hoverLinks = links
-      .filter(d => d.source.id === currentId && d.score === 1)
+      .filter(d => (d.source.id === currentId && d.score === 1) || isLink(d, linkData, currentId, centerId))
       .append('line')
       .attr('class', 'line-hover')
       .attr('stroke', '#fff')
       .attr('opacity', 1)
       .attr('stroke-width', 3)
     relatedNode = nodes
-      .filter(d => d.id === currentId || linkData.filter(x => (x.get('target') === d.id && x.get('source') === currentId
-        && x.get('score') === 1)).size !== 0)
+      .filter(d => d.id === currentId || !hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
   }
   // 显示相关联的节点
   relatedNode
@@ -231,6 +242,12 @@ function hoverOn(linkData, centerId, currentId) {
     .attr('font-size', 14)
     .attr('fill', '#125091')
     .attr('transform', 'translate(0,5)')
+  relatedNode
+    .selectAll('circle')
+    .transition()
+    .duration(500)
+    .attr('r', 50)
+    .attr('fill', d => chosenNodeColor[d.type])
   // 绘制临时连接线
   if (hoverLinks) {
     hoverLinks.attr('x1', (d) => {
@@ -262,12 +279,28 @@ function hoverLeave() {
     .attr('opacity', 0.5)
   d3.selectAll('.node-show')
     .attr('opacity', 1)
+    .selectAll('circle')
+    .attr('fill', d => nodeColor[d.type])
+  d3.selectAll('[type=A]')
+    .selectAll('circle')
+    .attr('fill', d => chosenNodeColor[d.type])
   d3.selectAll('.node-hidden')
     .attr('opacity', 0.3)
     .selectAll('text')
     .text('')
+  d3.selectAll('.node-hidden')
+    .attr('opacity', 0.3)
+    .selectAll('circle')
+    .transition(500)
+    .duration(500)
+    .attr('r', 40)
+    .attr('fill', d => nodeColor[d.type])
   // 删除hover时临时显示的线
-  hoverLinks.remove()
+  if (hoverLinks && !hoverLinks.empty()) {
+    hoverLinks.remove()
+    // 将hoverLinks的数据清空
+    hoverLinks = null
+  }
 }
 
 // 计算和处理函数
@@ -323,10 +356,15 @@ function calDistance(source, target) {
   return Math.sqrt(((target.y - source.y) * (target.y - source.y)) + ((target.x - source.x) * (target.x - source.x)))
 }
 
-export function restart() {
+export function restart(centerId) {
   force.nodes(nodes.data()).on('tick', tick)
   force.force('link').links(links.data())
   force.alpha(0.3).restart()
+  setTimeout(() => {
+    const centerNode = nodes.filter(d => d.id === centerId).datum()
+    d3.select('.graph-g').transition().duration(1000)
+      .attr('transform', `translate(${(width / 2) - centerNode.x},${(height / 2) - centerNode.y})`)
+  }, 1000)
 }
 
 function dragStart(d) {
@@ -344,4 +382,11 @@ function dragEnd(d) {
   if (!d3.event.active) force.alphaTarget(0)
   d.fx = null
   d.fy = null
+}
+
+function isLink(d, linkData, currentId, centerID) {
+  return (d.source.id === centerID && linkData.filter(x => x.get('source') === d.target.id && x.get('target') === currentId).size !== 0)
+    || (d.source.id === currentId && linkData.filter(x => x.get('source') === d.target.id && x.get('target') === centerID).size !== 0)
+    || (d.target.id === currentId && linkData.filter(x => x.get('target') === d.source.id && x.get('source') === centerID).size !== 0)
+    || (d.target.id === centerID && linkData.filter(x => x.get('target') === d.source.id && x.get('source') === currentId).size !== 0)
 }

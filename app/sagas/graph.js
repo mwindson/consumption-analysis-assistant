@@ -9,7 +9,7 @@ export default function* graphSaga() {
 
 function* handleUpdateGraphData({ keyword }) {
   try {
-    const url = `http://10.214.224.126:9001/graph?keyword=${keyword}`
+    const url = `http://localhost:9001/graph?keyword=${keyword}`
     const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
@@ -39,14 +39,16 @@ function* handleUpdateGraphData({ keyword }) {
 
 
 function* handleUpdateCardData({ tab, brandId }) {
-  try {
-    const url = `http://10.214.224.126:9001/brand/${tab}?brandId=${brandId}`
-    const response = yield fetch(url)
-    if (response.ok) {
-      const json = yield response.json()
-      yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data) })
+  if (tab === 'knowledge' || tab === 'relatedBrands') {
+    try {
+      const url = `http://localhost:9001/brand/${tab}?brandId=${brandId}`
+      const response = yield fetch(url)
+      if (response.ok) {
+        const json = yield response.json()
+        yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data) })
+      }
+    } catch (e) {
+      console.log(e)
     }
-  } catch (e) {
-    console.log(e)
   }
 }
