@@ -4,6 +4,7 @@ import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
 import CommonCard from 'components/cards/CommonCard'
 import ListCard from 'components/cards/ListCard'
+import textTruncated from 'utils/textTruncated'
 
 const mapStateToProps = state => state.toObject()
 
@@ -52,6 +53,7 @@ export default class BrandKnowledgeTab extends React.Component {
             name={data.get('name')}
             content={data.get('desc')}
             hasExpand
+            truncated={textTruncated(data.get('desc')).length > 120}
           />))}
         {lists.toArray().map((l, i) => (
           <ListCard

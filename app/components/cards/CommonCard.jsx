@@ -11,39 +11,22 @@ export default class CommonCard extends React.Component {
     name: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     hasExpand: PropTypes.bool.isRequired,
+    truncated: PropTypes.bool.isRequired,
   }
 
   state = {
-    expand: false,
-    truncated: false,
-  }
-
-  componentDidMount() {
-    const content = document.getElementById('text')
-    if (content.clientHeight > 120) {
-      content.style.height = '120px'
-      content.style.overflowY = 'hidden'
-      this.setState({ truncated: true })
-    }
+    expand: !this.props.truncated,
   }
 
   handleExpand = () => {
     // todo 关系图需要以该类变换
     // this.setState({ truncated: !this.state.truncated })
     this.setState({ expand: !this.state.expand })
-    const content = document.getElementById('text')
-    if (!this.state.expand) {
-      content.style.height = 'auto'
-      content.style.overflowY = 'auto'
-    } else {
-      content.style.height = '120px'
-      content.style.overflowY = 'hidden'
-    }
   }
 
   render() {
-    const { title, imgUrl, name, content, hasExpand } = this.props
-    const { expand, truncated } = this.state
+    const { title, imgUrl, name, content, hasExpand, truncated } = this.props
+    const { expand } = this.state
     return (
       <div className={classNames('common-card', { expand })}>
         <div className={classNames('title', { exist: title !== '' })}>{title}</div>
@@ -51,9 +34,9 @@ export default class CommonCard extends React.Component {
           <img src={imgUrl} alt={name} />
           <div className="intro">
             <div className="name">{name}</div>
-            <div className="text">
+            <div className={classNames('text', { truncated: expand })}>
               <div id="text" dangerouslySetInnerHTML={{ __html: content }} />
-              {/*{expand ? content : this.handleTextTruncate(content)}*/}
+              {/* {expand ? content : this.handleTextTruncate(content)}*/}
             </div>
           </div>
         </div>

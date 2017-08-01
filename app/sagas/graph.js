@@ -7,9 +7,11 @@ export default function* graphSaga() {
   yield takeEvery(A.FETCH_CARD_DATA, handleUpdateCardData)
 }
 
+const host = 'http://10.214.208.50:9001'
+
 function* handleUpdateGraphData({ keyword }) {
   try {
-    const url = `http://localhost:9001/graph?keyword=${keyword}`
+    const url = `${host}/graph?keyword=${keyword}`
     const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
@@ -41,7 +43,7 @@ function* handleUpdateGraphData({ keyword }) {
 function* handleUpdateCardData({ tab, brandId }) {
   if (tab === 'knowledge' || tab === 'relatedBrands') {
     try {
-      const url = `http://localhost:9001/brand/${tab}?brandId=${brandId}`
+      const url = `${host}/brand/${tab}?brandId=${brandId}`
       const response = yield fetch(url)
       if (response.ok) {
         const json = yield response.json()

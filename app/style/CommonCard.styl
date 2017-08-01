@@ -26,7 +26,11 @@
         margin-top 15px
         font-size 14px
         color #808080
-        text-overflow ellipsis
+        overflow-y hidden
+        height 120px
+        &.truncated
+          overflow-y auto
+          height auto
   .list
     height 100%
     width 100%
@@ -35,6 +39,9 @@
     flex-wrap wrap
     .item
       margin-bottom 42px
+      > img
+        height 98px
+        width 98px
       &.person
         width 98px
         height 98px
@@ -46,6 +53,7 @@
         width 150px
         margin-right 30px
     .name
+      margin-top 10px
       display flex
       justify-content center
       align-items center

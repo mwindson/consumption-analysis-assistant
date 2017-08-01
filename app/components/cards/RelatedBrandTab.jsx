@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import * as A from 'actions'
 import CommonCard from 'components/cards/CommonCard'
+import textTruncated from 'utils/textTruncated'
 
 const mapStateToProps = state => state.toObject()
 
@@ -62,6 +63,7 @@ export default class RelatedBrandCards extends React.Component {
               name={brand.get('name')}
               content={brand.get('content')}
               hasExpand={false}
+              truncated={textTruncated(brand.get('content')).length > 120}
             />)
           )}
       </div>

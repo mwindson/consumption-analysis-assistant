@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import { fromJS } from 'immutable'
 import 'style/graph.styl'
 
 let nodes
@@ -16,9 +15,11 @@ const chosenNodeColor = {
   Brand: '#4AF7FF',
   Company: '#F1D237',
   Person: '#2095FF',
+  empty: '#4AF7FF',
 }
 
 const nodeColor = {
+  empty: 'url(#brandGradient)',
   Brand: 'url(#brandGradient)',
   Company: 'url(#companyGradient)',
   Person: 'url(#personGradient)',
@@ -102,17 +103,26 @@ export function drawLines(centerId, type, first = true) {
 
 export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) {
 
+  nodes
+    .attr('class', 'node-hidden')
+    .attr('type', 'D')
+    .attr('opacity', 0.3)
   // 隐藏C类
   nodes
+    .filter(d => d.type !== 'empty')
     .attr('class', 'node-hidden')
     .attr('type', 'C')
     .attr('opacity', 0.3)
+    .selectAll('circle')
+    .attr('stroke', '#17b264')
   // 隐藏B2类
   nodes.filter(d => linkData.filter(x => x.get('score') !== 1 && x.get('source') === centerId
     && x.get('target') === d.id).size !== 0)
     .attr('class', 'node-hidden')
     .attr('type', 'B2')
     .attr('opacity', 0.3)
+    .selectAll('circle')
+    .attr('stroke', 'blue')
   // 更新当前中心点的A类
   nodes.filter(d => d.id === centerId)
     .attr('type', 'A')
@@ -121,6 +131,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .selectAll('circle')
     .attr('r', 50)
     .attr('fill', d => chosenNodeColor[d.type])
+    .attr('stroke', 'red')
   // 更新当前中心点的B1类
   if (type === 'all') {
     nodes.filter(d => linkData.filter(x => x.get('score') === 1 && x.get('source') === centerId
@@ -130,6 +141,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
       .attr('opacity', 1)
       .selectAll('circle')
       .attr('r', 50)
+      .attr('stroke', 'red')
   } else {
     nodes.filter(d => linkData.filter(x => x.get('source') === centerId && x.get('target') === d.id).size !== 0
       && d.type === type)
@@ -138,6 +150,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
       .attr('opacity', 1)
       .selectAll('circle')
       .attr('r', 50)
+      .attr('stroke', 'red')
   }
   // 显示和删除文字
   d3.selectAll('.node-show')
@@ -165,6 +178,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
       }
     })
   nodes
+    .filter(d => d.type !== 'empty')
     .on('mouseover', () => {
       const n = d3.select(d3.event.target).datum()
       const id = n.id
@@ -185,10 +199,12 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
         .classed('highlight', false)
       tooltip.transition().duration(100).style('opacity', 0)
     })
-  nodes.call(d3.drag()
-    .on('start', dragStart)
-    .on('drag', dragged)
-    .on('end', dragEnd))
+  nodes
+    .filter(d => d.type !== 'empty')
+    .call(d3.drag()
+      .on('start', dragStart)
+      .on('drag', dragged)
+      .on('end', dragEnd))
 }
 
 function hoverOn(linkData, centerId, currentId) {
