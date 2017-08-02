@@ -69,7 +69,7 @@ export default class KnowledgeGraph extends React.Component {
     if (type === 'reset') {
       zoomReset(this.svgElement, this.graphZoom)
     } else {
-      zoomClick(this.svgElement, this.graphZoom, type)
+      zoomClick(this.svgElement, this.graphZoom, type,centerId)
     }
   }
 

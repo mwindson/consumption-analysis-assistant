@@ -16,6 +16,7 @@ const chosenNodeColor = {
   Company: '#F1D237',
   Person: '#2095FF',
   empty: '#4AF7FF',
+  Product: '#EA8484',
 }
 
 const nodeColor = {
@@ -23,15 +24,13 @@ const nodeColor = {
   Brand: 'url(#brandGradient)',
   Company: 'url(#companyGradient)',
   Person: 'url(#personGradient)',
+  Product: 'url(#productGradient)'
 }
 
 // 绘图函数
 export function drawGraph(svg, nodeData, linkData, centerId, nodeClick, type, firstLoad) {
   width = svg.style('width').replace('px', '')
   height = svg.style('height').replace('px', '')
-  const scale = d3.scaleLinear()
-    .domain([0, 1])
-    .range([300, 150])
   force = d3.forceSimulation()
     .force('link', d3.forceLink().id(d => d.id).distance(d => d.source.id === centerId ? 100 : 500))
     .force('charge', d3.forceManyBody())
@@ -63,8 +62,8 @@ function drawNodes(svg, nodeData) {
   nodes
     .append('circle')
     .attr('id', d => d.type)
-    .attr('r', 40)
     .attr('fill', d => nodeColor[d.type])
+    .attr('stroke-width', '3')
   nodes
     .append('text')
     .attr('text-anchor', 'middle')
@@ -107,6 +106,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .attr('class', 'node-hidden')
     .attr('type', 'D')
     .attr('opacity', 0.3)
+    .attr('r', 40)
   // 隐藏C类
   nodes
     .filter(d => d.type !== 'empty')
@@ -115,6 +115,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .attr('opacity', 0.3)
     .selectAll('circle')
     .attr('stroke', '#17b264')
+    .attr('r', 40)
   // 隐藏B2类
   nodes.filter(d => linkData.filter(x => x.get('score') !== 1 && x.get('source') === centerId
     && x.get('target') === d.id).size !== 0)
@@ -123,6 +124,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .attr('opacity', 0.3)
     .selectAll('circle')
     .attr('stroke', 'blue')
+    .attr('r', 40)
   // 更新当前中心点的A类
   nodes.filter(d => d.id === centerId)
     .attr('type', 'A')

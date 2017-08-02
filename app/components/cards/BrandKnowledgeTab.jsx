@@ -38,11 +38,19 @@ export default class BrandKnowledgeTab extends React.Component {
       })
       cards = cards.push(company)
     }
-    const lists = List([Map({
+    let lists = List([Map({
       title: '相关人物',
       list: cardData.get('persons').map(i => Map({ url: '', text: i.get('name') })),
       type: 'Person',
     })])
+    if (cardData.get('products')) {
+      const product = Map({
+        title: '相关商品',
+        list: cardData.get('products').map(i => Map({ url: '', text: i.get('name') })),
+        type: 'Product',
+      })
+      lists = lists.push(product)
+    }
     return (
       <div className="cards">
         {cards.toArray().map((data, i) => (
