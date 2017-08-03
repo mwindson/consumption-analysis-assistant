@@ -50,7 +50,6 @@ export default class ListCard extends React.Component {
     }
   }
 
-  // todo 关系图需要以该类变换
   handleExpand = () => {
     // todo 增加动画
     const { dispatch, type } = this.props
@@ -68,8 +67,8 @@ export default class ListCard extends React.Component {
         <div className="list">
           {(expand ? list : list.slice(0, itemNum)).toArray().map((l, i) => (
             <div id={type} key={i} className={classNames('item', type)}>
-              <img src={l.get('url')} alt={l.get('text')} />
-              <div className="name">{l.get('text')}</div>
+              <img src={l.get('url')} alt={l.get('text')} title={l.get('text')} />
+              <div className="name" title={l.get('text')}>{l.get('text')}</div>
             </div>
           ))}
         </div>

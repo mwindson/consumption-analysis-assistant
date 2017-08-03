@@ -24,7 +24,7 @@ const nodeColor = {
   Brand: 'url(#brandGradient)',
   Company: 'url(#companyGradient)',
   Person: 'url(#personGradient)',
-  Product: 'url(#productGradient)'
+  Product: 'url(#productGradient)',
 }
 
 // 绘图函数

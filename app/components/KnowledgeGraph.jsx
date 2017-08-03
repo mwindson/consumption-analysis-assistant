@@ -35,12 +35,7 @@ export default class KnowledgeGraph extends React.Component {
 
   componentDidMount() {
     this.svgElement = d3.select('.graph-svg')
-    // window.addEventListener('resize', () => {
-    //   drawGraph(
-    //     nodeData, linkData, currentCenterId,
-    //     this.handleLineClick, this.handleNodeClick, this.hasClicked
-    //   )
-    // })
+    window.addEventListener('resize', this.resize)
     this.graphZoom = d3.zoom().scaleExtent([0.5, 8])
     this.graphZoom.on('zoom', this.zoomed)
     this.svgElement.call(this.graphZoom)
@@ -60,6 +55,14 @@ export default class KnowledgeGraph extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize)
+  }
+
+  resize = () => {
+    const { nodeData, linkData, centerId, graphType } = this.props
+    drawGraph(this.svgElement, nodeData, linkData, centerId, this.handleNodeClick, graphType, !nodeData.isEmpty())
+  }
   zoomed = () => {
     const g = d3.select('.graph-g')
     g.attr('transform', d3.event.transform)
@@ -67,13 +70,14 @@ export default class KnowledgeGraph extends React.Component {
 
   handleButtonClick = (type) => {
     if (type === 'reset') {
-      zoomReset(this.svgElement, this.graphZoom)
+      zoomReset(this.svgElement, this.graphZoom, this.props.centerId)
     } else {
-      zoomClick(this.svgElement, this.graphZoom, type,centerId)
+      zoomClick(this.svgElement, this.graphZoom, type, this.props.centerId)
     }
   }
 
   handleNodeClick = (id) => {
+    zoomReset(this.svgElement, this.graphZoom, this.props.centerId)
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, keyword: id })
   }
 

@@ -16,6 +16,7 @@ export default class RelatedBrandCards extends React.Component {
     this.state = {
       num: 6,
       scrollTop: 0,
+      loading: false,
     }
     this.cards = null
   }
@@ -37,7 +38,10 @@ export default class RelatedBrandCards extends React.Component {
     const scrollHeight = this.cards.scrollHeight
     const windowsHeight = this.cards.clientHeight
     if (scrollTop + windowsHeight === scrollHeight) {
-      this.setState({ num: this.state.num + 3 })
+      this.setState({ loading: true })
+      setTimeout(() => {
+        this.setState({ loading: false, num: this.state.num + 3 })
+      }, 3000)
     }
   }
 
@@ -48,10 +52,14 @@ export default class RelatedBrandCards extends React.Component {
       return (<div className="cards" />)
     }
     const brandList = cardData.map(i => Map({
-      imgUrl: '',
+      imgUrl: 'static/image/logo.png',
       name: i.get('name'),
       content: i.get('description'),
+      attr: Map(),
     }))
+    if (num > brandList.size) {
+      this.cards.removeEventListener('scroll', this.onScroll)
+    }
     return (
       <div className="cards">
         {brandList.slice(0, num > brandList.size ? brandList.size : num)
@@ -64,8 +72,20 @@ export default class RelatedBrandCards extends React.Component {
               content={brand.get('content')}
               hasExpand={false}
               truncated={textTruncated(brand.get('content')).length > 120}
+              attr={brand.get('attr')}
             />)
           )}
+        {this.state.loading ?
+          <div className="loading">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div> : null}
       </div>
     )
   }

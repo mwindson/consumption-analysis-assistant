@@ -150,7 +150,8 @@ const mapStateToProps = state => state.toJS()
 export default class KnowledgeCards extends React.Component {
   // todo react-redux 有bug
   // static propTypes = {
-  //   cardData: PropTypes.object.isRequired,
+  //   tab: PropTypes.string.isRequired,
+  //   centerId: PropTypes.string.isRequired,
   //   // callback
   //   dispatch: PropTypes.func.isRequired,
   // }
@@ -172,7 +173,7 @@ export default class KnowledgeCards extends React.Component {
   }
 
   render() {
-    const { cardData, tab: chosen } = this.props
+    const { tab: chosen } = this.props
     return (
       <div className="knowledge-cards">
         <div className="tabs-part">
