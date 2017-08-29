@@ -176,7 +176,8 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
       hoverLinks.remove()
       hoverLinks = null
       if (id !== centerId) {
-        nodeClick(id)
+        const nodeType = d3.select(d3.event.target).datum().type
+        nodeClick(id, nodeType)
       }
     })
   nodes

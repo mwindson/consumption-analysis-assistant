@@ -33,7 +33,6 @@ export default class RelatedBrandCards extends React.Component {
   }
 
   onScroll = () => {
-    // todo 加载动画
     const scrollTop = this.cards.scrollTop
     const scrollHeight = this.cards.scrollHeight
     const windowsHeight = this.cards.clientHeight

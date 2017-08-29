@@ -7,13 +7,17 @@ const initialState = Map({
   cardData: Map(),
   centerId: 'maigoo:美的Midea',
   currentCenterId: '',
-  // 关系图与中心点相连的关系点的类型 -- all,person,product,related_brand
+  // 关系图与中心点相连关系点的类型 -- all,person,product,related_brand
   graphType: 'all',
   tab: 'knowledge',
   noResult: false,
+  searchResult: List(),
 })
 export default function reducer(state = initialState, action) {
-  if (action.type === A.UPDATE_CARD_DATA) {
+  if (action.type === A.UPDATE_SEARCH_RESULT) {
+    const { result } = action
+    return state.set('searchResult', result).set('noResult', false)
+  } else if (action.type === A.UPDATE_CARD_DATA) {
     const { cardData } = action
     return state.set('cardData', cardData)
   } else if (action.type === A.UPDATE_NODES_AND_LINKS_DATA) {

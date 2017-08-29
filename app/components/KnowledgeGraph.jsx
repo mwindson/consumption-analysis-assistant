@@ -76,9 +76,9 @@ export default class KnowledgeGraph extends React.Component {
     }
   }
 
-  handleNodeClick = (id) => {
+  handleNodeClick = (id, nodeType) => {
     zoomReset(this.svgElement, this.graphZoom, this.props.centerId)
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, keyword: id })
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: nodeType })
   }
 
   render() {

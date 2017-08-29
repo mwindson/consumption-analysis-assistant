@@ -22,14 +22,16 @@ export default class BrandKnowledgeTab extends React.Component {
       return null
     }
     let cards = List()
-    const brand = Map({
-      title: titles.brand,
-      imgUrl: 'static/image/logo.png',
-      name: cardData.get('brand').get('name'),
-      desc: cardData.get('brand').get('description'),
-      attr: Map(),
-    })
-    cards = cards.push(brand)
+    if (cardData.get('brand')) {
+      const brand = Map({
+        title: titles.brand,
+        imgUrl: 'static/image/logo.png',
+        name: cardData.get('brand').get('name'),
+        desc: cardData.get('brand').get('description'),
+        attr: Map(),
+      })
+      cards = cards.push(brand)
+    }
     if (cardData.get('company')) {
       const company = Map({
         title: titles.company,
