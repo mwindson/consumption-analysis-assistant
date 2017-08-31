@@ -114,7 +114,8 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .attr('type', 'C')
     .attr('opacity', 0.3)
     .selectAll('circle')
-    .attr('stroke', '#17b264')
+    .attr('stroke', '#E88485')
+    .attr('stroke-width', 5)
     .attr('r', 40)
   // 隐藏B2类
   nodes.filter(d => linkData.filter(x => x.get('score') !== 1 && x.get('source') === centerId
@@ -123,7 +124,8 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .attr('type', 'B2')
     .attr('opacity', 0.3)
     .selectAll('circle')
-    .attr('stroke', 'blue')
+    .attr('stroke', '#2496FD')
+    .attr('stroke-width', 5)
     .attr('r', 40)
   // 更新当前中心点的A类
   nodes.filter(d => d.id === centerId)
@@ -133,7 +135,8 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .selectAll('circle')
     .attr('r', 50)
     .attr('fill', d => chosenNodeColor[d.type])
-    .attr('stroke', 'red')
+    .attr('stroke', '#4AF7FF')
+    .attr('stroke-width', 5)
   // 更新当前中心点的B1类
   if (type === 'all') {
     nodes.filter(d => linkData.filter(x => x.get('score') === 1 && x.get('source') === centerId
@@ -143,7 +146,8 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
       .attr('opacity', 1)
       .selectAll('circle')
       .attr('r', 50)
-      .attr('stroke', 'red')
+      .attr('stroke', 'white')
+      .attr('stroke-width', 5)
   } else {
     nodes.filter(d => linkData.filter(x => x.get('source') === centerId && x.get('target') === d.id).size !== 0
       && d.type === type)
@@ -152,7 +156,8 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
       .attr('opacity', 1)
       .selectAll('circle')
       .attr('r', 50)
-      .attr('stroke', 'red')
+      .attr('stroke', 'white')
+      .attr('stroke-width', 5)
   }
   // 显示和删除文字
   d3.selectAll('.node-show')

@@ -82,3 +82,13 @@ export const ArrowBottom = () => (
     />
   </svg>
 )
+
+export const ErrorIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M7.5 15a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zM6.429 4.286V7.5a1.072 1.072 0 0 0 2.142 0V4.286a1.072 1.072 0 0 0-2.142 0zm1.071 7.5a1.071 1.071 0 1 0 0-2.144 1.071 1.071 0 0 0 0 2.144z"
+      fillRule="nonzero"
+      fill="#E98484"
+    />
+  </svg>
+)
