@@ -26,6 +26,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.ya?ml$/,
+        use: ['json-loader', 'yaml-loader'],
+      },
+      {
         test: /\.css$/,
         loaders: ['style-loader', 'css-loader'],
       },

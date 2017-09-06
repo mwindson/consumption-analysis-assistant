@@ -56,6 +56,11 @@ export default class ListCard extends React.Component {
     this.setState({ expand: !this.state.expand })
     dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: this.state.expand ? 'all' : type })
   }
+  handleClick = (id, type) => {
+    console.log(id, type)
+    this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id, centerType: type })
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
+  }
 
   render() {
     const { title, list, type } = this.props
@@ -66,7 +71,12 @@ export default class ListCard extends React.Component {
         <div className={classNames('title', { exist: title !== '' })}>{title}</div>
         <div className="list">
           {(expand ? list : list.slice(0, itemNum)).toArray().map((l, i) => (
-            <div id={type} key={i} className={classNames('item', type)}>
+            <div
+              id={type}
+              key={i}
+              className={classNames('item', type)}
+              onClick={() => this.handleClick(l.get('id'), type)}
+            >
               <img src={l.get('url')} alt={l.get('text')} title={l.get('text')} />
               <div className="name" title={l.get('text')}>{l.get('text')}</div>
             </div>

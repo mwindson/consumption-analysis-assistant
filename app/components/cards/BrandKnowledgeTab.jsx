@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { List, Map } from 'immutable'
@@ -32,6 +33,14 @@ export default class BrandKnowledgeTab extends React.Component {
       })
       cards = cards.push(brand)
     }
+    const companyKeys = {
+      address: '公司地址',
+      email: '官网',
+      icp: '网站备案号',
+      website: '官网',
+      telephone: '联系方式',
+      wechat: '微信公众号',
+    }
     if (cardData.get('company')) {
       const company = Map({
         title: titles.company,
@@ -39,19 +48,23 @@ export default class BrandKnowledgeTab extends React.Component {
         name: cardData.get('company').get('name'),
         desc: '',
         attr: Map({
-          address: cardData.get('company').get('address'),
-          wechat: cardData.get('company').get('wechat').get('value'),
-          website: cardData.get('company').get('officialWebsite'),
-          telephone: cardData.get('company').get('telephone'),
-          email: cardData.get('company').get('email'),
-          icp: cardData.get('company').get('icp').get('value'),
+          "公司地址": cardData.get('company').get('address'),
+          '微信公众号': cardData.get('company').get('wechat').get('value'),
+          '官网': cardData.get('company').get('officialWebsite'),
+          '联系方式': cardData.get('company').get('telephone'),
+          '邮箱': cardData.get('company').get('email'),
+          '网站备案号': cardData.get('company').get('icp').get('value'),
         }),
       })
       cards = cards.push(company)
     }
     let lists = List([Map({
       title: '相关人物',
-      list: cardData.get('persons').map(i => Map({ url: 'static/image/person1.png', text: i.get('name') })),
+      list: cardData.get('persons').map(i => Map({
+        url: 'static/image/person1.png',
+        text: i.get('name'),
+        id: i.get('id'),
+      })),
       type: 'Person',
     })])
     if (cardData.get('products')) {

@@ -52,7 +52,7 @@ function* handleUpdateGraphData({ id, resultType }) {
           target: i.get('objectB'),
           score: i.get('score'),
         }))
-        yield put({ type: A.UPDATE_CENTER_ID, centerId: data.centerId })
+        yield put({ type: A.UPDATE_CENTER_ID, centerId: data.centerId, centerType: resultType })
         yield put({ type: A.UPDATE_NODES_AND_LINKS_DATA, nodeData, linkData })
       } else {
         alert('暂无此词条')
@@ -64,14 +64,15 @@ function* handleUpdateGraphData({ id, resultType }) {
 }
 
 
-function* handleUpdateCardData({ tab, brandId }) {
-  if (tab === 'knowledge' || tab === 'relatedBrands') {
+function* handleUpdateCardData({ tab, id, cardType }) {
+  // 部分tab页目前没有数据
+  if (tab === 'knowledge' || tab === 'relatedBrands' || tab === 'detail') {
     try {
-      const url = `${host}/brand/${tab}?brandId=${brandId}`
+      const url = `${host}/${cardType.toLowerCase()}/${tab}?${cardType.toLowerCase()}Id=${id}`
       const response = yield fetch(url)
       if (response.ok) {
         const json = yield response.json()
-        yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data) })
+        yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data), centerType: cardType })
       }
     } catch (e) {
       console.log(e)

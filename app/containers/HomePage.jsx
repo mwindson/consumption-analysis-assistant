@@ -9,6 +9,7 @@ import * as A from 'actions'
 import { LogoIcon, SearchIcon, ErrorIcon } from 'components/Icons'
 import ceMap from 'utils/ceMap'
 import 'style/HomePage.styl'
+import config from '../utils/config.yaml'
 
 const mapStateToProps = state => state.toObject()
 
@@ -29,7 +30,7 @@ export default class HomePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { searchResult, noResult } = this.props
+    const { searchResult } = this.props
     if (!is(nextProps.searchResult, searchResult)) {
       this.handleResult(nextProps.searchResult.first().get('id'), nextProps.searchResult.first().get('type'))
     }
@@ -53,7 +54,6 @@ export default class HomePage extends React.Component {
   }
   handleSearch = (event) => {
     if (event.keyCode === 13) {
-      // todo 修改成与现有数据格式匹配
       this.props.dispatch({ type: A.FETCH_SEARCH_RESULT, keyword: this.state.inputValue })
       this.setState({ searchState: 'searching', overflow: false })
     }
@@ -61,7 +61,6 @@ export default class HomePage extends React.Component {
   handleResult = (id, resultType) => {
     this.setState({ listExpand: false })
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType })
-    this.props.dispatch({ type: A.CHANGE_TAB, tab: 'knowledge' })
   }
 
   render() {

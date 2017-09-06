@@ -2,12 +2,10 @@ import * as d3 from 'd3'
 import 'style/graph.styl'
 
 let nodes
-let node
 let links
 let link
 let force
 let hoverLinks
-let text
 let width
 let height
 
@@ -101,18 +99,17 @@ export function drawLines(centerId, type, first = true) {
 }
 
 export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) {
-
   nodes
     .attr('class', 'node-hidden')
     .attr('type', 'D')
-    .attr('opacity', 0.3)
+    .attr('opacity', 0.8)
     .attr('r', 40)
   // 隐藏C类
   nodes
     .filter(d => d.type !== 'empty')
     .attr('class', 'node-hidden')
     .attr('type', 'C')
-    .attr('opacity', 0.3)
+    .attr('opacity', 0.5)
     .selectAll('circle')
     .attr('stroke', '#E88485')
     .attr('stroke-width', 5)
@@ -122,7 +119,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     && x.get('target') === d.id).size !== 0)
     .attr('class', 'node-hidden')
     .attr('type', 'B2')
-    .attr('opacity', 0.3)
+    .attr('opacity', 0.5)
     .selectAll('circle')
     .attr('stroke', '#2496FD')
     .attr('stroke-width', 5)
@@ -165,7 +162,8 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .text(d => d.name.length > 4 ? `${d.name.substr(0, 4)}...` : d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
-    .attr('font-size', 14)
+    .attr('font-size', d => d.id === centerId ? 20 : 14)
+    .attr('font-weight', d => d.id === centerId ? 'bold' : 'null')
     .attr('fill', '#125091')
     .attr('transform', 'translate(0,5)')
   d3.selectAll('.node-hidden')
@@ -174,11 +172,11 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
   // 更新节点点击和拖动事件
   const tooltip = d3.select('.tooltip')
   nodes
-    .filter(d => d.type === 'Brand')
+    .filter(d => d.type === 'Brand' || d.type === 'Person')
     .attr('cursor', 'pointer')
     .on('click', () => {
       const id = d3.select(d3.event.target).datum().id
-      hoverLinks.remove()
+      if (hoverLinks) hoverLinks.remove()
       hoverLinks = null
       if (id !== centerId) {
         const nodeType = d3.select(d3.event.target).datum().type
@@ -220,7 +218,7 @@ function hoverOn(linkData, centerId, currentId) {
   d3.selectAll('.line-show')
     .attr('opacity', 0)
   d3.selectAll('.node-show')
-    .attr('opacity', 0.3)
+    .attr('opacity', 0.5)
   const hoverNode = nodes.filter(d => d.id === currentId)
   // A类实体，Hover上去时高亮和B1的连线。
   // B1类实体，Hover上去时高亮和A的连线，以及显示和C1的连线。
@@ -263,7 +261,8 @@ function hoverOn(linkData, centerId, currentId) {
     .text(d => d.name.length > 4 ? `${d.name.substr(0, 4)}...` : d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
-    .attr('font-size', 14)
+    .attr('font-size', d => d.id === centerId ? 20 : 14)
+    .attr('font-weight', d => d.id === centerId ? 'bold' : 'null')
     .attr('fill', '#125091')
     .attr('transform', 'translate(0,5)')
   relatedNode
@@ -309,11 +308,11 @@ function hoverLeave() {
     .selectAll('circle')
     .attr('fill', d => chosenNodeColor[d.type])
   d3.selectAll('.node-hidden')
-    .attr('opacity', 0.3)
+    .attr('opacity', 0.5)
     .selectAll('text')
     .text('')
   d3.selectAll('.node-hidden')
-    .attr('opacity', 0.3)
+    .attr('opacity', 0.5)
     .selectAll('circle')
     .transition(500)
     .duration(500)

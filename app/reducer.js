@@ -1,12 +1,13 @@
 import { Map, List, Set } from 'immutable'
 import * as A from 'actions'
+import config from './utils/config.yaml'
 
 const initialState = Map({
   nodeData: Set(),
   linkData: Set(),
   cardData: Map(),
   centerId: 'maigoo:美的Midea',
-  currentCenterId: '',
+  centerType: 'Brand',
   // 关系图与中心点相连关系点的类型 -- all,person,product,related_brand
   graphType: 'all',
   tab: 'knowledge',
@@ -24,11 +25,10 @@ export default function reducer(state = initialState, action) {
     const { nodeData, linkData } = action
     return state.set('nodeData', nodeData).set('linkData', linkData).set('noResult', false)
   } else if (action.type === A.UPDATE_CENTER_ID) {
-    const { centerId } = action
-    return state.set('centerId', centerId)
-  } else if (action.type === A.CHANGE_CURRENT_CENTER_ID) {
-    const { id } = action
-    return state.set('currentCenterId', id)
+    const { centerId, centerType } = action
+    console.log(centerType)
+    console.log(config[centerType][0])
+    return state.set('centerId', centerId).set('centerType', centerType).set('tab', config[centerType][0])
   } else if (action.type === A.UPDATE_GRAPH_TYPE) {
     const { graphType } = action
     return state.set('graphType', graphType)

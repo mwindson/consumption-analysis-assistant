@@ -7,8 +7,6 @@ export const FETCH_SEARCH_RESULT = 'FETCH_SEARCH_RESULT'
 export const UPDATE_SEARCH_RESULT = 'UPDATE_SEARCH_RESULT'
 // 更新默认的中心节点
 export const UPDATE_CENTER_ID = 'UPDATE_CENTER_ID'
-// 改变当前的中心节点
-export const CHANGE_CURRENT_CENTER_ID = 'CHANGE_CURRENT_CENTER_ID'
 // 改变当前鼠标hover的节点
 export const CHANGE_HOVER_ID = 'CHANGE_HOVER_ID'
 

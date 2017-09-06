@@ -48,10 +48,14 @@ export default class CommonCard extends React.Component {
               </div> :
               <div className={classNames('text', { truncated: expand })}>
                 {attr.entrySeq().map((v, k) => {
-                  return v[0] !== 'website' ?
-                    <div key={k}>{`${companyKeys[v[0]]}: ${v[1]}`}</div> :
-                    <div key={k}>{`${companyKeys[v[0]]}: `}<a href={v[1]} target="_blank">{v[1]}</a></div>
-                })}
+                    if (v[0] !== '人物履历:') {
+                      return v[0] !== '官网' ?
+                        <div key={k}>{`${v[0]}: ${v[1]}`}</div> :
+                        <div key={k}>{`${v[0]}: `}<a href={v[1]} target="_blank">{v[1]}</a></div>
+                    } else {
+                      return <div>{v[1].entrySeq().map((v1, k1) => (<div key={k1}>{`${v1[0]}：${v1[1]}`}</div>))}</div>
+                    }
+                  })}
               </div>}
           </div>
         </div>

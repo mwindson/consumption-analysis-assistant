@@ -1,14 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { fromJS, Map } from 'immutable'
+import { fromJS, Map, Range } from 'immutable'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import NewsCards from 'components/cards/NewsTab'
 import BrandTrendCards from 'components/cards/BrandTrendTab'
 import RelatedBrandCards from 'components/cards/RelatedBrandTab'
+import PersonKnowledgeTab from 'components/cards/PersonKnowledgeTab'
 import * as A from 'actions'
 import 'style/KnowledgeCards.styl'
 import BrandKnowledgeTab from './cards/BrandKnowledgeTab'
+import config from '../utils/config.yaml'
 
 const data = {
   knowledge: {
@@ -157,14 +159,19 @@ export default class KnowledgeCards extends React.Component {
   // }
 
   componentDidMount() {
-    const { tab, centerId } = this.props
-    this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, brandId: centerId })
+    const { tab, centerId, centerType } = this.props
+    this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, id: centerId, cardType: centerType })
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.tab !== this.props.tab || nextProps.centerId !== this.props.centerId) {
       this.props.dispatch({ type: A.CLEAR_CARD_DATA })
-      this.props.dispatch({ type: A.FETCH_CARD_DATA, tab: nextProps.tab, brandId: nextProps.centerId })
+      this.props.dispatch({
+        type: A.FETCH_CARD_DATA,
+        tab: nextProps.tab,
+        id: nextProps.centerId,
+        cardType: nextProps.centerType,
+      })
     }
   }
 
@@ -173,28 +180,19 @@ export default class KnowledgeCards extends React.Component {
   }
 
   render() {
-    const { tab: chosen } = this.props
+    const { tab: chosen, centerType } = this.props
     return (
       <div className="knowledge-cards">
         <div className="tabs-part">
-          <div
-            className={classNames('tab', { chosen: chosen === 'knowledge' })}
-            onClick={() => this.handleClick('knowledge')}
-          >
-            品牌知识
-          </div>
-          <div className={classNames('tab', { chosen: chosen === 'hot' })} onClick={() => this.handleClick('hot')}>
-            热点聚焦
-          </div>
-          <div className={classNames('tab', { chosen: chosen === 'trend' })} onClick={() => this.handleClick('trend')}>
-            品牌动态
-          </div>
-          <div
-            className={classNames('tab', { chosen: chosen === 'relatedBrands' })}
-            onClick={() => this.handleClick('relatedBrands')}
-          >
-            相关品牌
-          </div>
+          {Range(0, 4).map(i => (
+            <div
+              key={i}
+              className={classNames('tab', { chosen: chosen === config[centerType][i] })}
+              onClick={() => this.handleClick(config[centerType][i])}
+            >
+              {config[`tabMap`][centerType][config[centerType][i]]}
+            </div>
+          ))}
         </div>
         {chosen === 'hot' ?
           <NewsCards
@@ -209,6 +207,7 @@ export default class KnowledgeCards extends React.Component {
           /> : null}
         {chosen === 'relatedBrands' ? <RelatedBrandCards brandList={fromJS(data[chosen])} /> : null}
         {chosen === 'knowledge' ? <BrandKnowledgeTab /> : null}
+        {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
       </div>
     )
   }

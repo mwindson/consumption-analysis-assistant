@@ -1,0 +1,26 @@
+Brand:
+ - knowledge
+ - hot
+ - trend
+ - related
+Person:
+ - detail
+ - empty
+ - empty
+ - empty
+Company:
+ - empty
+ - empty
+ - empty
+ - empty
+tabMap:
+ Brand:
+  knowledge: 品牌知识
+  hot: 热点聚焦
+  trend: 品牌动态
+  related: 相关品牌
+ Person:
+  detail: 人物简介
+  empty: 暂无
+ Company:
+  empty: 暂无
