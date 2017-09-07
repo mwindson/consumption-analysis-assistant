@@ -12,7 +12,7 @@ const host = 'http://10.214.208.50:9001'
 
 function* handleSearch({ keyword }) {
   try {
-    const url = `${host}/search?keyword=${keyword}`
+    const url = `${host}/search?keyword=${encodeURIComponent(keyword)}`
     const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
@@ -36,7 +36,7 @@ function* handleSearch({ keyword }) {
 
 function* handleUpdateGraphData({ id, resultType }) {
   try {
-    const url = `${host}/graph?id=${id}&type=${resultType}`
+    const url = `${host}/graph?id=${encodeURIComponent(id)}&type=${resultType}`
     const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
@@ -68,7 +68,7 @@ function* handleUpdateCardData({ tab, id, cardType }) {
   // 部分tab页目前没有数据
   if (tab === 'knowledge' || tab === 'relatedBrands' || tab === 'detail') {
     try {
-      const url = `${host}/${cardType.toLowerCase()}/${tab}?${cardType.toLowerCase()}Id=${id}`
+      const url = `${host}/${cardType.toLowerCase()}/${tab}?${cardType.toLowerCase()}Id=${encodeURIComponent(id)}`
       const response = yield fetch(url)
       if (response.ok) {
         const json = yield response.json()
