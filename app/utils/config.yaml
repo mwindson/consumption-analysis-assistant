@@ -1,29 +1,35 @@
 Brand:
- - knowledge
- - hot
- - trend
- - related
+ - key: knowledge
+   name: 品牌知识
+ - key: hot
+   name: 热点聚焦
+ - key: trend
+   name: 品牌动态
+ - key: relatedBrands
+   name: 相关品牌
 Person:
- - detail
- - empty
- - empty
- - empty
+ - key: detail
+   name: 人物简介
+ - key: story
+   name: 人物故事
+ - key: empty
+   name: 暂无
+ - key: empty
+   name: 暂无
 Company:
- - empty
- - empty
- - empty
- - empty
-tabMap:
- Brand:
-  knowledge: 品牌知识
-  hot: 热点聚焦
-  trend: 品牌动态
-  related: 相关品牌
- Person:
-  detail: 人物简介
-  empty: 暂无
- Company:
-  empty: 暂无
+ - key: empty
+   name: 暂无
+ - key: empty
+   name: 暂无
+ - key: empty
+   name: 暂无
+ - key: empty
+   name: 暂无
+Product:
+ - key: detail
+   name: 商品信息
+ - key: model
+   name: 商品规格
 nameMap:
   Brand: 品牌
   Company: 公司

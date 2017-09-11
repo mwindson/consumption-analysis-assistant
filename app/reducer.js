@@ -28,7 +28,7 @@ export default function reducer(state = initialState, action) {
     return state.set('nodeData', nodeData).set('linkData', linkData).set('noResult', false)
   } else if (action.type === A.UPDATE_CENTER_ID) {
     const { centerId, centerType } = action
-    return state.set('centerId', centerId).set('centerType', centerType).set('tab', config[centerType][0])
+    return state.set('centerId', centerId).set('centerType', centerType).set('tab', config[centerType][0].key)
   } else if (action.type === A.UPDATE_GRAPH_TYPE) {
     const { graphType } = action
     return state.set('graphType', graphType)

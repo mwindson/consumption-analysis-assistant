@@ -9,7 +9,7 @@ import textTruncated from 'utils/textTruncated'
 const mapStateToProps = state => state.toObject()
 
 @connect(mapStateToProps)
-export default class RelatedBrandCards extends React.Component {
+export default class RelatedBrandTab extends React.Component {
 
   constructor(props) {
     super(props)
@@ -40,7 +40,7 @@ export default class RelatedBrandCards extends React.Component {
       this.setState({ loading: true })
       setTimeout(() => {
         this.setState({ loading: false, num: this.state.num + 3 })
-      }, 3000)
+      }, 1500)
     }
   }
 
@@ -72,18 +72,18 @@ export default class RelatedBrandCards extends React.Component {
               hasExpand={false}
               truncated={textTruncated(brand.get('content')).length > 120}
               attr={brand.get('attr')}
-            />)
+            />),
           )}
         {this.state.loading ?
           <div className="loading">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
           </div> : null}
       </div>
     )
