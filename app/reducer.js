@@ -12,7 +12,9 @@ const initialState = Map({
   graphType: 'all',
   tab: 'knowledge',
   noResult: false,
+  popupType: 'none',  // none or searchResult or product -- none 不弹出
   searchResult: List(),
+  productDetail: Map(),
 })
 export default function reducer(state = initialState, action) {
   if (action.type === A.UPDATE_SEARCH_RESULT) {
@@ -37,6 +39,25 @@ export default function reducer(state = initialState, action) {
     return state.set('tab', tab)
   } else if (action.type === A.RETURN_NO_RESULT) {
     return state.set('noResult', true)
+  } else if (action.type === A.UPDATE_POPUP_TYPE) {
+    const { contentType, id } = action
+    let productDetail
+    if (id !== '') {
+      const products = state.get('cardData').get('products').filter(x => x.get('id') === id).first()
+      productDetail = Map({
+        name: products.get('name'),
+        brand: products.get('brand'),
+        category: products.get('category'),
+        description: products.get('description'),
+        sku: products.get('sku'),
+        source: products.get('source'),
+        url: products.get('url'),
+        optional: products.get('optional'),
+      })
+    } else {
+      productDetail = Map()
+    }
+    return state.set('popupType', contentType).set('productDetail', productDetail)
   } else {
     return state
   }

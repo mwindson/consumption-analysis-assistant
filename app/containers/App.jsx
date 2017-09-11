@@ -3,15 +3,18 @@ import { Provider } from 'react-redux'
 import store from 'store'
 import HomePage from './HomePage'
 
-export default () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-)
-class App extends Component {
+// export default () => (
+//
+//   <App />
+//   < /Provider>
+// )
+
+export default class App extends Component {
   render() {
     return (
-      <HomePage />
+      <Provider store={store}>
+        <HomePage />
+      </Provider>
     )
   }
 }

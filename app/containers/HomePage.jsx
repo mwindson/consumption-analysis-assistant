@@ -26,7 +26,7 @@ export default class HomePage extends React.Component {
   componentDidMount() {
     const searchResult = document.getElementsByClassName('search-result')[0]
     searchResult.addEventListener('overflow', () => this.setState({ overflow: true }))
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:美的Midea', resultType: 'Brand' })
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:Dove多芬', resultType: 'Brand' })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,12 +59,20 @@ export default class HomePage extends React.Component {
     }
   }
   handleResult = (id, resultType) => {
+    this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'none', id: '' })
     this.setState({ listExpand: false })
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType })
   }
+  popupSearchResult = () => {
+    this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'searchResult', id: '' })
+  }
+  closePopup = () => {
+    this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'none', id: '' })
+  }
 
   render() {
-    const { editing, inputValue, searchState, listExpand } = this.state
+    const { editing, inputValue, searchState } = this.state
+    const isExpand = this.props.popupType !== 'none'
     return (
       <div className="main">
         <div className="left-part">
@@ -106,7 +114,7 @@ export default class HomePage extends React.Component {
                   </div>
                 ))}
                 {this.props.searchResult.size > 6 ?
-                  <div className="more-result" onClick={() => this.setState({ listExpand: true })}>更多</div> : null}
+                  <div className="more-result" onClick={() => this.popupSearchResult()}>更多</div> : null}
               </div>
             </div>
           </div>
@@ -117,25 +125,48 @@ export default class HomePage extends React.Component {
         <div className="right-part">
           <KnowledgeCards />
         </div>
-        <div className={classNames('popup', { listExpand })}>
+        <div className={classNames('popup', { listExpand: isExpand })}>
           <div className="mask" />
-          <Motion style={{ y: spring(listExpand ? 100 : 0), opacity: spring(listExpand ? 1 : 0.5) }}>
+          <Motion style={{ y: spring(isExpand ? 100 : 0), opacity: spring(isExpand ? 1 : 0.5) }}>
             {({ y, opacity }) =>
               (<div className="search-result-list" style={{ transform: `translate(0,${y}px)`, opacity }}>
-                <div className="close" onClick={() => this.setState({ listExpand: false })}>关闭</div>
-                <div className="list">
-                  {this.props.searchResult.toArray().map((item, i) => (
-                    <div
-                      key={i}
-                      title={`${item.get('name')}（${ceMap[item.get('type')]}）`}
-                      className="search-item"
-                      onClick={() => this.handleResult(item.get('id'), item.get('type'))}
-                    >
-                      {`${item.get('name')}（${ceMap[item.get('type')]}）`}
-                    </div>
-                  ))}
+                  <div className="close" onClick={() => this.closePopup()}>关闭</div>
+                  <div className="list">
+                    {this.props.popupType === 'searchResult' ? this.props.searchResult.toArray().map((item, i) => (
+                      <div
+                        key={i}
+                        title={`${item.get('name')}（${ceMap[item.get('type')]}）`}
+                        className="search-item"
+                        onClick={() => this.handleResult(item.get('id'), item.get('type'))}
+                      >
+                        {`${item.get('name')}（${ceMap[item.get('type')]}）`}
+                      </div>
+                    )) : null}
+                    {this.props.popupType === 'product' ? this.props.productDetail.entrySeq().map((attr, index) => {
+                      if (attr[0] !== 'category' && attr[0] !== 'optional' && attr[1].length !== 0) {
+                        return (<div key={index} className="attr">
+                          <div className="key">{config.nameMap[attr[0]]}</div>
+                          <div className="value">{attr[0] === 'url' ?
+                            <a href={attr[1]} target="_blank">京东页面</a> : attr[1]} </div>
+                        </div>)
+                      } else if (attr[0] === 'category') {
+                        return (<div key={index} className="attr">
+                          <div className="key">类别</div>
+                          <div className="value">{attr[1].join('、')}</div>
+                        </div>)
+                      } else if (attr[0] === 'optional' && attr[1].size !== 0) {
+                        return (<div key={index} className="attr">
+                          <div className="key">其他</div>
+                          <div className="value">{attr[1].entrySeq().map((v, i) =>
+                            <div key={i} className="other">{`${v[0]}: ${v[1]}`}</div>)}
+                          </div>
+                        </div>)
+                      }
+                    }) : null}
+                  </div>
                 </div>
-              </div>)}
+              )
+            }
           </Motion>
         </div>
       </div>

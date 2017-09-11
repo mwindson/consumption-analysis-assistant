@@ -57,8 +57,13 @@ export default class ListCard extends React.Component {
     dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: this.state.expand ? 'all' : type })
   }
   handleClick = (id, type) => {
-    this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id, centerType: type })
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
+    if (type !== 'Product') {
+      this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id, centerType: type })
+      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
+    } else {
+      console.log(id)
+      this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'product', id })
+    }
   }
 
   render() {

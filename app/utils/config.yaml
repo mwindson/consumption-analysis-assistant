@@ -24,3 +24,13 @@ tabMap:
   empty: 暂无
  Company:
   empty: 暂无
+nameMap:
+  Brand: 品牌
+  Company: 公司
+  Person: 人物
+  brand: 品牌
+  name: 名称
+  sku: sku编号
+  source: 来源
+  url: 链接
+  description: 介绍

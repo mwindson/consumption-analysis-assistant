@@ -48,7 +48,7 @@ export default class BrandKnowledgeTab extends React.Component {
         name: cardData.get('company').get('name'),
         desc: '',
         attr: Map({
-          "公司地址": cardData.get('company').get('address'),
+          '公司地址': cardData.get('company').get('address'),
           '微信公众号': cardData.get('company').get('wechat').get('value'),
           '官网': cardData.get('company').get('officialWebsite'),
           '联系方式': cardData.get('company').get('telephone'),
@@ -70,7 +70,11 @@ export default class BrandKnowledgeTab extends React.Component {
     if (cardData.get('products')) {
       const product = Map({
         title: '相关商品',
-        list: cardData.get('products').map(i => Map({ url: 'static/image/product1.png', text: i.get('name') })),
+        list: cardData.get('products').map(i => Map({
+          url: 'static/image/product1.png',
+          text: i.get('name'),
+          id: i.get('id'),
+        })),
         type: 'Product',
       })
       lists = lists.push(product)

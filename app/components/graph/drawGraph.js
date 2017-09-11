@@ -172,7 +172,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
   // 更新节点点击和拖动事件
   const tooltip = d3.select('.tooltip')
   nodes
-    .filter(d => d.type === 'Brand' || d.type === 'Person')
+    .filter(d => d.type === 'Brand' || d.type === 'Person' || d.type === 'Product')
     .attr('cursor', 'pointer')
     .on('click', () => {
       const id = d3.select(d3.event.target).datum().id
