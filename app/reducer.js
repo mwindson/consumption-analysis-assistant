@@ -42,7 +42,7 @@ export default function reducer(state = initialState, action) {
   } else if (action.type === A.UPDATE_POPUP_TYPE) {
     const { contentType, id } = action
     let productDetail
-    if (id !== '') {
+    if (id !== '' && state.get('cardData').get('products').size !== 0) {
       const products = state.get('cardData').get('products').filter(x => x.get('id') === id).first()
       productDetail = Map({
         name: products.get('name'),
