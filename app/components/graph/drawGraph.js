@@ -176,6 +176,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .attr('cursor', 'pointer')
     .on('click', () => {
       const id = d3.select(d3.event.target).datum().id
+      force.stop()
       if (hoverLinks) hoverLinks.remove()
       hoverLinks = null
       if (id !== centerId) {

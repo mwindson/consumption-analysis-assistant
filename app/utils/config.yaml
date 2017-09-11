@@ -12,17 +12,7 @@ Person:
    name: 人物简介
  - key: story
    name: 人物故事
- - key: empty
-   name: 暂无
- - key: empty
-   name: 暂无
 Company:
- - key: empty
-   name: 暂无
- - key: empty
-   name: 暂无
- - key: empty
-   name: 暂无
  - key: empty
    name: 暂无
 Product:

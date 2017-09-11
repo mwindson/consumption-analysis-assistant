@@ -184,7 +184,7 @@ export default class KnowledgeCards extends React.Component {
     return (
       <div className="knowledge-cards">
         <div className="tabs-part">
-          {Range(0, 4).map(i => (
+          {Range(0, config[centerType].length).map(i => (
             <div
               key={i}
               className={classNames('tab', { chosen: chosen === config[centerType][i].key })}
