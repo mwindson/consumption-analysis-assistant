@@ -31,11 +31,15 @@ export default class KnowledgeGraph extends React.Component {
     }
     this.svgElement = null
     this.graphZoom = null
+    this.resizeId = null
   }
 
   componentDidMount() {
     this.svgElement = d3.select('.graph-svg')
-    window.addEventListener('resize', this.resize)
+    window.addEventListener('resize', () => {
+      clearTimeout(this.resizeId)
+      this.resizeId = setTimeout(this.resize, 500)
+    })
     this.graphZoom = d3.zoom().scaleExtent([0.5, 8])
     this.graphZoom.on('zoom', this.zoomed)
     this.svgElement.call(this.graphZoom)
@@ -56,7 +60,7 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.resize)
+    window.removeEventListener('resize')
   }
 
   resize = () => {

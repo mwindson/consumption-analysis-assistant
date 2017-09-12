@@ -49,6 +49,7 @@ export function drawGraph(svg, nodeData, linkData, centerId, nodeClick, type, fi
 
 function drawNodes(svg, nodeData) {
   if (nodes) nodes.remove()
+  if (hoverLinks) hoverLinks.remove()
   nodes = svg
     .select('.node-group')
     .selectAll('.node')

@@ -159,8 +159,8 @@ export default class KnowledgeCards extends React.Component {
   // }
 
   componentDidMount() {
-    const { tab, centerId, centerType } = this.props
-    this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, id: centerId, cardType: centerType })
+    // const { tab, centerId, centerType } = this.props
+    // this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, id: centerId, cardType: centerType })
   }
 
   componentWillReceiveProps(nextProps) {

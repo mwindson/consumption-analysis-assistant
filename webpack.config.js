@@ -75,5 +75,6 @@ module.exports = {
     host: '0.0.0.0',
     contentBase: './app',
     hot: true,
+    public: '10.214.224.133:8080',
   },
 }

@@ -1,5 +1,6 @@
 import { takeEvery, put } from 'redux-saga/effects'
 import { Map, fromJS } from 'immutable'
+import 'whatwg-fetch'
 import * as A from 'actions'
 
 export default function* graphSaga() {
@@ -13,7 +14,7 @@ const host = 'http://10.214.208.50:9001'
 function* handleSearch({ keyword }) {
   try {
     const url = `${host}/search?keyword=${encodeURIComponent(keyword)}`
-    const response = yield fetch(url)
+    const response = yield fetch(url, { mode: 'cors' })
     if (response.ok) {
       const json = yield response.json()
       const data = json.data
@@ -37,7 +38,7 @@ function* handleSearch({ keyword }) {
 function* handleUpdateGraphData({ id, resultType }) {
   try {
     const url = `${host}/graph?id=${encodeURIComponent(id)}&type=${resultType}`
-    const response = yield fetch(url)
+    const response = yield fetch(url, { mode: 'cors' })
     if (response.ok) {
       const json = yield response.json()
       const data = json.data
@@ -69,7 +70,7 @@ function* handleUpdateCardData({ tab, id, cardType }) {
   if (tab === 'knowledge' || tab === 'relatedBrands' || tab === 'detail') {
     try {
       const url = `${host}/${cardType.toLowerCase()}/${tab}?${cardType.toLowerCase()}Id=${encodeURIComponent(id)}`
-      const response = yield fetch(url)
+      const response = yield fetch(url, { mode: 'cors' })
       if (response.ok) {
         const json = yield response.json()
         yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data), centerType: cardType })

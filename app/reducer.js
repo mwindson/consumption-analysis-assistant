@@ -6,7 +6,7 @@ const initialState = Map({
   nodeData: Set(),
   linkData: Set(),
   cardData: Map(),
-  centerId: 'maigoo:美的Midea',
+  centerId: '',
   centerType: 'Brand',
   // 关系图与中心点相连关系点的类型 -- all,person,product,related_brand
   graphType: 'all',
