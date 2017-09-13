@@ -38,26 +38,26 @@ const data = {
         { url: 'static/image/person4.png', text: '代言人' },
       ],
     },
-      {
-        title: '门店信息',
-        type: 'store',
-        list: [
+    {
+      title: '门店信息',
+      type: 'store',
+      list: [
           { url: 'static/image/shop1.png', text: '1号店' },
           { url: 'static/image/shop2.png', text: '2号店' },
           { url: 'static/image/shop3.png', text: '3号店' },
           { url: 'static/image/shop3.png', text: '4号店' },
           { url: 'static/image/shop3.png', text: '5号店' },
           { url: 'static/image/shop3.png', text: '6号店' },
-        ],
-      },
-      {
-        title: '热门商品',
-        type: 'product',
-        list: [
+      ],
+    },
+    {
+      title: '热门商品',
+      type: 'product',
+      list: [
           { url: 'static/image/product1.png', text: '包' },
           { url: 'static/image/product2.png', text: '化妆品' },
           { url: 'static/image/product3.png', text: '香水' }],
-      },
+    },
     ],
   },
   hot: {

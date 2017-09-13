@@ -87,7 +87,6 @@ export default class KnowledgeGraph extends React.Component {
     } else {
       this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'product', id })
     }
-
   }
 
   render() {

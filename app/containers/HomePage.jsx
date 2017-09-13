@@ -7,7 +7,6 @@ import KnowledgeGraph from 'components/KnowledgeGraph'
 import { is } from 'immutable'
 import * as A from 'actions'
 import { LogoIcon, SearchIcon, ErrorIcon } from 'components/Icons'
-import ceMap from 'utils/ceMap'
 import 'style/HomePage.styl'
 import config from '../utils/config.yaml'
 
@@ -106,11 +105,11 @@ export default class HomePage extends React.Component {
                 {this.props.searchResult.slice(0, 6).toArray().map((item, i) => (
                   <div
                     key={i}
-                    title={`${item.get('name')}（${ceMap[item.get('type')]}）`}
+                    title={`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
                     className="search-item"
                     onClick={() => this.handleResult(item.get('id'), item.get('type'))}
                   >
-                    {`${item.get('name')}（${ceMap[item.get('type')]}）`}
+                    {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
                   </div>
                 ))}
                 {this.props.searchResult.size > 6 ?
@@ -130,41 +129,41 @@ export default class HomePage extends React.Component {
           <Motion style={{ y: spring(isExpand ? 100 : 0), opacity: spring(isExpand ? 1 : 0.5) }}>
             {({ y, opacity }) =>
               (<div className="search-result-list" style={{ transform: `translate(0,${y}px)`, opacity }}>
-                  <div className="close" onClick={() => this.closePopup()}>关闭</div>
-                  <div className="list">
-                    {this.props.popupType === 'searchResult' ? this.props.searchResult.toArray().map((item, i) => (
-                      <div
-                        key={i}
-                        title={`${item.get('name')}（${ceMap[item.get('type')]}）`}
-                        className="search-item"
-                        onClick={() => this.handleResult(item.get('id'), item.get('type'))}
-                      >
-                        {`${item.get('name')}（${ceMap[item.get('type')]}）`}
-                      </div>
+                <div className="close" onClick={() => this.closePopup()}>关闭</div>
+                <div className="list">
+                  {this.props.popupType === 'searchResult' ? this.props.searchResult.toArray().map((item, i) => (
+                    <div
+                      key={i}
+                      title={`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
+                      className="search-item"
+                      onClick={() => this.handleResult(item.get('id'), item.get('type'))}
+                    >
+                      {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
+                    </div>
                     )) : null}
-                    {this.props.popupType === 'product' ? this.props.productDetail.entrySeq().map((attr, index) => {
-                      if (attr[0] !== 'category' && attr[0] !== 'optional' && attr[1].length !== 0) {
-                        return (<div key={index} className="attr">
-                          <div className="key">{config.nameMap[attr[0]]}</div>
-                          <div className="value">{attr[0] === 'url' ?
-                            <a href={attr[1]} target="_blank">京东页面</a> : attr[1]} </div>
-                        </div>)
-                      } else if (attr[0] === 'category') {
-                        return (<div key={index} className="attr">
-                          <div className="key">类别</div>
-                          <div className="value">{attr[1].join('、')}</div>
-                        </div>)
-                      } else if (attr[0] === 'optional' && attr[1].size !== 0) {
-                        return (<div key={index} className="attr">
-                          <div className="key">其他</div>
-                          <div className="value">{attr[1].entrySeq().map((v, i) =>
-                            <div key={i} className="other">{`${v[0]}: ${v[1]}`}</div>)}
-                          </div>
-                        </div>)
-                      }
-                    }) : null}
-                  </div>
+                  {this.props.popupType === 'product' ? this.props.productDetail.entrySeq().map((attr, index) => {
+                    if (attr[0] !== 'category' && attr[0] !== 'optional' && attr[1].length !== 0) {
+                      return (<div key={index} className="attr">
+                        <div className="key">{config.nameMap[attr[0]]}</div>
+                        <div className="value">{attr[0] === 'url' ?
+                          <a href={attr[1]} target="_blank">京东页面</a> : attr[1]} </div>
+                      </div>)
+                    } else if (attr[0] === 'category') {
+                      return (<div key={index} className="attr">
+                        <div className="key">类别</div>
+                        <div className="value">{attr[1].join('、')}</div>
+                      </div>)
+                    } else if (attr[0] === 'optional' && attr[1].size !== 0) {
+                      return (<div key={index} className="attr">
+                        <div className="key">其他</div>
+                        <div className="value">{attr[1].entrySeq().map((v, i) =>
+                          <div key={i} className="other">{`${v[0]}: ${v[1]}`}</div>)}
+                        </div>
+                      </div>)
+                    }
+                  }) : null}
                 </div>
+              </div>
               )
             }
           </Motion>
