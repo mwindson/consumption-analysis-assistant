@@ -14,53 +14,6 @@ import ProductDetailTab from 'components/ProductDetailTab'
 import config from '../utils/config.yaml'
 
 const data = {
-  knowledge: {
-    cards: [{
-      title: '品牌信息',
-      type: 'intro',
-      name: 'CHANEL',
-      imgUrl: 'static/image/logo.png',
-      text: '品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍品牌信息介绍',
-    },
-      { title: '企业信息', type: 'company', name: 'COMPANY', imgUrl: 'static/image/company.png', text: '企业信息介绍' },
-      { title: '业态', type: 'store_type', name: 'LUXURUY', imgUrl: 'static/image/store_type.png', text: '经营业态介绍' }],
-    lists: [{
-      title: '相关人物',
-      type: 'Person',
-      list: [
-        { url: 'static/image/person1.png', text: '创始人' },
-        { url: 'static/image/person2.png', text: 'CEO' },
-        { url: 'static/image/person3.png', text: '首席设计师' },
-        { url: 'static/image/person4.png', text: '代言人' },
-        { url: 'static/image/person5.png', text: '明星' },
-        { url: 'static/image/person1.png', text: '创始人' },
-        { url: 'static/image/person2.png', text: 'CEO' },
-        { url: 'static/image/person3.png', text: '首席设计师' },
-        { url: 'static/image/person4.png', text: '代言人' },
-      ],
-    },
-      {
-        title: '门店信息',
-        type: 'store',
-        list: [
-          { url: 'static/image/shop1.png', text: '1号店' },
-          { url: 'static/image/shop2.png', text: '2号店' },
-          { url: 'static/image/shop3.png', text: '3号店' },
-          { url: 'static/image/shop3.png', text: '4号店' },
-          { url: 'static/image/shop3.png', text: '5号店' },
-          { url: 'static/image/shop3.png', text: '6号店' },
-        ],
-      },
-      {
-        title: '热门商品',
-        type: 'product',
-        list: [
-          { url: 'static/image/product1.png', text: '包' },
-          { url: 'static/image/product2.png', text: '化妆品' },
-          { url: 'static/image/product3.png', text: '香水' }],
-      },
-    ],
-  },
   hot: {
     keywords: ['关键词1', '关键词2', '关键词3', '关键词4', '关键词5', '关键词6', '关键词7', '关键词8', '关键词9'],
     newsList: [
@@ -105,46 +58,6 @@ const data = {
       { headImg: '.', nickname: 'Kate 学生 32岁', content: '这里是评论这里是评论这里是评论这里是评论这里是评论这里是评论' },
     ],
   },
-  related: [
-    {
-      name: 'Dior',
-      type: 'intro',
-      imgUrl: 'static/image/logo.png',
-      content: '这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本这里是介绍文本',
-    },
-    { name: 'HERMES', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-    { name: '香奈儿', type: 'brand', imgUrl: 'static/image/logo.png', content: 'text' },
-  ],
 }
 
 const mapStateToProps = state => state.toJS()

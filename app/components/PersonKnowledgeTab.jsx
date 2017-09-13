@@ -18,7 +18,7 @@ export default class PersonKnowledgeTab extends React.Component {
     let cards = List()
     const company = Map({
       title: '人物简介',
-      imgUrl: 'static/image/company.png',
+      imgUrl: 'app/static/image/company.png',
       name: cardData.get('name'),
       desc: cardData.get('description'),
       attr: cardData.get('optional').sortBy(x => x.length),

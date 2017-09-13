@@ -51,7 +51,7 @@ export default class RelatedBrandTab extends React.Component {
       return (<div className="cards" />)
     }
     const brandList = cardData.map(i => Map({
-      imgUrl: 'static/image/logo.png',
+      imgUrl: 'app/static/image/logo.png',
       name: i.get('name'),
       content: i.get('description'),
       attr: Map(),

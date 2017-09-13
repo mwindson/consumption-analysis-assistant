@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     main: [
       'babel-polyfill',
+      'react-hot-loader/patch',
       `${__dirname}/app/index.js`,
     ],
   },
@@ -73,7 +74,7 @@ module.exports = {
 
   devServer: {
     host: '0.0.0.0',
-    contentBase: './app',
+    contentBase: __dirname,
     hot: true,
     // public: '10.214.224.133:8080',
   },

@@ -26,7 +26,7 @@ export default class BrandKnowledgeTab extends React.Component {
     if (cardData.get('brand')) {
       const brand = Map({
         title: titles.brand,
-        imgUrl: 'static/image/logo.png',
+        imgUrl: 'app/static/image/logo.png',
         name: cardData.get('brand').get('name'),
         desc: cardData.get('brand').get('description'),
         attr: Map(),
@@ -44,7 +44,7 @@ export default class BrandKnowledgeTab extends React.Component {
     if (cardData.get('company')) {
       const company = Map({
         title: titles.company,
-        imgUrl: 'static/image/company.png',
+        imgUrl: 'app/static/image/company.png',
         name: cardData.get('company').get('name'),
         desc: '',
         attr: Map({
@@ -61,7 +61,7 @@ export default class BrandKnowledgeTab extends React.Component {
     let lists = List([Map({
       title: '相关人物',
       list: cardData.get('persons').map(i => Map({
-        url: 'static/image/person1.png',
+        url: 'app/static/image/person1.png',
         text: i.get('name'),
         id: i.get('id'),
       })),
@@ -71,7 +71,7 @@ export default class BrandKnowledgeTab extends React.Component {
       const product = Map({
         title: '相关商品',
         list: cardData.get('products').map(i => Map({
-          url: 'static/image/product1.png',
+          url: 'app/static/image/product1.png',
           text: i.get('name'),
           id: i.get('id'),
         })),

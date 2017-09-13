@@ -236,15 +236,17 @@ function hoverOn(linkData, centerId, currentId) {
     link.filter(d => (d.source.id === centerId && d.target.id === currentId) || (d.source.id === currentId && d.target.id === centerId))
       .attr('opacity', 1)
     hoverLinks = links
-      .filter(d => (d.source.id === currentId && d.score === 1) || (d.target.id === currentId && d.source.id === centerId))
+      .filter(d => (d.source.id === currentId && d.score === 1) || (d.target.id === currentId && d.source.id === centerId) || isLink(d, linkData, currentId, centerId))
       .append('line')
       .attr('class', 'line-hover')
       .attr('stroke', '#fff')
       .attr('opacity', 1)
       .attr('stroke-width', 3)
     relatedNode = nodes
-      .filter(d => d.id === currentId || d.id === centerId || linkData.filter(x => (x.get('target') === d.id && x.get('source') === currentId
-        && x.get('score') === 1)).size !== 0)
+      .filter(d => d.id === currentId
+        // || d.id === centerId || linkData.filter(x => (x.get('target') === d.id && x.get('source') === currentId
+        // && x.get('score') === 1)).size !== 0)
+        || !hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
   } else {
     hoverLinks = links
       .filter(d => (d.source.id === currentId && d.score === 1) || isLink(d, linkData, currentId, centerId))
@@ -409,9 +411,9 @@ function dragEnd(d) {
   d.fy = null
 }
 
-function isLink(d, linkData, currentId, centerID) {
-  return (d.source.id === centerID && linkData.filter(x => x.get('source') === d.target.id && x.get('target') === currentId).size !== 0)
-    || (d.source.id === currentId && linkData.filter(x => x.get('source') === d.target.id && x.get('target') === centerID).size !== 0)
-    || (d.target.id === currentId && linkData.filter(x => x.get('target') === d.source.id && x.get('source') === centerID).size !== 0)
-    || (d.target.id === centerID && linkData.filter(x => x.get('target') === d.source.id && x.get('source') === currentId).size !== 0)
+function isLink(d, linkData, currentId, centerId) {
+  return (d.source.id === centerId && linkData.filter(x => x.get('source') === d.target.id && x.get('target') === currentId).size !== 0)
+    || (d.source.id === currentId && linkData.filter(x => x.get('source') === d.target.id && x.get('target') === centerId).size !== 0)
+    || (d.target.id === currentId && linkData.filter(x => x.get('target') === d.source.id && x.get('source') === centerId).size !== 0)
+    || (d.target.id === centerId && linkData.filter(x => x.get('target') === d.source.id && x.get('source') === currentId).size !== 0)
 }

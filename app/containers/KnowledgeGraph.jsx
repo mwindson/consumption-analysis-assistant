@@ -81,12 +81,12 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   handleNodeClick = (id, nodeType) => {
-    if (nodeType !== 'Product') {
-      zoomReset(this.svgElement, this.graphZoom, this.props.centerId)
-      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: nodeType })
-    } else {
-      this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'product', id })
-    }
+    // if (nodeType !== 'Product') {
+    zoomReset(this.svgElement, this.graphZoom, this.props.centerId)
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: nodeType })
+    // } else {
+    //   this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'product', id })
+    // }
   }
 
   render() {

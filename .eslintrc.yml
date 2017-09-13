@@ -38,4 +38,5 @@ rules:
   react/no-array-index-key: off
   react/forbid-prop-types: off
   one-var: off
+  linebreak-style: off
 
