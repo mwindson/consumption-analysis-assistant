@@ -3,13 +3,14 @@ import PropTypes from 'prop-types'
 import { fromJS, Map, Range } from 'immutable'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import NewsCards from 'components/cards/NewsTab'
-import BrandTrendCards from 'components/cards/BrandTrendTab'
-import RelatedBrandCards from 'components/cards/RelatedBrandTab'
-import PersonKnowledgeTab from 'components/cards/PersonKnowledgeTab'
+import NewsCards from 'components/NewsTab'
+import BrandTrendCards from 'components/BrandTrendTab'
+import RelatedBrandCards from 'components/RelatedBrandTab'
+import PersonKnowledgeTab from 'components/PersonKnowledgeTab'
 import * as A from 'actions'
 import 'style/KnowledgeCards.styl'
-import BrandKnowledgeTab from './cards/BrandKnowledgeTab'
+import BrandKnowledgeTab from 'components/BrandKnowledgeTab'
+import ProductDetailTab from 'components/ProductDetailTab'
 import config from '../utils/config.yaml'
 
 const data = {
@@ -38,26 +39,26 @@ const data = {
         { url: 'static/image/person4.png', text: '代言人' },
       ],
     },
-    {
-      title: '门店信息',
-      type: 'store',
-      list: [
+      {
+        title: '门店信息',
+        type: 'store',
+        list: [
           { url: 'static/image/shop1.png', text: '1号店' },
           { url: 'static/image/shop2.png', text: '2号店' },
           { url: 'static/image/shop3.png', text: '3号店' },
           { url: 'static/image/shop3.png', text: '4号店' },
           { url: 'static/image/shop3.png', text: '5号店' },
           { url: 'static/image/shop3.png', text: '6号店' },
-      ],
-    },
-    {
-      title: '热门商品',
-      type: 'product',
-      list: [
+        ],
+      },
+      {
+        title: '热门商品',
+        type: 'product',
+        list: [
           { url: 'static/image/product1.png', text: '包' },
           { url: 'static/image/product2.png', text: '化妆品' },
           { url: 'static/image/product3.png', text: '香水' }],
-    },
+      },
     ],
   },
   hot: {
@@ -208,6 +209,7 @@ export default class KnowledgeCards extends React.Component {
         {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
         {chosen === 'knowledge' ? <BrandKnowledgeTab /> : null}
         {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
+        {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
       </div>
     )
   }
