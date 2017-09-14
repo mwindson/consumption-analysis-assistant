@@ -67,7 +67,7 @@ function* handleUpdateGraphData({ id, resultType }) {
 
 function* handleUpdateCardData({ tab, id, cardType }) {
   // 部分tab页目前没有数据
-  if (tab === 'knowledge' || tab === 'relatedBrands' || tab === 'detail') {
+  if (tab === 'knowledge' || tab === 'relatedBrands' || tab === 'detail' || tab === 'spec') {
     try {
       const url = `${host}/${cardType.toLowerCase()}/${tab}?${cardType.toLowerCase()}Id=${encodeURIComponent(id)}`
       const response = yield fetch(url, { mode: 'cors' })

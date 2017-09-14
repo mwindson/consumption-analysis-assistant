@@ -20,7 +20,7 @@ Company:
 Product:
  - key: detail
    name: 商品信息
- - key: model
+ - key: spec
    name: 商品规格
  - key: priceSales
    name: 价格销量
@@ -30,7 +30,7 @@ nameMap:
   Person: 人物
   brand: 品牌
   name: 名称
-  sku: sku编号
+  sku: 商品编号
   source: 来源
   url: 链接
   description: 介绍

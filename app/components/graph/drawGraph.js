@@ -236,7 +236,7 @@ function hoverOn(linkData, centerId, currentId) {
     link.filter(d => (d.source.id === centerId && d.target.id === currentId) || (d.source.id === currentId && d.target.id === centerId))
       .attr('opacity', 1)
     hoverLinks = links
-      .filter(d => (d.source.id === currentId && d.score === 1) || (d.target.id === currentId && d.source.id === centerId) || isLink(d, linkData, currentId, centerId))
+      .filter(d => (d.source.id === currentId && d.score === 1) || (d.target.id === currentId && d.source.id === centerId))
       .append('line')
       .attr('class', 'line-hover')
       .attr('stroke', '#fff')
@@ -244,9 +244,9 @@ function hoverOn(linkData, centerId, currentId) {
       .attr('stroke-width', 3)
     relatedNode = nodes
       .filter(d => d.id === currentId
-        // || d.id === centerId || linkData.filter(x => (x.get('target') === d.id && x.get('source') === currentId
-        // && x.get('score') === 1)).size !== 0)
-        || !hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
+        || d.id === centerId || linkData.filter(x => (x.get('target') === d.id && x.get('source') === currentId
+          && x.get('score') === 1)).size !== 0)
+    // || !hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
   } else {
     hoverLinks = links
       .filter(d => (d.source.id === currentId && d.score === 1) || isLink(d, linkData, currentId, centerId))

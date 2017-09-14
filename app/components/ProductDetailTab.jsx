@@ -1,8 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Map, Range, List } from 'immutable'
+import { Map, Range, List, fromJS } from 'immutable'
 import ListCard from 'components/cards/ListCard'
-import config from 'utils/config.yaml'
 import 'style/ProductDetailTab.styl'
 
 const mapStateToProps = state => state.toObject()
@@ -14,46 +13,30 @@ export default class ProductDetailTab extends React.Component {
     if (cardData.isEmpty()) {
       return null
     }
-    const productDetail = Map({
-      name: cardData.get('name'),
-      brand: cardData.get('brand'),
-      category: cardData.get('category'),
-      description: cardData.get('description'),
-      sku: cardData.get('sku'),
-      source: cardData.get('source'),
-      url: cardData.get('url'),
-      optional: cardData.get('optional'),
-    })
+    let productDetail = List([
+      Map({ key: '商品名称', value: cardData.get('name') }),
+      Map({ key: '品牌', value: cardData.get('brand') }),
+      Map({ key: '商品编号', value: cardData.get('sku') }),
+      Map({ key: '来源', value: cardData.get('source') }),
+      Map({ key: '链接', value: cardData.get('url') }),
+    ])
+    const main = cardData.get('spec')
+      .filter(x => x.get('key') === '主体')
+    if (!main.isEmpty()) {
+      productDetail = productDetail.concat(main.first().get('value').filter(x => x.get('key') !== '品牌'))
+    }
     const category = cardData.get('category')
-    const lists = Map({
-      title: '相关商品',
-      list: List(),
-      type: 'Poduct',
-    })
     return (
       <div className="cards">
         <div className="product-card">
           <div className="title">商品信息</div>
-          {productDetail.entrySeq().map((attr, index) => {
-            if (attr[0] !== 'category' && attr[0] !== 'optional' && attr[1] && attr[1].length !== 0) {
-              return (<div key={index} className="attr">
-                <div className="key">{config.nameMap[attr[0]]}</div>
-                <div className="value">{attr[0] === 'url' ?
-                  <a href={attr[1]} target="_blank">京东页面</a> : attr[1]} </div>
-              </div>)
-            } else if (attr[0] === 'category') {
-              return (<div key={index} className="attr">
-                <div className="key">类别</div>
-                <div className="value">{attr[1].join('、')}</div>
-              </div>)
-            } else if (attr[0] === 'optional' && attr[1].size !== 0) {
-              return (<div key={index} className="attr">
-                <div className="key">其他</div>
-                <div className="value">{attr[1].entrySeq().map((v, i) =>
-                  <div key={i} className="other">{`${v[0]}: ${v[1]}`}</div>)}
-                </div>
-              </div>)
-            }
+          {productDetail.map((attr, index) => {
+            return (<div key={index} className="attr">
+              <div className="key">{attr.get('key')}</div>
+              <div className="value">{attr.get('key') === '链接' ?
+                <a href={attr.get('value')} target="_blank">京东页面</a> : attr.get('value')}
+              </div>
+            </div>)
           })}
         </div>
         <div className="product-card">

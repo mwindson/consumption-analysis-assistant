@@ -11,6 +11,7 @@ import * as A from 'actions'
 import 'style/KnowledgeCards.styl'
 import BrandKnowledgeTab from 'components/BrandKnowledgeTab'
 import ProductDetailTab from 'components/ProductDetailTab'
+import ProductSpecTab from 'components/ProductSpecTab'
 import config from '../utils/config.yaml'
 
 const data = {
@@ -123,6 +124,7 @@ export default class KnowledgeCards extends React.Component {
         {chosen === 'knowledge' ? <BrandKnowledgeTab /> : null}
         {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
         {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
+        {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
       </div>
     )
   }
