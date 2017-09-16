@@ -67,16 +67,16 @@ function* handleUpdateGraphData({ id, resultType }) {
 
 function* handleUpdateCardData({ tab, id, cardType }) {
   // 部分tab页目前没有数据
-  if (tab === 'knowledge' || tab === 'relatedBrands' || tab === 'detail' || tab === 'spec') {
-    try {
-      const url = `${host}/${cardType.toLowerCase()}/${tab}?${cardType.toLowerCase()}Id=${encodeURIComponent(id)}`
-      const response = yield fetch(url, { mode: 'cors' })
-      if (response.ok) {
-        const json = yield response.json()
-        yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data), centerType: cardType })
-      }
-    } catch (e) {
-      console.log(e)
+  try {
+    const url = `${host}/${cardType.toLowerCase()}/${tab}?${cardType.toLowerCase()}Id=${encodeURIComponent(id)}`
+    const response = yield fetch(url, { mode: 'cors' })
+    if (response.ok) {
+      const json = yield response.json()
+      yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data), centerType: cardType })
+    } else {
+      yield put({ type: A.CLEAR_CARD_DATA })
     }
+  } catch (e) {
+    console.log(e)
   }
 }

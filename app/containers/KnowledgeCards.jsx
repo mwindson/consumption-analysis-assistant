@@ -7,6 +7,7 @@ import NewsCards from 'components/NewsTab'
 import BrandTrendCards from 'components/BrandTrendTab'
 import RelatedBrandCards from 'components/RelatedBrandTab'
 import PersonKnowledgeTab from 'components/PersonKnowledgeTab'
+import PersonStoryTab from 'components/PersonStoryTab'
 import * as A from 'actions'
 import 'style/KnowledgeCards.styl'
 import BrandKnowledgeTab from 'components/BrandKnowledgeTab'
@@ -123,6 +124,7 @@ export default class KnowledgeCards extends React.Component {
         {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
         {chosen === 'knowledge' ? <BrandKnowledgeTab /> : null}
         {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
+        {chosen === 'story' && centerType === 'Person' ? <PersonStoryTab /> : null}
         {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
         {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
       </div>
