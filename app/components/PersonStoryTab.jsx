@@ -14,7 +14,7 @@ export default class PersonKnowledgeTab extends React.Component {
       return null
     }
     const detail = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'detail')
-    if (cardData.get('optional') || detail.isEmpty()) {
+    if (!cardData.get('optional') || detail.isEmpty()) {
       return (
         <div className="cards">
           <div className="product-card">暂无更多信息</div>
