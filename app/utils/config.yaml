@@ -15,8 +15,12 @@ Person:
  - key: story
    name: 人物故事
 Company:
- - key: empty
-   name: 暂无
+ - key: detail
+   name: 企业信息
+ - key: story
+   name: 企业故事
+ - key: relatedBrands
+   name: 相关品牌
 Product:
  - key: detail
    name: 商品信息

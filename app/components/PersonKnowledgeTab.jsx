@@ -30,7 +30,7 @@ export default class PersonKnowledgeTab extends React.Component {
     const infoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box')
     const person = Map({
       title: '人物简介',
-      imgUrl: 'app/static/image/company.png',
+      imgUrl: cardData.get('image'),
       name: cardData.get('name'),
       desc: cardData.get('description'),
       attr: infoBox.isEmpty() ? null : infoBox.first().get('value'),
@@ -43,7 +43,7 @@ export default class PersonKnowledgeTab extends React.Component {
               <div className="person-name">{person.get('name')}</div>
               <div className="person-text">{person.get('desc')}</div>
             </div>
-            <img src={'app/static/image/company.png'} alt={person.get('name')} />
+            <img src={person.get('imgUrl')} alt={person.get('name')} />
           </div>
           {person.get('attr') ?
             <div className="person-attr">

@@ -64,8 +64,9 @@ function drawNodes(svg, nodeData) {
     .attr('fill', d => nodeColor[d.type])
     .attr('stroke-width', '3')
   nodes
+    .append('g')
+    .attr('clip-path', 'url(#textClip)')
     .append('text')
-    .attr('text-anchor', 'middle')
     .text('')
 }
 
@@ -160,24 +161,29 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
   // 显示和删除文字
   d3.selectAll('.node-show')
     .selectAll('text')
-    .text(d => d.name.length > 4 ? `${d.name.substr(0, 4)}...` : d.name)
+    .text(d => d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
     .attr('font-size', d => d.id === centerId ? 20 : 14)
     .attr('font-weight', d => d.id === centerId ? 'bold' : 'null')
     .attr('fill', '#125091')
-    .attr('transform', 'translate(0,5)')
+    .each(function () {
+      const textWidth = d3.select(this).node().getBBox().width
+      d3.select(this).attr('transform', `translate(${textWidth <= 90 ? -textWidth / 2 : -45},7)`)
+    })
+
   d3.selectAll('.node-hidden')
     .selectAll('text')
     .text('')
-  // 更新节点点击和拖动事件
+// 更新节点点击和拖动事件
   const tooltip = d3.select('.tooltip')
   nodes
-    .filter(d => d.type === 'Brand' || d.type === 'Person' || d.type === 'Product')
     .attr('cursor', 'pointer')
     .on('click', () => {
       const id = d3.select(d3.event.target).datum().id
       force.stop()
+      // 移除文字动画
+      d3.selectAll('animateTransform').remove()
       if (hoverLinks) hoverLinks.remove()
       hoverLinks = null
       if (id !== centerId) {
@@ -262,13 +268,32 @@ function hoverOn(linkData, centerId, currentId) {
   relatedNode
     .attr('opacity', 1)
     .selectAll('text')
-    .text(d => d.name.length > 4 ? `${d.name.substr(0, 4)}...` : d.name)
+    .text(d => d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
     .attr('font-size', d => d.id === centerId ? 20 : 14)
     .attr('font-weight', d => d.id === centerId ? 'bold' : 'null')
     .attr('fill', '#125091')
-    .attr('transform', 'translate(0,5)')
+    .each(function () {
+      const textWidth = d3.select(this).node().getBBox().width
+      d3.select(this).attr('transform', `translate(${textWidth <= 90 ? -textWidth / 2 : -45},7)`)
+    })
+  relatedNode
+    .filter(d => d.id === currentId)
+    .selectAll('text')
+    .each(function () {
+      const textWidth = d3.select(this).node().getBBox().width
+      if (textWidth > 90) {
+        d3.select(this)
+          .append('animateTransform')
+          .attr('attributeName', 'transform')
+          .attr('type', 'translate')
+          .attr('from', '45 7')
+          .attr('to', `${-textWidth - 45} 7`)
+          .attr('dur', `${textWidth / 40}`)
+          .attr('repeatCount', 'indefinite')
+      }
+    })
   relatedNode
     .selectAll('circle')
     .transition()
@@ -322,6 +347,8 @@ function hoverLeave() {
     .duration(500)
     .attr('r', 40)
     .attr('fill', d => nodeColor[d.type])
+  // 移除文字动画
+  d3.selectAll('animateTransform').remove()
   // 删除hover时临时显示的线
   if (hoverLinks && !hoverLinks.empty()) {
     hoverLinks.remove()

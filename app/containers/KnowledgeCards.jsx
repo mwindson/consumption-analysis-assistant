@@ -1,18 +1,19 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { fromJS, Map, Range } from 'immutable'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
+import * as A from 'actions'
+import 'style/KnowledgeCards.styl'
 import NewsCards from 'components/NewsTab'
 import BrandTrendCards from 'components/BrandTrendTab'
 import RelatedBrandCards from 'components/RelatedBrandTab'
 import PersonKnowledgeTab from 'components/PersonKnowledgeTab'
 import PersonStoryTab from 'components/PersonStoryTab'
-import * as A from 'actions'
-import 'style/KnowledgeCards.styl'
 import BrandKnowledgeTab from 'components/BrandKnowledgeTab'
 import ProductDetailTab from 'components/ProductDetailTab'
 import ProductSpecTab from 'components/ProductSpecTab'
+import CompanyKnowledgeTab from 'components/CompanyKnowledgeTab'
+import CompanyStoryTab from 'components/CompanyStoryTab'
 import config from '../utils/config.yaml'
 
 const data = {
@@ -122,11 +123,13 @@ export default class KnowledgeCards extends React.Component {
             trendData={fromJS(data[chosen]).get('trend')}
           /> : null}
         {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
-        {chosen === 'knowledge' ? <BrandKnowledgeTab /> : null}
+        {chosen === 'knowledge' && centerType === 'Brand' ? <BrandKnowledgeTab /> : null}
         {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
         {chosen === 'story' && centerType === 'Person' ? <PersonStoryTab /> : null}
         {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
         {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
+        {chosen === 'detail' && centerType === 'Company' ? <CompanyKnowledgeTab /> : null}
+        {chosen === 'story'&& centerType === 'Company' ? <CompanyStoryTab /> : null}
       </div>
     )
   }

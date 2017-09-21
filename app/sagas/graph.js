@@ -9,7 +9,8 @@ export default function* graphSaga() {
   yield takeEvery(A.FETCH_CARD_DATA, handleUpdateCardData)
 }
 
-const host = 'http://10.214.208.50:9001'
+// const host = 'http://10.214.208.50:9001'
+const host = 'http://10.214.224.126:9001'
 
 function* handleSearch({ keyword }) {
   try {

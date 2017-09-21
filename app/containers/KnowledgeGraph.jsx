@@ -119,6 +119,9 @@ export default class KnowledgeGraph extends React.Component {
             <g className="graph-g">
               <g className="line-group" />
               <g className="node-group" />
+              <clipPath id="textClip">
+                <rect x="-45" y="-15" width="90" height="30" />
+              </clipPath>
             </g>
           </svg>
           <div className="tooltip">

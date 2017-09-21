@@ -26,7 +26,7 @@ export default class BrandKnowledgeTab extends React.Component {
     if (cardData.get('brand')) {
       const brand = Map({
         title: titles.brand,
-        imgUrl: 'app/static/image/logo.png',
+        imgUrl: cardData.get('brand').get('image'),
         name: cardData.get('brand').get('name'),
         desc: cardData.get('brand').get('description'),
         attr: Map(),
@@ -42,31 +42,40 @@ export default class BrandKnowledgeTab extends React.Component {
       wechat: '微信公众号',
     }
     if (cardData.get('company')) {
-      const company = Map({
+      let company = Map({
         title: titles.company,
         imgUrl: 'app/static/image/company.png',
         name: cardData.get('company').get('name'),
         desc: '',
         attr: Map({
           '公司地址': cardData.get('company').get('address'),
-          '微信公众号': cardData.get('company').get('wechat').get('value'),
           '官网': cardData.get('company').get('officialWebsite'),
           '联系方式': cardData.get('company').get('telephone'),
           '邮箱': cardData.get('company').get('email'),
-          '网站备案号': cardData.get('company').get('icp').get('value'),
         }),
       })
+      if (cardData.get('company').get('optional')) {
+        cardData.get('company').get('optional').forEach((item) => {
+          if (typeof item.get('value') === 'string') {
+            company = company.set('attr', company.get('attr').set(item.get('key'), item.get('value')))
+          }
+        })
+      }
       cards = cards.push(company)
     }
-    let lists = List([Map({
-      title: '相关人物',
-      list: cardData.get('persons').map(i => Map({
-        url: 'app/static/image/person1.png',
-        text: i.get('name'),
-        id: i.get('id'),
-      })),
-      type: 'Person',
-    })])
+    let lists = List([])
+    if (cardData.get('persons')) {
+      const persons = Map({
+        title: '相关人物',
+        list: cardData.get('persons').map(i => Map({
+          url: 'app/static/image/person1.png',
+          text: i.get('name'),
+          id: i.get('id'),
+        })),
+        type: 'Person',
+      })
+      lists = lists.push(persons)
+    }
     if (cardData.get('products')) {
       const product = Map({
         title: '相关商品',
