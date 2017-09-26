@@ -3,7 +3,7 @@ import { restart } from 'components/graph/drawGraph'
 
 export function zoomClick(svg, zoom, type) {
   const g = svg.select('.graph-g')
-  const k = type === 'zoom_in' ? 2 : 0.5
+  const k = type === 'zoom_in' ? 1.25 : 0.8
   // const width = svg.style('width').replace('px', '')
   // const height = svg.style('height').replace('px', '')
   zoom.scaleBy(svg, k)

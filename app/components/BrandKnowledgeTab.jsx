@@ -7,7 +7,7 @@ import CommonCard from 'components/cards/CommonCard'
 import ListCard from 'components/cards/ListCard'
 import textTruncated from 'utils/textTruncated'
 
-const mapStateToProps = state => state.toObject()
+const mapStateToProps = state => state.reducer.toObject()
 
 @connect(mapStateToProps)
 export default class BrandKnowledgeTab extends React.Component {
@@ -68,7 +68,7 @@ export default class BrandKnowledgeTab extends React.Component {
       const persons = Map({
         title: '相关人物',
         list: cardData.get('persons').map(i => Map({
-          url: 'app/static/image/person1.png',
+          url: i.get('image'),
           text: i.get('name'),
           id: i.get('id'),
         })),

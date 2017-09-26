@@ -7,7 +7,7 @@ import * as A from 'actions'
 import { ArrowTop, ArrowBottom } from 'components/Icons'
 import 'style/CommonCard.styl'
 
-const mapStateToProps = state => state.toObject()
+const mapStateToProps = state => state.reducer.toObject()
 
 @connect(mapStateToProps)
 export default class ListCard extends React.Component {
@@ -51,18 +51,13 @@ export default class ListCard extends React.Component {
   }
 
   handleExpand = () => {
-    // todo 增加动画
     const { dispatch, type } = this.props
     this.setState({ expand: !this.state.expand })
     dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: this.state.expand ? 'all' : type })
   }
   handleClick = (id, type) => {
-    // if (type !== 'Product') {
     this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id, centerType: type })
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
-    // } else {
-    //   this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'product', id })
-    // }
   }
 
   render() {
@@ -80,7 +75,7 @@ export default class ListCard extends React.Component {
               className={classNames('item', type)}
               onClick={() => this.handleClick(l.get('id'), type)}
             >
-              <img src={l.get('url')} alt={l.get('text')} title={l.get('text')} />
+              <img src={l.get('url')} />
               <div className="name" title={l.get('text')}>{l.get('text')}</div>
             </div>
           ))}

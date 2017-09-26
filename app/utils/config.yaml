@@ -7,8 +7,6 @@ Brand:
    name: 品牌动态
  - key: relatedBrands
    name: 相关品牌
- - key: story
-   name: 品牌故事
 Person:
  - key: detail
    name: 人物简介

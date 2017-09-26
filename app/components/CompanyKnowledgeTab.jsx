@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import CommonCard from 'components/cards/CommonCard'
 import 'style/PersonKnowledgeTab.styl'
 
-const mapStateToProps = state => state.toObject()
+const mapStateToProps = state => state.reducer.toObject()
 
 @connect(mapStateToProps)
 export default class CompanyKnowledgeTab extends React.Component {
@@ -14,11 +14,13 @@ export default class CompanyKnowledgeTab extends React.Component {
     if (cardData.isEmpty()) {
       return null
     }
-    let infoBox = null
-    if (!fromJS(cardData.get('optional')).filter(x => x.get('key') === 'qixin_info_box').first().get('value').isEmpty()) {
-      infoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'qixin_info_box').first().get('value')
-    } else if (!fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box').first().get('value').isEmpty()) {
-      infoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box').first().get('value')
+    let info = List()
+    const qixinInfoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'qixin_info_box')
+    const infoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box')
+    if (!qixinInfoBox.isEmpty() && !qixinInfoBox.first().get('value').isEmpty()) {
+      info = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'qixin_info_box').first().get('value')
+    } else if (!infoBox.isEmpty() && !fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box').first().get('value').isEmpty()) {
+      info = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box').first().get('value')
     }
 
     let company = Map({
@@ -26,23 +28,31 @@ export default class CompanyKnowledgeTab extends React.Component {
       imgUrl: 'app/static/image/company.png',
       name: cardData.get('name'),
       desc: '',
-      attr: Map({
-        '公司地址': cardData.get('address'),
-        '官网': cardData.get('officialWebsite'),
-        '联系方式': cardData.get('telephone'),
-        '邮箱': cardData.get('email'),
-      }),
     })
+    let attr = Map()
+    if (cardData.get('address')) {
+      attr = attr.set('公司地址', cardData.get('address'))
+    }
+    if (cardData.get('officialWebsite')) {
+      attr = attr.set('官网', cardData.get('officialWebsite'))
+    }
+    if (cardData.get('telephone')) {
+      attr = attr.set('联系方式', cardData.get('telephone'))
+    }
+    if (cardData.get('email')) {
+      attr = attr.set('邮箱', cardData.get('email'))
+    }
     if (cardData.get('optional')) {
       cardData.get('optional').forEach((item) => {
         if (typeof item.get('value') === 'string') {
-          company = company.set('attr', company.get('attr').set(item.get('key'), item.get('value')))
+          attr = attr.set(item.get('key'), item.get('value'))
         }
       })
     }
+    company = company.set('attr', attr)
     const companyAttr = Map({
       name: '企业资料',
-      attr: infoBox.isEmpty() ? null : infoBox,
+      attr: info.isEmpty() ? null : info,
     })
     return (
       <div className="cards">

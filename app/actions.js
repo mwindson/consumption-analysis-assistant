@@ -10,6 +10,9 @@ export const RETURN_NO_RESULT = 'RETURN_NO_RESULT'
 // 更新默认的中心节点
 export const UPDATE_CENTER_ID = 'UPDATE_CENTER_ID'
 
+// 关系图的加载状态
+export const SET_GRAPH_LOADING = 'SET_GRAPH_LOADING'
+
 // 操作中心节点对应知识卡片的数据
 export const FETCH_CARD_DATA = 'FETCH_CARD_DATA'
 export const UPDATE_CARD_DATA = 'UPDATE_CARD_DATA'

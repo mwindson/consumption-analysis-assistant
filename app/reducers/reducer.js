@@ -1,6 +1,6 @@
 import { Map, List, Set } from 'immutable'
 import * as A from 'actions'
-import config from './utils/config.yaml'
+import config from 'utils/config.yaml'
 
 const initialState = Map({
   nodeData: Set(),
@@ -15,6 +15,7 @@ const initialState = Map({
   popupType: 'none',  // none or searchResult or product -- none 不弹出
   searchResult: List(),
   productDetail: Map(),
+  graphLoading: false,
 })
 export default function reducer(state = initialState, action) {
   if (action.type === A.UPDATE_SEARCH_RESULT) {
@@ -25,7 +26,7 @@ export default function reducer(state = initialState, action) {
     return state.set('cardData', cardData)
   } else if (action.type === A.UPDATE_NODES_AND_LINKS_DATA) {
     const { nodeData, linkData } = action
-    return state.set('nodeData', nodeData).set('linkData', linkData).set('noResult', false)
+    return state.set('nodeData', nodeData).set('linkData', linkData).set('noResult', false).set('graphLoading', false)
   } else if (action.type === A.UPDATE_CENTER_ID) {
     const { centerId, centerType } = action
     return state.set('centerId', centerId).set('centerType', centerType).set('tab', config[centerType][0].key)
@@ -58,6 +59,8 @@ export default function reducer(state = initialState, action) {
       productDetail = Map()
     }
     return state.set('popupType', contentType).set('productDetail', productDetail)
+  } else if (action.type === A.SET_GRAPH_LOADING) {
+    return state.set('graphLoading', true)
   } else {
     return state
   }

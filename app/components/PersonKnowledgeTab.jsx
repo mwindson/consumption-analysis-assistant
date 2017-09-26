@@ -3,7 +3,7 @@ import { List, Map, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import 'style/PersonKnowledgeTab.styl'
 
-const mapStateToProps = state => state.toObject()
+const mapStateToProps = state => state.reducer.toObject()
 
 @connect(mapStateToProps)
 export default class PersonKnowledgeTab extends React.Component {
@@ -13,20 +13,6 @@ export default class PersonKnowledgeTab extends React.Component {
     if (cardData.isEmpty()) {
       return null
     }
-    const optional = [
-      {
-        key: 'info_box',
-        value: [
-          {
-            key: '职务',
-            value: '董事长',
-          },
-          {
-            key: '性别',
-            value: '男',
-          },
-        ],
-      }]
     const infoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box')
     const person = Map({
       title: '人物简介',
@@ -41,9 +27,9 @@ export default class PersonKnowledgeTab extends React.Component {
           <div className="person-content">
             <div className="person-intro">
               <div className="person-name">{person.get('name')}</div>
-              <div className="person-text">{person.get('desc')}</div>
+              <div className="person-text">{person.get('desc') ? person.get('desc') : '暂无更多数据'}</div>
             </div>
-            <img src={person.get('imgUrl')} alt={person.get('name')} />
+            <img src={person.get('imgUrl')} />
           </div>
           {person.get('attr') ?
             <div className="person-attr">

@@ -10,25 +10,27 @@ import { LogoIcon, SearchIcon, ErrorIcon } from 'components/Icons'
 import 'style/HomePage.styl'
 import config from '../utils/config.yaml'
 
-const mapStateToProps = state => state.toObject()
+const mapStateToProps = state => state.reducer.toObject()
 
 @connect(mapStateToProps)
 export default class HomePage extends React.Component {
   state = {
-    editing: false,
-    inputValue: '',
+    editing: false, // 是否正在输入
+    inputValue: '', // 搜索框输入内容
     searchState: 'none', // none | searching | error
     overflow: false, // 判断搜索结果是否溢出
-    listExpand: false,
+    listExpand: false, // 搜索结果显示更多
   }
 
   componentDidMount() {
+    // todo 品牌条目和产品条目统计展示
     const searchResult = document.getElementsByClassName('search-result')[0]
     searchResult.addEventListener('overflow', () => this.setState({ overflow: true }))
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:小米MI', resultType: 'Brand' })
   }
 
   componentWillReceiveProps(nextProps) {
+    // todo 浏览历史记录展示
     const { searchResult } = this.props
     if (!is(nextProps.searchResult, searchResult)) {
       this.handleResult(nextProps.searchResult.first().get('id'), nextProps.searchResult.first().get('type'))
@@ -118,6 +120,12 @@ export default class HomePage extends React.Component {
             </div>
           </div>
           <div className="graph">
+            {this.props.graphLoading ?
+              <div className="mask">
+                <div className="loading">
+                  <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
+                </div>
+              </div> : null}
             <KnowledgeGraph />
           </div>
         </div>
@@ -129,41 +137,20 @@ export default class HomePage extends React.Component {
           <Motion style={{ y: spring(isExpand ? 100 : 0), opacity: spring(isExpand ? 1 : 0.5) }}>
             {({ y, opacity }) =>
               (<div className="search-result-list" style={{ transform: `translate(0,${y}px)`, opacity }}>
-                <div className="close" onClick={() => this.closePopup()}>关闭</div>
-                <div className="list">
-                  {this.props.popupType === 'searchResult' ? this.props.searchResult.toArray().map((item, i) => (
-                    <div
-                      key={i}
-                      title={`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
-                      className="search-item"
-                      onClick={() => this.handleResult(item.get('id'), item.get('type'))}
-                    >
-                      {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
-                    </div>
+                  <div className="close" onClick={() => this.closePopup()}>关闭</div>
+                  <div className="list">
+                    {this.props.popupType === 'searchResult' ? this.props.searchResult.toArray().map((item, i) => (
+                      <div
+                        key={i}
+                        title={`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
+                        className="search-item"
+                        onClick={() => this.handleResult(item.get('id'), item.get('type'))}
+                      >
+                        {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
+                      </div>
                     )) : null}
-                  {this.props.popupType === 'product' ? this.props.productDetail.entrySeq().map((attr, index) => {
-                    if (attr[0] !== 'category' && attr[0] !== 'optional' && attr[1].length !== 0) {
-                      return (<div key={index} className="attr">
-                        <div className="key">{config.nameMap[attr[0]]}</div>
-                        <div className="value">{attr[0] === 'url' ?
-                          <a href={attr[1]} target="_blank">京东页面</a> : attr[1]} </div>
-                      </div>)
-                    } else if (attr[0] === 'category') {
-                      return (<div key={index} className="attr">
-                        <div className="key">类别</div>
-                        <div className="value">{attr[1].join('、')}</div>
-                      </div>)
-                    } else if (attr[0] === 'optional' && attr[1].size !== 0) {
-                      return (<div key={index} className="attr">
-                        <div className="key">其他</div>
-                        <div className="value">{attr[1].entrySeq().map((v, i) =>
-                          <div key={i} className="other">{`${v[0]}: ${v[1]}`}</div>)}
-                        </div>
-                      </div>)
-                    }
-                  }) : null}
+                  </div>
                 </div>
-              </div>
               )
             }
           </Motion>

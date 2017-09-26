@@ -10,7 +10,7 @@ import { zoomClick, zoomReset } from 'components/graph/zoomClick'
 import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
 
-const mapStateToProps = state => state.toObject()
+const mapStateToProps = state => state.reducer.toObject()
 
 @connect(mapStateToProps)
 export default class KnowledgeGraph extends React.Component {
@@ -47,6 +47,7 @@ export default class KnowledgeGraph extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { nodeData, linkData, centerId, graphType } = this.props
+    // todo 添加加载中的动画
     if (!is(nextProps.nodeData, nodeData) || !is(nextProps.linkData, linkData)) {
       drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, centerId,
         this.handleNodeClick, graphType, !nodeData.isEmpty(),
@@ -81,12 +82,8 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   handleNodeClick = (id, nodeType) => {
-    // if (nodeType !== 'Product') {
     zoomReset(this.svgElement, this.graphZoom, this.props.centerId)
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: nodeType })
-    // } else {
-    //   this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'product', id })
-    // }
   }
 
   render() {

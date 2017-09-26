@@ -63,7 +63,7 @@ const data = {
   },
 }
 
-const mapStateToProps = state => state.toJS()
+const mapStateToProps = state => state.reducer.toJS()
 
 @connect(mapStateToProps)
 export default class KnowledgeCards extends React.Component {
@@ -129,7 +129,7 @@ export default class KnowledgeCards extends React.Component {
         {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
         {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
         {chosen === 'detail' && centerType === 'Company' ? <CompanyKnowledgeTab /> : null}
-        {chosen === 'story'&& centerType === 'Company' ? <CompanyStoryTab /> : null}
+        {chosen === 'story' && centerType === 'Company' ? <CompanyStoryTab /> : null}
       </div>
     )
   }

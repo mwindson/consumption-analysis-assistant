@@ -5,7 +5,7 @@ import ListCard from 'components/cards/ListCard'
 import config from 'utils/config.yaml'
 import 'style/ProductSpecTab.styl'
 
-const mapStateToProps = state => state.toObject()
+const mapStateToProps = state => state.reducer.toObject()
 
 @connect(mapStateToProps)
 export default class ProductSpecTab extends React.Component {

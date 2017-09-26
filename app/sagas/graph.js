@@ -9,8 +9,9 @@ export default function* graphSaga() {
   yield takeEvery(A.FETCH_CARD_DATA, handleUpdateCardData)
 }
 
-// const host = 'http://10.214.208.50:9001'
-const host = 'http://10.214.224.126:9001'
+const host = 'http://10.214.208.50:9001'
+
+// const host = 'http://10.214.224.126:9001'
 
 function* handleSearch({ keyword }) {
   try {
@@ -19,7 +20,7 @@ function* handleSearch({ keyword }) {
     if (response.ok) {
       const json = yield response.json()
       const data = json.data
-      if (data) {
+      if (data && data.length !== 0) {
         const result = fromJS(data).map(i => Map({
           id: i.get('id'),
           type: i.get('type').last(),
@@ -38,12 +39,13 @@ function* handleSearch({ keyword }) {
 
 function* handleUpdateGraphData({ id, resultType }) {
   try {
+    yield put({ type: A.SET_GRAPH_LOADING })
     const url = `${host}/graph?id=${encodeURIComponent(id)}&type=${resultType}`
     const response = yield fetch(url, { mode: 'cors' })
     if (response.ok) {
       const json = yield response.json()
       const data = json.data
-      if (data) {
+      if (data && data.length !== 0) {
         const nodeData = fromJS(data.entities).map(i => Map({
           id: i.get('id'),
           name: i.get('name'),
@@ -57,7 +59,7 @@ function* handleUpdateGraphData({ id, resultType }) {
         yield put({ type: A.UPDATE_CENTER_ID, centerId: data.centerId, centerType: resultType })
         yield put({ type: A.UPDATE_NODES_AND_LINKS_DATA, nodeData, linkData })
       } else {
-        alert('暂无此词条')
+        console.log('暂无此词条')
       }
     }
   } catch (e) {
