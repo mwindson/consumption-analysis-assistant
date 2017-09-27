@@ -34,7 +34,11 @@ export default class ProductDetailTab extends React.Component {
             return (<div key={index} className="attr">
               <div className="key">{attr.get('key')}</div>
               <div className="value">{attr.get('key') === '链接' ?
-                <a href={attr.get('value')} target="_blank">京东页面</a> : attr.get('value')}
+                <a
+                  href={attr.get('value')}
+                  target="_blank"
+                  style={{ color: '#4990E2' }}
+                > 京东页面</a> : attr.get('value')}
               </div>
             </div>)
           })}
@@ -51,11 +55,6 @@ export default class ProductDetailTab extends React.Component {
             {Range(0, category.size).map(i => <div key={i} className="tag">{category.get(i)}</div>)}
           </div>
         </div>
-        <ListCard
-          title={'相关商品'}
-          list={List()}
-          type={'Product'}
-        />
       </div>
     )
   }

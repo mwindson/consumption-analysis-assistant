@@ -2,7 +2,7 @@ import React from 'react'
 import { List, Map, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import CommonCard from 'components/cards/CommonCard'
-import 'style/PersonKnowledgeTab.styl'
+import 'style/CompanyKnowledge.styl'
 
 const mapStateToProps = state => state.reducer.toObject()
 
@@ -66,13 +66,9 @@ export default class CompanyKnowledgeTab extends React.Component {
           truncated={false}
         />
         {companyAttr.get('attr') ?
-          <div className="person-cards">
-            <div className="person-content">
-              <div className="person-intro">
-                <div className="person-name">{companyAttr.get('name')}</div>
-              </div>
-            </div>
-            <div className="person-attr">
+          <div className="company-cards">
+            <div className="company-name">{companyAttr.get('name')}</div>
+            <div className="company-attr">
               {companyAttr.get('attr').map((item, index) =>
                 <div key={index} className="attr">
                   <div className="key">{item.get('key')}</div>

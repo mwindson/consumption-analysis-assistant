@@ -19,7 +19,7 @@ export default class BrandKnowledgeTab extends React.Component {
       persons: '相关人物',
     }
     const { cardData } = this.props
-    if (cardData.isEmpty()) {
+    if (!cardData || cardData.isEmpty()) {
       return null
     }
     let cards = List()

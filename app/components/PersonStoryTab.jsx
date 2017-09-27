@@ -25,6 +25,10 @@ export default class PersonKnowledgeTab extends React.Component {
     return (
       <div className="cards">
         <div className="person-cards">
+          {cardData.get('description') && cardData.get('description') !== '' ?
+            <div className="story">
+              <div className="text">{cardData.get('description')}</div>
+            </div> : null}
           {personStory.map((item, index) =>
             <div key={index} className="story">
               <h3>{item.get('key')}</h3>

@@ -7,11 +7,29 @@ export default function* graphSaga() {
   yield takeEvery(A.FETCH_SEARCH_RESULT, handleSearch)
   yield takeEvery(A.FETCH_NODES_AND_LINKS_DATA, handleUpdateGraphData)
   yield takeEvery(A.FETCH_CARD_DATA, handleUpdateCardData)
+  yield takeEvery(A.FETCH_COUNT_DATA, handleFetchCount)
 }
 
 const host = 'http://10.214.208.50:9001'
 
 // const host = 'http://10.214.224.126:9001'
+
+function* handleFetchCount() {
+  try {
+    const url = `${host}/statistic/count`
+    const response = yield fetch(url, { mode: 'core' })
+    if (response.ok) {
+      const data = yield response.json()
+      if (data && data.length !== 0) {
+        yield put({ type: A.UPDATE_COUNT_DATA, count: fromJS(data) })
+      } else {
+        console.log('暂无数据')
+      }
+    }
+  } catch (e) {
+    console.log(e)
+  }
+}
 
 function* handleSearch({ keyword }) {
   try {

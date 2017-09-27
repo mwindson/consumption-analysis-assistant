@@ -12,26 +12,31 @@
   .attr
     width 100%
     font-size 18px
-    line-height 20px
     border solid 1px rgba(0, 0, 0, .6)
     border-bottom none
     display flex
-    align-items center
     &:last-child
       border-bottom solid 1px rgba(0, 0, 0, .6)
+    &:nth-child(odd)
+      .value
+        background #EFEFEF
     .key
-      height 100%
       min-width 200px
+      background #E3E4E4
       display flex
-      align-items center
       justify-content center
+      align-items center
+      font-weight 600
     .value
+      width 100%
       border-left solid 1px rgba(0, 0, 0, .6)
       font-size 16px
       padding 5px
       display flex
       flex-wrap wrap
       align-items center
+      &:nth-child(odd)
+        background #EFEFEF
       .other
         width 100%
         margin 5px 0
@@ -43,9 +48,12 @@
     margin 5px 0
     .tag
       display inline-block
-      background-color #e1f0f7
-      color #69c
-      border-radius 3px
-      padding 5px
+      min-width 91px
+      height 25px
+      background-color #e4f1ff
+      font-size 14px
+      line-height 25px
+      color #4990E2
+      border-radius 2px
       text-align center
-      margin 0 5px
+      margin-left 15px

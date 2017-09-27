@@ -16,6 +16,8 @@ const initialState = Map({
   searchResult: List(),
   productDetail: Map(),
   graphLoading: false,
+  count: Map(),
+  history: List(),
 })
 export default function reducer(state = initialState, action) {
   if (action.type === A.UPDATE_SEARCH_RESULT) {
@@ -61,6 +63,9 @@ export default function reducer(state = initialState, action) {
     return state.set('popupType', contentType).set('productDetail', productDetail)
   } else if (action.type === A.SET_GRAPH_LOADING) {
     return state.set('graphLoading', true)
+  } else if (action.type === A.UPDATE_COUNT_DATA) {
+    const { count } = action
+    return state.set('count', count)
   } else {
     return state
   }

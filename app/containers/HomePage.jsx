@@ -23,10 +23,11 @@ export default class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    // todo 品牌条目和产品条目统计展示
     const searchResult = document.getElementsByClassName('search-result')[0]
     searchResult.addEventListener('overflow', () => this.setState({ overflow: true }))
     this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:米家MIJIA', resultType: 'Brand' })
+    // 品牌条目和产品条目统计展示
+    this.props.dispatch({ type: A.FETCH_COUNT_DATA })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -73,6 +74,7 @@ export default class HomePage extends React.Component {
 
   render() {
     const { editing, inputValue, searchState } = this.state
+    const { count } = this.props
     const isExpand = this.props.popupType !== 'none'
     return (
       <div className="main">
@@ -81,7 +83,25 @@ export default class HomePage extends React.Component {
             <div className="logo">
               <LogoIcon />
             </div>
-            <div className="title">Relationship diagram</div>
+            <div className="title" style={{ whiteSpace: 'nowrap' }}>Relationship diagram</div>
+            <div
+              className="title"
+              style={{ marginLeft: 50 }}
+            >当前已收录品牌
+              <span style={{ color: 'red', fontWeight: 'bold' }}>{count.get('brand') ? count.get('brand') : '0'}</span>个，
+              人物<span style={{
+                color: 'red',
+                fontWeight: 'bold',
+              }}>{count.get('person') ? count.get('person') : '0'}</span>个，
+              公司<span style={{
+                color: 'red',
+                fontWeight: 'bold',
+              }}>{count.get('company') ? count.get('company') : '0'}</span>个，
+              产品<span style={{
+                color: 'red',
+                fontWeight: 'bold',
+              }}>{count.get('product') ? count.get('product') : '0'}</span>个
+            </div>
           </div>
           <div className="search">
             <div className="input">

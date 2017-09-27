@@ -24,22 +24,17 @@ export default class PersonKnowledgeTab extends React.Component {
     return (
       <div className="cards">
         <div className="person-cards">
+          <div className="title">人物介绍</div>
           <div className="person-content">
-            <div className="person-intro">
-              <div className="person-name">{person.get('name')}</div>
-              <div className="person-text">{person.get('desc') ? person.get('desc') : '暂无更多数据'}</div>
-            </div>
             <img src={person.get('imgUrl')} />
+            <div className="person-name">{person.get('name')}</div>
+            {person.get('attr') ?
+              <div className="person-attr">
+                {person.get('attr').map((item, index) =>
+                  <div key={index} className="attr">{`${item.get('key')}：${item.get('value')}`}</div>)}
+              </div>
+              : null}
           </div>
-          {person.get('attr') ?
-            <div className="person-attr">
-              {person.get('attr').map((item, index) =>
-                <div key={index} className="attr">
-                  <div className="key">{item.get('key')}</div>
-                  <div className="value">{item.get('value')}</div>
-                </div>)}
-            </div>
-            : null}
         </div>
       </div>
     )

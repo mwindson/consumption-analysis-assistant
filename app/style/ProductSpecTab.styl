@@ -3,20 +3,27 @@
   font-size 18px
   line-height 20px
   border-top solid 1px gray
+  border-left solid 1px gray
+  border-right solid 1px gray
   display flex
   &:last-child
     margin-bottom 20px
     border-bottom solid 1px gray
+  &:nth-child(odd)
+    .value
+      background #EFEFEF
   .key
-    padding 10px
-    height 100%
     min-width 200px
+    background #E3E4E4
     display flex
-    justify-content flex-end
-    margin-right 20px
+    justify-content center
+    align-items center
+    font-weight 600
   .value
+    width 100%
     padding 10px
     font-size 16px
     display flex
     flex-wrap wrap
     justify-content flex-start
+    border-left solid 1px gray
