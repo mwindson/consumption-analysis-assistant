@@ -44,7 +44,7 @@ export default class BrandKnowledgeTab extends React.Component {
     if (cardData.get('company')) {
       let company = Map({
         title: titles.company,
-        imgUrl: 'app/static/image/company.png',
+        imgUrl: cardData.get('company').get('image'),
         name: cardData.get('company').get('name'),
         desc: '',
         attr: Map({

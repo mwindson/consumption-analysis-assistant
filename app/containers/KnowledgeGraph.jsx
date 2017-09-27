@@ -61,7 +61,7 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize')
+    window.removeEventListener('resize', this.resize)
   }
 
   resize = () => {

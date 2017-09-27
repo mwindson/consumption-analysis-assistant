@@ -32,7 +32,7 @@ export function drawGraph(svg, nodeData, linkData, centerId, nodeClick, type, fi
   force = d3.forceSimulation()
     .force('link', d3.forceLink().id(d => d.id).distance(d => d.source.id === centerId ? 100 : 500))
     .force('charge', d3.forceManyBody())
-    .force('collide', d3.forceCollide().radius(50))
+    .force('collide', d3.forceCollide().radius(60))
     .force('center', d3.forceCenter(width / 2, height / 2))
     .force('x', d3.forceX())
     .force('y', d3.forceY())
@@ -105,7 +105,6 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .attr('class', 'node-hidden')
     .attr('type', 'D')
     .attr('opacity', 0.8)
-    .attr('r', 40)
   // 隐藏C类
   nodes
     .filter(d => d.type !== 'empty')
