@@ -36,14 +36,14 @@ export default function reducer(state = initialState, action) {
     const oldName = state.get('centerName')
     let history = state.get('history')
     if (oldName !== '') {
-      history = history.push(Map({
+      history = history.unshift(Map({
         name: `${oldName}（${config.nameMap[state.get('centerType')]}）`,
         id: state.get('centerId'),
         type: state.get('centerType'),
       }))
     }
     if (history.size > 10) {
-      history = history.shift()
+      history = history.pop()
     }
     return state.set('centerId', centerId).set('centerType', centerType).set('tab', config[centerType][0].key)
       .set('centerName', centerName)
