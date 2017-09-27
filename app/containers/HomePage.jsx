@@ -26,7 +26,7 @@ export default class HomePage extends React.Component {
     // todo 品牌条目和产品条目统计展示
     const searchResult = document.getElementsByClassName('search-result')[0]
     searchResult.addEventListener('overflow', () => this.setState({ overflow: true }))
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:小米MI', resultType: 'Brand' })
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:米家MIJIA', resultType: 'Brand' })
   }
 
   componentWillReceiveProps(nextProps) {
