@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { Motion, spring } from 'react-motion'
 import KnowledgeCards from 'containers/KnowledgeCards'
 import KnowledgeGraph from 'containers/KnowledgeGraph'
+import CollapseButton from 'components/CollapseButton'
 import { is } from 'immutable'
 import * as A from 'actions'
 import { LogoIcon, SearchIcon, ErrorIcon } from 'components/Icons'
@@ -20,6 +21,7 @@ export default class HomePage extends React.Component {
     searchState: 'none', // none | searching | error
     overflow: false, // 判断搜索结果是否溢出
     listExpand: false, // 搜索结果显示更多
+    historyExpand: false, // 历史记录展开
   }
 
   componentDidMount() {
@@ -74,7 +76,7 @@ export default class HomePage extends React.Component {
 
   render() {
     const { editing, inputValue, searchState } = this.state
-    const { count } = this.props
+    const { count, history } = this.props
     const isExpand = this.props.popupType !== 'none'
     return (
       <div className="main">
@@ -147,6 +149,9 @@ export default class HomePage extends React.Component {
                 </div>
               </div> : null}
             <KnowledgeGraph />
+          </div>
+          <div id="history" className="history">
+            <CollapseButton contentList={history} itemClick={this.handleResult} />
           </div>
         </div>
         <div className="right-part">

@@ -74,7 +74,12 @@ function* handleUpdateGraphData({ id, resultType }) {
           target: i.get('objectB'),
           score: i.get('score'),
         }))
-        yield put({ type: A.UPDATE_CENTER_ID, centerId: data.centerId, centerType: resultType })
+        yield put({
+          type: A.UPDATE_CENTER_ID,
+          centerId: data.centerId,
+          centerType: resultType,
+          centerName: data.centerName,
+        })
         yield put({ type: A.UPDATE_NODES_AND_LINKS_DATA, nodeData, linkData })
       } else {
         console.log('暂无此词条')

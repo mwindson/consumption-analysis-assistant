@@ -7,6 +7,7 @@ const initialState = Map({
   linkData: Set(),
   cardData: Map(),
   centerId: '',
+  centerName: '',
   centerType: 'Brand',
   // 关系图与中心点相连关系点的类型 -- all,person,product,related_brand
   graphType: 'all',
@@ -30,8 +31,23 @@ export default function reducer(state = initialState, action) {
     const { nodeData, linkData } = action
     return state.set('nodeData', nodeData).set('linkData', linkData).set('noResult', false).set('graphLoading', false)
   } else if (action.type === A.UPDATE_CENTER_ID) {
-    const { centerId, centerType } = action
+    const { centerId, centerType, centerName } = action
+    // 更新中心节点时，添加历史记录
+    const oldName = state.get('centerName')
+    let history = state.get('history')
+    if (oldName !== '') {
+      history = history.push(Map({
+        name: `${oldName}（${config.nameMap[state.get('centerType')]}）`,
+        id: state.get('centerId'),
+        type: state.get('centerType'),
+      }))
+    }
+    if (history.size > 10) {
+      history = history.shift()
+    }
     return state.set('centerId', centerId).set('centerType', centerType).set('tab', config[centerType][0].key)
+      .set('centerName', centerName)
+      .set('history', history)
   } else if (action.type === A.UPDATE_GRAPH_TYPE) {
     const { graphType } = action
     return state.set('graphType', graphType)

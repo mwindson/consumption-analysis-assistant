@@ -8,7 +8,6 @@ import 'style/CommonCard.styl'
 
 export default class CommonCard extends React.Component {
   static propTypes = {
-    imgUrl: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
@@ -49,7 +48,7 @@ export default class CommonCard extends React.Component {
               </div> :
               <div className={classNames('text', { truncated: expand })}>
                 {attr.entrySeq().map((v, k) => {
-                  if (!Map.isMap(v[1])) {
+                  if (!Map.isMap(v[1]) && v[0] && v[1]) {
                     return v[0] !== '官网' ?
                       <div key={k}>{`${v[0]}: ${v[1]}`}</div> :
                       <div key={k}>{`${v[0]}: `}<a href={v[1]} target="_blank">{v[1]}</a></div>

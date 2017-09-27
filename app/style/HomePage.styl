@@ -20,6 +20,7 @@ html, body
     padding 18px
     display flex
     flex-direction column
+    position relative
     .top
       flex 0 0 30px
       display flex
@@ -35,10 +36,6 @@ html, body
       padding-top 16px
       justify-content center
       position relative
-      .history
-        position absolute
-        top 20px
-        right 20px
       .input
         width 576px
         height 46px
@@ -208,6 +205,15 @@ html, body
               -webkit-animation-delay 1.0s
       .graph-svg
         min-height 600px
+    .history
+      position absolute
+      top 20px
+      right 20px
+      .history-button
+        padding 5px
+        background white
+        border-radius 3px
+        cursor pointer
   .right-part
     width 40%
     height 100%

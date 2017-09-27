@@ -30,6 +30,7 @@ nameMap:
   Brand: 品牌
   Company: 公司
   Person: 人物
+  Product: 产品
   brand: 品牌
   name: 名称
   sku: 商品编号
