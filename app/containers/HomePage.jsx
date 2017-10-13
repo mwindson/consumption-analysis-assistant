@@ -6,12 +6,14 @@ import KnowledgeCards from 'containers/KnowledgeCards'
 import KnowledgeGraph from 'containers/KnowledgeGraph'
 import CollapseButton from 'components/CollapseButton'
 import { is } from 'immutable'
+import querystring from 'querystring'
+import { push } from 'react-router-redux'
 import * as A from 'actions'
-import { LogoIcon, SearchIcon, ErrorIcon } from 'components/Icons'
+import { LogoIcon, SearchIcon, ErrorIcon, ArrowTop, ArrowBottom } from 'components/Icons'
 import 'style/HomePage.styl'
 import config from '../utils/config.yaml'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => Object.assign({}, state.reducer.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class HomePage extends React.Component {
@@ -22,26 +24,41 @@ export default class HomePage extends React.Component {
     overflow: false, // 判断搜索结果是否溢出
     listExpand: false, // 搜索结果显示更多
     historyExpand: false, // 历史记录展开
+    searchBarExpand: true, // 搜索框是否展开
   }
 
   componentDidMount() {
     const searchResult = document.getElementsByClassName('search-result')[0]
     searchResult.addEventListener('overflow', () => this.setState({ overflow: true }))
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:米家MIJIA', resultType: 'Brand' })
+    console.log(this.props.location)
+    if (this.props.location.search === "") {
+      this.props.dispatch(push(`?${querystring.stringify({
+        type: 'Brand',
+        id: 'maigoo:brand:米家MIJIA',
+      })}`, { type: 'Brand', id: 'maigoo:brand:米家MIJIA' }))
+      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:米家MIJIA', resultType: 'Brand' })
+    } else {
+      const { type, id } = querystring.parse(this.props.location.search.substring(1))
+      this.props.dispatch(push(`?${querystring.stringify({ type, id })}`, { type, id }))
+    }
     // 品牌条目和产品条目统计展示
     this.props.dispatch({ type: A.FETCH_COUNT_DATA })
   }
 
   componentWillReceiveProps(nextProps) {
-    // todo 浏览历史记录展示
-    const { searchResult } = this.props
+    const { searchResult, location } = this.props
     if (!is(nextProps.searchResult, searchResult)) {
       this.handleResult(nextProps.searchResult.first().get('id'), nextProps.searchResult.first().get('type'))
+      setTimeout(() => this.setState({ searchBarExpand: false }), 5000)
     }
     if (nextProps.noResult) {
       setTimeout(() => this.setState({ searchState: 'error', inputValue: '' }), 1000)
     } else {
       setTimeout(() => this.setState({ searchState: 'none' }), 1000)
+    }
+    if (nextProps.location !== location) {
+      const { type, id } = nextProps.location.state
+      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
     }
   }
 
@@ -65,7 +82,8 @@ export default class HomePage extends React.Component {
   handleResult = (id, resultType) => {
     this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'none', id: '' })
     this.setState({ listExpand: false })
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType })
+    this.props.dispatch(push(`?${querystring.stringify({ type: resultType, id })}`, { type: resultType, id }))
+    // this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType })
   }
   popupSearchResult = () => {
     this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'searchResult', id: '' })
@@ -75,8 +93,8 @@ export default class HomePage extends React.Component {
   }
 
   render() {
-    const { editing, inputValue, searchState } = this.state
-    const { count, history } = this.props
+    const { editing, inputValue, searchState, searchBarExpand } = this.state
+    const { count, footprint } = this.props
     const isExpand = this.props.popupType !== 'none'
     return (
       <div className="main">
@@ -105,7 +123,7 @@ export default class HomePage extends React.Component {
               }}>{count.get('product') ? count.get('product') : '0'}</span>个
             </div>
           </div>
-          <div className="search">
+          <div className={classNames('search', { expand: searchBarExpand })}>
             <div className="input">
               <input
                 type="text"
@@ -141,6 +159,10 @@ export default class HomePage extends React.Component {
               </div>
             </div>
           </div>
+          <div
+            onClick={() => this.setState({ searchBarExpand: !searchBarExpand })}
+            className="search-bar-button"
+          >{searchBarExpand ? <ArrowTop fill={'white'} /> : <ArrowBottom fill={'white'} />}</div>
           <div className="graph">
             {this.props.graphLoading ?
               <div className="mask">
@@ -151,7 +173,7 @@ export default class HomePage extends React.Component {
             <KnowledgeGraph />
           </div>
           <div id="history" className="history">
-            <CollapseButton contentList={history} itemClick={this.handleResult} />
+            <CollapseButton contentList={footprint} itemClick={this.handleResult} />
           </div>
         </div>
         <div className="right-part">

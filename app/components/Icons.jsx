@@ -63,22 +63,22 @@ export const ArrowRight = () => (
   </svg>
 )
 
-export const ArrowTop = () => (
+export const ArrowTop = ({ fill = '#4A90E2' }) => (
   <svg width="9" height="9" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M.696 8.296l.673.702 3.47-3.621 3.47 3.62.674-.701-4.144-4.324L.696 8.296zm4.143-6.892l3.47 3.622.674-.703L4.839 0 .696 4.323l.673.703 3.47-3.622z"
       fillRule="nonzero"
-      fill="#4A90E2"
+      fill={fill}
     />
   </svg>
 )
 
-export const ArrowBottom = () => (
+export const ArrowBottom = ({ fill = '#4A90E2' }) => (
   <svg width="9" height="9" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M8.304.704L7.631.002l-3.47 3.621L.69.003.016.703l4.144 4.324L8.304.704zM4.161 7.596L.69 3.974l-.674.703L4.161 9l4.143-4.323-.673-.703-3.47 3.622z"
       fillRule="nonzero"
-      fill="#4A90E2"
+      fill={fill}
     />
   </svg>
 )

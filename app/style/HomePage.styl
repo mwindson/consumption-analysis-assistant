@@ -1,12 +1,10 @@
-width = 1440px
-height = 820px
-html, body
+html, dy
   margin 0
   height 100%
 
 .main
-  min-width width
-  min-height height
+  min-width 1440px
+  min-height 820px
   position absolute
   top 0
   bottom 0
@@ -22,8 +20,9 @@ html, body
     flex-direction column
     position relative
     .top
-      flex 0 0 30px
+      height 30px
       display flex
+      padding-bottom 15px
       .logo
         width 30px
       .title
@@ -31,11 +30,14 @@ html, body
         font-size 18px
         color white
     .search
-      flex 0 0 135px
+      height 0
       display flex
-      padding-top 16px
       justify-content center
       position relative
+      transition height 1s ease
+      overflow-y hidden
+      &.expand
+        height 135px
       .input
         width 576px
         height 46px
@@ -142,6 +144,15 @@ html, body
             height 25px
             border-radius 3px
             cursor pointer
+    .search-bar-button
+      height 15px
+      width 100%
+      bottom 0
+      display flex
+      justify-content center
+      align-items center
+      cursor pointer
+      color white
     .graph
       flex 1 0 600px
       position relative

@@ -6,7 +6,7 @@ const initialState = Map({
   nodeData: Set(),
   linkData: Set(),
   cardData: Map(),
-  centerId: '',
+  centerId: 'maigoo:brand:米家MIJIA',
   centerName: '',
   centerType: 'Brand',
   // 关系图与中心点相连关系点的类型 -- all,person,product,related_brand
@@ -18,7 +18,7 @@ const initialState = Map({
   productDetail: Map(),
   graphLoading: false,
   count: Map(),
-  history: List(),
+  footprint: List(),
 })
 export default function reducer(state = initialState, action) {
   if (action.type === A.UPDATE_SEARCH_RESULT) {
@@ -34,7 +34,7 @@ export default function reducer(state = initialState, action) {
     const { centerId, centerType, centerName } = action
     // 更新中心节点时，添加历史记录
     const oldName = state.get('centerName')
-    let history = state.get('history')
+    let history = state.get('footprint')
     if (oldName !== '') {
       history = history.unshift(Map({
         name: `${oldName}（${config.nameMap[state.get('centerType')]}）`,
@@ -45,9 +45,9 @@ export default function reducer(state = initialState, action) {
     if (history.size > 10) {
       history = history.pop()
     }
-    return state.set('centerId', centerId).set('centerType', centerType).set('tab', config[centerType][0].key)
+    return state.set('centerType', centerType).set('tab', config[centerType][0].key)
       .set('centerName', centerName)
-      .set('history', history)
+      .set('footprint', history)
   } else if (action.type === A.UPDATE_GRAPH_TYPE) {
     const { graphType } = action
     return state.set('graphType', graphType)

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
+import querystring from 'querystring'
+import { push } from 'react-router-redux'
 import * as A from 'actions'
 import { ArrowTop, ArrowBottom } from 'components/Icons'
 import 'style/CommonCard.styl'
@@ -56,8 +58,9 @@ export default class ListCard extends React.Component {
     dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: this.state.expand ? 'all' : type })
   }
   handleClick = (id, type, name) => {
-    this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id, centerType: type, centerName: name })
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
+    // this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id, centerType: type, centerName: name })
+    // this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
+    this.props.dispatch(push(`?${querystring.stringify({ type, id })}`, { type, id }))
   }
 
   render() {

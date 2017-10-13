@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import store from 'store'
+import { store, history } from 'store'
+import { Switch, BrowserRouter as Router, Route } from 'react-router-dom'
+import { ConnectedRouter } from 'react-router-redux'
 import HomePage from './HomePage'
-
-// export default () => (
-//
-//   <App />
-//   < /Provider>
-// )
 
 export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <HomePage />
+        <ConnectedRouter history={history}>
+          <Router>
+            <Switch>
+              <Route path="/" component={HomePage} />
+            </Switch>
+          </Router>
+        </ConnectedRouter>
       </Provider>
     )
   }

@@ -26,7 +26,7 @@ export default class PersonKnowledgeTab extends React.Component {
         <div className="person-cards">
           <div className="title">人物介绍</div>
           <div className="person-content">
-            <img src={person.get('imgUrl')} />
+            {person.get('imgUrl') ? <img src={person.get('imgUrl')} /> : null}
             <div className="person-name">{person.get('name')}</div>
             {person.get('attr') ?
               <div className="person-attr">

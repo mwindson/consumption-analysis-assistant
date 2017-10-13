@@ -14,6 +14,7 @@ export default class CommonCard extends React.Component {
     hasExpand: PropTypes.bool.isRequired,
     truncated: PropTypes.bool.isRequired,
     attr: ImmutablePropTypes.map.isRequired,
+    imgUrl: PropTypes.string,
   }
 
   state = {
@@ -25,21 +26,13 @@ export default class CommonCard extends React.Component {
   }
 
   render() {
-    const companyKeys = {
-      address: '公司地址',
-      email: '邮箱',
-      icp: '网站备案号',
-      website: '官网',
-      telephone: '联系方式',
-      wechat: '微信公众号',
-    }
     const { title, imgUrl, name, content, hasExpand, truncated, attr } = this.props
     const { expand } = this.state
     return (
       <div className={classNames('common-card', { expand })}>
         <div className={classNames('title', { exist: title !== '' })}>{title}</div>
         <div className="content">
-          <img src={imgUrl} />
+          {imgUrl ? <img src={imgUrl} /> : null}
           <div className="intro">
             <div className="name">{name}</div>
             {attr.size === 0 ?

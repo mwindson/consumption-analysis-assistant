@@ -63,7 +63,7 @@ const data = {
   },
 }
 
-const mapStateToProps = state => state.reducer.toJS()
+const mapStateToProps = state => Object.assign({}, state.reducer.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class KnowledgeCards extends React.Component {
@@ -76,18 +76,19 @@ export default class KnowledgeCards extends React.Component {
   // }
 
   componentDidMount() {
-    // const { tab, centerId, centerType } = this.props
-    // this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, id: centerId, cardType: centerType })
+    // const { tab } = this.props
+    // const { id, type: cardType } = this.location.state
+    // this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, id, cardType })
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.tab !== this.props.tab || nextProps.centerId !== this.props.centerId) {
+    if (nextProps.tab !== this.props.tab || nextProps.location !== this.props.location) {
       this.props.dispatch({ type: A.CLEAR_CARD_DATA })
       this.props.dispatch({
         type: A.FETCH_CARD_DATA,
         tab: nextProps.tab,
-        id: nextProps.centerId,
-        cardType: nextProps.centerType,
+        id: nextProps.location.state.id,
+        cardType: nextProps.location.state.type,
       })
     }
   }

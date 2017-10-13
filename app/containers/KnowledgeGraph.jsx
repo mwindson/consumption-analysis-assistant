@@ -4,13 +4,15 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import { is } from 'immutable'
 import * as d3 from 'd3'
 import { connect } from 'react-redux'
+import querystring from 'querystring'
+import { push } from 'react-router-redux'
 import * as A from 'actions'
 import { drawGraph, drawLines, restart, updateNodes } from 'components/graph/drawGraph'
 import { zoomClick, zoomReset } from 'components/graph/zoomClick'
 import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => Object.assign({}, state.reducer.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class KnowledgeGraph extends React.Component {
@@ -46,17 +48,17 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { nodeData, linkData, centerId, graphType } = this.props
+    const { nodeData, linkData, centerId, graphType, location } = this.props
     // todo 添加加载中的动画
     if (!is(nextProps.nodeData, nodeData) || !is(nextProps.linkData, linkData)) {
-      drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, centerId,
+      drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, nextProps.location.state.id,
         this.handleNodeClick, graphType, !nodeData.isEmpty(),
       )
     }
     if (nextProps.graphType !== graphType) {
-      drawLines(centerId, nextProps.graphType, false)
-      updateNodes(this.svgElement, nodeData, linkData, centerId, this.handleNodeClick, nextProps.graphType)
-      restart(centerId)
+      drawLines(location.state.id, nextProps.graphType, false)
+      updateNodes(this.svgElement, nodeData, linkData, location.state.id, this.handleNodeClick, nextProps.graphType)
+      restart(location.state.id)
     }
   }
 
@@ -65,8 +67,8 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   resize = () => {
-    const { nodeData, linkData, centerId, graphType } = this.props
-    drawGraph(this.svgElement, nodeData, linkData, centerId, this.handleNodeClick, graphType, !nodeData.isEmpty())
+    const { nodeData, linkData, centerId, graphType, location } = this.props
+    drawGraph(this.svgElement, nodeData, linkData, location.state.id, this.handleNodeClick, graphType, !nodeData.isEmpty())
   }
   zoomed = () => {
     const g = d3.select('.graph-g')
@@ -75,15 +77,16 @@ export default class KnowledgeGraph extends React.Component {
 
   handleButtonClick = (type) => {
     if (type === 'reset') {
-      zoomReset(this.svgElement, this.graphZoom, this.props.centerId)
+      zoomReset(this.svgElement, this.graphZoom, this.props.location.state.id)
     } else {
-      zoomClick(this.svgElement, this.graphZoom, type, this.props.centerId)
+      zoomClick(this.svgElement, this.graphZoom, type, this.props.location.state.id)
     }
   }
 
   handleNodeClick = (id, nodeType) => {
-    zoomReset(this.svgElement, this.graphZoom, this.props.centerId)
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: nodeType })
+    zoomReset(this.svgElement, this.graphZoom, this.props.location.state.id)
+    this.props.dispatch(push(`?${querystring.stringify({ type: nodeType, id })}`, { type: nodeType, id }))
+    // this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: nodeType })
   }
 
   render() {
