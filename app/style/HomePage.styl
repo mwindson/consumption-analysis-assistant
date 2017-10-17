@@ -20,15 +20,32 @@ html, dy
     flex-direction column
     position relative
     .top
-      height 30px
+      min-height 30px
       display flex
       padding-bottom 15px
       .logo
         width 30px
       .title
-        margin-left 11px
         font-size 18px
+        margin-right auto
         color white
+        display flex
+        flex-wrap wrap
+      .statistic
+        margin-right auto
+        color white
+        font-size 18px
+      .history
+        height 30px
+        .history-button
+          padding 5px
+          background white
+          border-radius 3px
+          cursor pointer
+      .feedback-button
+        height 30px
+        font-size 18px
+        color #4990e2
     .search
       height 0
       display flex
@@ -154,7 +171,7 @@ html, dy
       cursor pointer
       color white
     .graph
-      flex 1 0 600px
+      flex 1 0 500px
       position relative
       .mask
         position absolute
@@ -215,16 +232,7 @@ html, dy
               transform rotate(324deg)
               -webkit-animation-delay 1.0s
       .graph-svg
-        min-height 600px
-    .history
-      position absolute
-      top 20px
-      right 20px
-      .history-button
-        padding 5px
-        background white
-        border-radius 3px
-        cursor pointer
+        min-height 500px
   .right-part
     width 40%
     height 100%

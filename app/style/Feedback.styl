@@ -1,0 +1,64 @@
+@import "button.styl"
+.feedback
+  position absolute
+  top 0
+  left 0
+  right 0
+  bottom 0
+  z-index -10
+  &.expand
+    z-index 5
+  .mask
+    position absolute
+    top 0
+    left 0
+    right 0
+    bottom 0
+    background rgba(0, 0, 0, .6)
+  .feedback-dialog
+    position absolute
+    top 0
+    left 0
+    right 0
+    margin-right auto
+    margin-left auto
+    width 576px
+    padding 20px
+    border-radius 10px
+    background white
+    border solid 1px black
+    display flex
+    flex-direction column
+    justify-content center
+    align-items flex-start
+    .input, .buttons
+      width calc(100% - 15px)
+      margin-left 15px
+      font-size 16px
+      height 50px
+    .title
+      width 100%
+      text-align center
+      font-size 32px
+      border-bottom solid 1px rgba(148, 144, 147, 0.67)
+    .name
+      margin 15px
+      @extend .button
+      cursor auto
+    .input
+      height 200px
+      > textarea
+        margin-top 15px
+        height 150px
+        font-size 16px
+        padding 0
+        width calc(100% - 15px)
+    .buttons
+      display flex
+      justify-content flex-end
+      align-items center
+      .submit
+        @extend .button
+        margin-right 15px
+      .cancel
+        @extend .button

@@ -5,6 +5,7 @@ import { Motion, spring } from 'react-motion'
 import KnowledgeCards from 'containers/KnowledgeCards'
 import KnowledgeGraph from 'containers/KnowledgeGraph'
 import CollapseButton from 'components/CollapseButton'
+import Feedback from 'components/Feedback'
 import { is } from 'immutable'
 import querystring from 'querystring'
 import { push } from 'react-router-redux'
@@ -25,6 +26,7 @@ export default class HomePage extends React.Component {
     listExpand: false, // 搜索结果显示更多
     historyExpand: false, // 历史记录展开
     searchBarExpand: true, // 搜索框是否展开
+    feedbackExpand: false, // 反馈展开
   }
 
   componentDidMount() {
@@ -83,7 +85,6 @@ export default class HomePage extends React.Component {
     this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'none', id: '' })
     this.setState({ listExpand: false })
     this.props.dispatch(push(`?${querystring.stringify({ type: resultType, id })}`, { type: resultType, id }))
-    // this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType })
   }
   popupSearchResult = () => {
     this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'searchResult', id: '' })
@@ -91,10 +92,16 @@ export default class HomePage extends React.Component {
   closePopup = () => {
     this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'none', id: '' })
   }
+  openFeedback = () => {
+    this.setState({ feedbackExpand: true })
+  }
+  closeFeedback = () => {
+    this.setState({ feedbackExpand: false })
+  }
 
   render() {
-    const { editing, inputValue, searchState, searchBarExpand } = this.state
-    const { count, footprint } = this.props
+    const { editing, inputValue, searchState, searchBarExpand, feedbackExpand } = this.state
+    const { count, footprint, centerName, centerId } = this.props
     const isExpand = this.props.popupType !== 'none'
     return (
       <div className="main">
@@ -104,9 +111,13 @@ export default class HomePage extends React.Component {
               <LogoIcon />
             </div>
             <div className="title" style={{ whiteSpace: 'nowrap' }}>Relationship diagram</div>
+            <div id="history" className="history">
+              <CollapseButton contentList={footprint} itemClick={this.handleResult} />
+            </div>
+          </div>
+          <div className="top">
             <div
-              className="title"
-              style={{ marginLeft: 50 }}
+              className="statistic"
             >当前已收录品牌
               <span style={{ color: 'red', fontWeight: 'bold' }}>{count.get('brand') ? count.get('brand') : '0'}</span>个，
               人物<span style={{
@@ -122,6 +133,7 @@ export default class HomePage extends React.Component {
                 fontWeight: 'bold',
               }}>{count.get('product') ? count.get('product') : '0'}</span>个
             </div>
+            <button className="feedback-button" onClick={() => this.openFeedback()}>我要反馈</button>
           </div>
           <div className={classNames('search', { expand: searchBarExpand })}>
             <div className="input">
@@ -172,33 +184,30 @@ export default class HomePage extends React.Component {
               </div> : null}
             <KnowledgeGraph />
           </div>
-          <div id="history" className="history">
-            <CollapseButton contentList={footprint} itemClick={this.handleResult} />
-          </div>
         </div>
         <div className="right-part">
           <KnowledgeCards />
         </div>
+        <Feedback name={centerName} id={centerId} expand={feedbackExpand} closeFunc={this.closeFeedback} />
         <div className={classNames('popup', { listExpand: isExpand })}>
           <div className="mask" />
           <Motion style={{ y: spring(isExpand ? 100 : 0), opacity: spring(isExpand ? 1 : 0.5) }}>
             {({ y, opacity }) =>
               (<div className="search-result-list" style={{ transform: `translate(0,${y}px)`, opacity }}>
-                  <div className="close" onClick={() => this.closePopup()}>关闭</div>
-                  <div className="list">
-                    {this.props.popupType === 'searchResult' ? this.props.searchResult.toArray().map((item, i) => (
-                      <div
-                        key={i}
-                        title={`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
-                        className="search-item"
-                        onClick={() => this.handleResult(item.get('id'), item.get('type'))}
-                      >
-                        {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
-                      </div>
-                    )) : null}
-                  </div>
+                <div className="close" onClick={() => this.closePopup()}>关闭</div>
+                <div className="list">
+                  {this.props.popupType === 'searchResult' ? this.props.searchResult.toArray().map((item, i) => (
+                    <div
+                      key={i}
+                      title={`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
+                      className="search-item"
+                      onClick={() => this.handleResult(item.get('id'), item.get('type'))}
+                    >
+                      {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
+                    </div>
+                  )) : null}
                 </div>
-              )
+              </div>)
             }
           </Motion>
         </div>
