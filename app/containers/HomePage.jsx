@@ -32,8 +32,7 @@ export default class HomePage extends React.Component {
   componentDidMount() {
     const searchResult = document.getElementsByClassName('search-result')[0]
     searchResult.addEventListener('overflow', () => this.setState({ overflow: true }))
-    console.log(this.props.location)
-    if (this.props.location.search === "") {
+    if (this.props.location.search === '') {
       this.props.dispatch(push(`?${querystring.stringify({
         type: 'Brand',
         id: 'maigoo:brand:米家MIJIA',
@@ -101,7 +100,7 @@ export default class HomePage extends React.Component {
 
   render() {
     const { editing, inputValue, searchState, searchBarExpand, feedbackExpand } = this.state
-    const { count, footprint, centerName, centerId } = this.props
+    const { count, footprint, centerName, centerId, centerType } = this.props
     const isExpand = this.props.popupType !== 'none'
     return (
       <div className="main">
@@ -123,15 +122,18 @@ export default class HomePage extends React.Component {
               人物<span style={{
                 color: 'red',
                 fontWeight: 'bold',
-              }}>{count.get('person') ? count.get('person') : '0'}</span>个，
+              }}
+              >{count.get('person') ? count.get('person') : '0'}</span>个，
               公司<span style={{
                 color: 'red',
                 fontWeight: 'bold',
-              }}>{count.get('company') ? count.get('company') : '0'}</span>个，
+              }}
+              >{count.get('company') ? count.get('company') : '0'}</span>个，
               产品<span style={{
                 color: 'red',
                 fontWeight: 'bold',
-              }}>{count.get('product') ? count.get('product') : '0'}</span>个
+              }}
+              >{count.get('product') ? count.get('product') : '0'}</span>个
             </div>
             <button className="feedback-button" onClick={() => this.openFeedback()}>我要反馈</button>
           </div>
@@ -188,7 +190,7 @@ export default class HomePage extends React.Component {
         <div className="right-part">
           <KnowledgeCards />
         </div>
-        <Feedback name={centerName} id={centerId} expand={feedbackExpand} closeFunc={this.closeFeedback} />
+        <Feedback name={centerName} id={centerId} expand={feedbackExpand} closeFunc={this.closeFeedback} type={centerType} />
         <div className={classNames('popup', { listExpand: isExpand })}>
           <div className="mask" />
           <Motion style={{ y: spring(isExpand ? 100 : 0), opacity: spring(isExpand ? 1 : 0.5) }}>
