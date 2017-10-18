@@ -23,11 +23,9 @@ export default class Feedback extends React.Component {
     const { name, id, type } = this.props
     const input = document.getElementById('input').value
     if (input.length !== 0) {
-      console.log(input)
-      console.log({ id, name, content: input, type })
       this.submitMessage({ id, name, content: input, type })
     } else {
-      alert('请输入内容')
+      this.setState({ hint: '请输入内容' })
     }
   }
   handleCancel = () => {
