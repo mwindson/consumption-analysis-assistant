@@ -49,7 +49,6 @@ export default class KnowledgeGraph extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { nodeData, linkData, centerId, graphType, location } = this.props
-    // todo 添加加载中的动画
     if (!is(nextProps.nodeData, nodeData) || !is(nextProps.linkData, linkData)) {
       drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, nextProps.location.state.id,
         this.handleNodeClick, graphType, !nodeData.isEmpty(),

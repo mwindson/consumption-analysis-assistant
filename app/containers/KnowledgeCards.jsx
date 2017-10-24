@@ -82,7 +82,7 @@ export default class KnowledgeCards extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.tab !== this.props.tab || nextProps.location !== this.props.location) {
+    if (nextProps.tab !== this.props.tab || (nextProps.location !== this.props.location && nextProps.location.state)) {
       this.props.dispatch({ type: A.CLEAR_CARD_DATA })
       this.props.dispatch({
         type: A.FETCH_CARD_DATA,
