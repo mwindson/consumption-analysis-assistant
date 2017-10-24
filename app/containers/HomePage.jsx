@@ -8,7 +8,7 @@ import CollapseButton from 'components/CollapseButton'
 import Feedback from 'components/Feedback'
 import { is } from 'immutable'
 import querystring from 'querystring'
-import { push } from 'react-router-redux'
+import { replace, push } from 'react-router-redux'
 import * as A from 'actions'
 import { LogoIcon, SearchIcon, ErrorIcon, ArrowTop, ArrowBottom } from 'components/Icons'
 import 'style/HomePage.styl'
@@ -33,10 +33,8 @@ export default class HomePage extends React.Component {
     const searchResult = document.getElementsByClassName('search-result')[0]
     searchResult.addEventListener('overflow', () => this.setState({ overflow: true }))
     if (this.props.location.search === '') {
-      this.props.dispatch(push(`?${querystring.stringify({
-        type: 'Brand',
-        id: 'maigoo:brand:米家MIJIA',
-      })}`, { type: 'Brand', id: 'maigoo:brand:米家MIJIA' }))
+      const para = { type: 'Brand', id: 'maigoo:brand:米家MIJIA' }
+      this.props.dispatch(push(`?${querystring.stringify(para)}`, para))
       this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:米家MIJIA', resultType: 'Brand' })
     } else {
       const { type, id } = querystring.parse(this.props.location.search.substring(1))
@@ -57,7 +55,7 @@ export default class HomePage extends React.Component {
     } else {
       setTimeout(() => this.setState({ searchState: 'none' }), 1000)
     }
-    if (nextProps.location !== location) {
+    if (nextProps.location !== location && nextProps.location.state) {
       const { type, id } = nextProps.location.state
       this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
     }
