@@ -48,7 +48,6 @@ export default class HomePage extends React.Component {
     const { searchResult, location } = this.props
     if (!is(nextProps.searchResult, searchResult)) {
       this.handleResult(nextProps.searchResult.first().get('id'), nextProps.searchResult.first().get('type'))
-      setTimeout(() => this.setState({ searchBarExpand: false }), 5000)
     }
     if (nextProps.noResult) {
       setTimeout(() => this.setState({ searchState: 'error', inputValue: '' }), 1000)

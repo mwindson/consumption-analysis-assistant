@@ -8,6 +8,7 @@ import querystring from 'querystring'
 import { push } from 'react-router-redux'
 import * as A from 'actions'
 import { drawGraph, drawLines, restart, updateNodes } from 'components/graph/drawGraph'
+import RelationGraph from 'components/graph/RelationGraph'
 import { zoomClick, zoomReset } from 'components/graph/zoomClick'
 import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
@@ -34,10 +35,12 @@ export default class KnowledgeGraph extends React.Component {
     this.svgElement = null
     this.graphZoom = null
     this.resizeId = null
+    this.graph = null
   }
 
   componentDidMount() {
     this.svgElement = d3.select('.graph-svg')
+    this.graph = new RelationGraph(this.svgElement)
     window.addEventListener('resize', () => {
       clearTimeout(this.resizeId)
       this.resizeId = setTimeout(this.resize, 500)
@@ -50,14 +53,14 @@ export default class KnowledgeGraph extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { nodeData, linkData, centerId, graphType, location } = this.props
     if (!is(nextProps.nodeData, nodeData) || !is(nextProps.linkData, linkData)) {
-      drawGraph(this.svgElement, nextProps.nodeData, nextProps.linkData, nextProps.location.state.id,
+      this.graph.draw(nextProps.nodeData, nextProps.linkData, nextProps.location.state.id,
         this.handleNodeClick, graphType, !nodeData.isEmpty(),
       )
     }
     if (nextProps.graphType !== graphType) {
-      drawLines(location.state.id, nextProps.graphType, false)
-      updateNodes(this.svgElement, nodeData, linkData, location.state.id, this.handleNodeClick, nextProps.graphType)
-      restart(location.state.id)
+      this.graph.drawLines(location.state.id, nextProps.graphType, false)
+      this.graph.updateNodes(nodeData, linkData, location.state.id, this.handleNodeClick, nextProps.graphType)
+      this.graph.restart(location.state.id)
     }
   }
 
@@ -66,8 +69,8 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   resize = () => {
-    const { nodeData, linkData, centerId, graphType, location } = this.props
-    drawGraph(this.svgElement, nodeData, linkData, location.state.id, this.handleNodeClick, graphType, !nodeData.isEmpty())
+    const { nodeData, linkData, graphType, location } = this.props
+    this.graph.draw(nodeData, linkData, location.state.id, this.handleNodeClick, graphType, !nodeData.isEmpty())
   }
   zoomed = () => {
     const g = d3.select('.graph-g')
@@ -76,16 +79,15 @@ export default class KnowledgeGraph extends React.Component {
 
   handleButtonClick = (type) => {
     if (type === 'reset') {
-      zoomReset(this.svgElement, this.graphZoom, this.props.location.state.id)
+      zoomReset(this.svgElement, this.graphZoom, this.props.location.state.id, this.graph)
     } else {
       zoomClick(this.svgElement, this.graphZoom, type, this.props.location.state.id)
     }
   }
 
   handleNodeClick = (id, nodeType) => {
-    zoomReset(this.svgElement, this.graphZoom, this.props.location.state.id)
+    zoomReset(this.svgElement, this.graphZoom, this.props.location.state.id, this.graph)
     this.props.dispatch(push(`?${querystring.stringify({ type: nodeType, id })}`, { type: nodeType, id }))
-    // this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: nodeType })
   }
 
   render() {
@@ -118,9 +120,7 @@ export default class KnowledgeGraph extends React.Component {
             <g className="graph-g">
               <g className="line-group" />
               <g className="node-group" />
-              <clipPath id="textClip">
-                <rect x="-45" y="-15" width="90" height="30" />
-              </clipPath>
+              <clipPath id="textClip" />
             </g>
           </svg>
           <div className="tooltip">

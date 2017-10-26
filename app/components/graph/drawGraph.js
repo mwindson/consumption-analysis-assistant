@@ -174,7 +174,7 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
   d3.selectAll('.node-hidden')
     .selectAll('text')
     .text('')
-// 更新节点点击和拖动事件
+  // 更新节点点击和拖动事件
   const tooltip = d3.select('.tooltip')
   nodes
     .attr('cursor', 'pointer')
@@ -359,7 +359,6 @@ function hoverLeave() {
 // 计算和处理函数
 function tick() {
   nodes.attr('transform', d => `translate(${d.x}, ${d.y})`)
-
   link
     .attr('x1', (d) => {
       const r = nodes.filter(n => n.id === d.source.id).select('circle').attr('r')
