@@ -55,7 +55,7 @@ export default class ListCard extends React.Component {
   handleExpand = () => {
     const { dispatch, type } = this.props
     this.setState({ expand: !this.state.expand })
-    dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: this.state.expand ? 'all' : type })
+    // dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: this.state.expand ? 'all' : type })
   }
   handleClick = (id, type, name) => {
     // this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id, centerType: type, centerName: name })

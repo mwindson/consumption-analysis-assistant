@@ -22,14 +22,14 @@ export default class RelatedBrandTab extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'Brand' })
+    // this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'Brand' })
     this.cards = document.getElementsByClassName('cards')[0]
     this.cards.addEventListener('scroll', this.onScroll)
   }
 
   componentWillUnmount() {
     this.cards.removeEventListener('scroll', this.onScroll)
-    this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'all' })
+    // this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'all' })
   }
 
   onScroll = () => {
@@ -73,7 +73,7 @@ export default class RelatedBrandTab extends React.Component {
               truncated={textTruncated(brand.get('content')).length > 120}
               attr={brand.get('attr')}
             />),
-          )}
+        )}
         {this.state.loading ?
           <div className="loading">
             <span />

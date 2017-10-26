@@ -30,18 +30,17 @@ export default class ProductDetailTab extends React.Component {
       <div className="cards">
         <div className="product-card">
           <div className="title">商品信息</div>
-          {productDetail.map((attr, index) => {
-            return (<div key={index} className="attr">
-              <div className="key">{attr.get('key')}</div>
-              <div className="value">{attr.get('key') === '链接' ?
-                <a
-                  href={attr.get('value')}
-                  target="_blank"
-                  style={{ color: '#4990E2' }}
-                > 京东页面</a> : attr.get('value')}
-              </div>
-            </div>)
-          })}
+          <img src={cardData.get('image')} alt="" />
+          {productDetail.map((attr, index) => (<div key={index} className="attr">
+            <div className="key">{attr.get('key')}</div>
+            <div className="value">{attr.get('key') === '链接' ?
+              <a
+                href={attr.get('value')}
+                target="_blank"
+                style={{ color: '#4990E2' }}
+              > 京东页面</a> : attr.get('value')}
+            </div>
+          </div>))}
         </div>
         <div className="product-card">
           <div className="title">商品类别</div>

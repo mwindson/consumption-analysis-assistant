@@ -80,7 +80,7 @@ export default class BrandKnowledgeTab extends React.Component {
       const product = Map({
         title: '相关商品',
         list: cardData.get('products').map(i => Map({
-          url: 'app/static/image/product1.png',
+          url: i.get('image'),
           text: i.get('name'),
           id: i.get('id'),
         })),

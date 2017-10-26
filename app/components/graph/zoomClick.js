@@ -15,9 +15,9 @@ export function zoomClick(svg, zoom, type) {
 }
 
 export function zoomReset(svg, zoom, centerId, graphManager) {
-  // svg.transition()
-  // .duration(750)
-  // .call(zoom.transform, d3.zoomIdentity)
+  svg.transition()
+    .duration(750)
+    .call(zoom.transform, d3.zoomIdentity)
   graphManager.restart(centerId)
   // zoom.scaleTo(svg.select('.graph-g'), 1)
 }

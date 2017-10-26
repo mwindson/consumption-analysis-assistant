@@ -1,17 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import ImmutablePropTypes from 'react-immutable-proptypes'
 import { is } from 'immutable'
 import * as d3 from 'd3'
 import { connect } from 'react-redux'
 import querystring from 'querystring'
 import { push } from 'react-router-redux'
 import * as A from 'actions'
-import { drawGraph, drawLines, restart, updateNodes } from 'components/graph/drawGraph'
 import RelationGraph from 'components/graph/RelationGraph'
 import { zoomClick, zoomReset } from 'components/graph/zoomClick'
 import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
+import config from 'utils/config.yaml'
 
 const mapStateToProps = state => Object.assign({}, state.reducer.toObject(), state.routing)
 

@@ -354,9 +354,10 @@ export default class RelationGraph {
   }
 
   hoverLeave() {
-    // 恢复现有线段和点
+    // 恢复现有线段
     d3.selectAll('.line-show')
       .attr('opacity', 0.5)
+    // 恢复现有节点
     d3.selectAll('.node-show')
       .attr('opacity', 1)
       .selectAll('circle')
