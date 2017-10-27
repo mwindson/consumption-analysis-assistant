@@ -35,7 +35,7 @@ export default class RelationGraph {
     this.width = this.svg.style('width').replace('px', '')
     this.height = this.svg.style('height').replace('px', '')
     this.force = d3.forceSimulation()
-      .force('link', d3.forceLink().id(d => d.id).distance(500))
+      .force('link', d3.forceLink().id(d => d.id).distance(350))
       .force('collide', d3.forceCollide().radius(this.radius + 5))
       .force('center', d3.forceCenter(this.width / 2, this.height / 2))
       .force('x', d3.forceX((d) => {
@@ -354,6 +354,7 @@ export default class RelationGraph {
   }
 
   hoverLeave() {
+    console.log('hoverLeave')
     // 恢复现有线段
     d3.selectAll('.line-show')
       .attr('opacity', 0.5)

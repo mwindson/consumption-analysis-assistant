@@ -19,8 +19,8 @@ module.exports = {
   devtool: isProduction ? false : 'cheap-module-source-map',
 
   output: {
-    path: path.resolve(__dirname, 'build', packageInfo.version),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist', packageInfo.version),
+    filename: isProduction ? '[name].[chunkhash].js' : '[name].js',
     publicPath: isProduction ? './' : '/',
   },
 
@@ -69,6 +69,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'app/index.tmpl.html'),
     }),
+    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ],
 
@@ -76,6 +77,6 @@ module.exports = {
     host: '0.0.0.0',
     contentBase: __dirname,
     hot: true,
-    // public: '10.214.224.133:8080',
+    // public: '10.214.224.115:8080',
   },
 }

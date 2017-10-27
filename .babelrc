@@ -1,10 +1,17 @@
 {
   "presets": [
-    "es2015",
+    [
+      "env",
+      {
+        "es2015": {
+          "modules": false
+        }
+      }
+    ]
   ],
   "plugins": [
+    "react-hot-loader/babel",
     "transform-decorators-legacy",
-    "transform-class-properties",
-    "react-hot-loader/babel"
+    "transform-class-properties"
   ]
 }

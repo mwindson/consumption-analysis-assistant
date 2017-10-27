@@ -68,7 +68,7 @@ export default class BrandKnowledgeTab extends React.Component {
       const persons = Map({
         title: '相关人物',
         list: cardData.get('persons').map(i => Map({
-          url: i.get('image'),
+          url: i.get('image') || 'app/static/image/no_picture.jpg',
           text: i.get('name'),
           id: i.get('id'),
         })),
@@ -80,7 +80,7 @@ export default class BrandKnowledgeTab extends React.Component {
       const product = Map({
         title: '相关商品',
         list: cardData.get('products').map(i => Map({
-          url: i.get('image'),
+          url: i.get('image') || 'app/static/image/no_picture.jpg',
           text: i.get('name'),
           id: i.get('id'),
         })),
