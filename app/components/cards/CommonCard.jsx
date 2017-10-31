@@ -32,7 +32,7 @@ export default class CommonCard extends React.Component {
       <div className={classNames('common-card', { expand })}>
         <div className={classNames('title', { exist: title !== '' })}>{title}</div>
         <div className="content">
-          {imgUrl ? <img src={imgUrl} /> : null}
+          {imgUrl ? <div className="image"><img src={imgUrl} alt="" /></div> : null}
           <div className="intro">
             <div className="name">{name}</div>
             {attr.size === 0 ?

@@ -1,7 +1,8 @@
 import React from 'react'
-import { fromJS, Map, Range } from 'immutable'
+import { fromJS, Map, Range, is } from 'immutable'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
+import querystring from 'querystring'
 import * as A from 'actions'
 import 'style/KnowledgeCards.styl'
 import NewsCards from 'components/NewsTab'
@@ -63,11 +64,10 @@ const data = {
   },
 }
 
-const mapStateToProps = state => Object.assign({}, state.reducer.toObject(), state.routing)
+const mapStateToProps = state => Object.assign({}, state.cards.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class KnowledgeCards extends React.Component {
-  // todo react-redux 有bug
   // static propTypes = {
   //   tab: PropTypes.string.isRequired,
   //   centerId: PropTypes.string.isRequired,
@@ -75,30 +75,27 @@ export default class KnowledgeCards extends React.Component {
   //   dispatch: PropTypes.func.isRequired,
   // }
 
-  componentDidMount() {
-    // const { tab } = this.props
-    // const { id, type: cardType } = this.location.state
-    // this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, id, cardType })
-  }
-
   componentWillReceiveProps(nextProps) {
-    if (nextProps.tab !== this.props.tab || (nextProps.location !== this.props.location && nextProps.location.state)) {
-      this.props.dispatch({ type: A.CLEAR_CARD_DATA })
+    if (nextProps.location !== this.props.location) {
+      const { id, type } = querystring.parse(nextProps.location.search.substring(1))
       this.props.dispatch({
         type: A.FETCH_CARD_DATA,
-        tab: nextProps.tab,
-        id: nextProps.location.state.id,
-        cardType: nextProps.location.state.type,
+        tab: config[type][0].key,
+        id,
+        cardType: type,
       })
     }
   }
 
   handleClick = (tab) => {
-    this.props.dispatch({ type: A.CHANGE_TAB, tab })
+    const { id, type } = querystring.parse(this.props.location.search.substring(1))
+    this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, id, cardType: type })
   }
 
   render() {
-    const { tab: chosen, centerType } = this.props
+    const { tab: chosen } = this.props
+    const centerType = this.props.location.search === '' ? 'Brand' :
+      querystring.parse(this.props.location.search.substring(1)).type
     return (
       <div className="knowledge-cards">
         <div className="tabs-part">

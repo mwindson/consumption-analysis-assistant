@@ -1,10 +1,10 @@
 Brand:
  - key: knowledge
    name: 品牌知识
- - key: hot
-   name: 热点聚焦
- - key: trend
-   name: 品牌动态
+#  - key: hot
+  #  name: 热点聚焦
+#  - key: trend
+  #  name: 品牌动态
  - key: relatedBrands
    name: 相关品牌
 Person:

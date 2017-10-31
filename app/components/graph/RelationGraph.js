@@ -23,15 +23,15 @@ export default class RelationGraph {
     this.radius = 50
   }
 
-  draw(nodeData, linkData, centerId, nodeClick, type, firstLoad) {
-    this.initForce(nodeData, linkData, centerId, nodeClick, type, firstLoad)
+  draw(nodeData, linkData, centerId, nodeClick, firstLoad) {
+    this.initForce(nodeData, linkData, centerId, nodeClick, firstLoad)
     this.initNodes(nodeData)
-    this.updateNodes(nodeData, linkData, centerId, nodeClick, type)
-    this.drawLines(centerId, type, firstLoad)
+    this.updateNodes(nodeData, linkData, centerId, nodeClick)
+    this.drawLines(centerId, firstLoad)
     this.restart(centerId)
   }
 
-  initForce(nodeData, linkData, centerId, nodeClick, type, firstLoad) {
+  initForce(nodeData, linkData, centerId, nodeClick, firstLoad) {
     this.width = this.svg.style('width').replace('px', '')
     this.height = this.svg.style('height').replace('px', '')
     this.force = d3.forceSimulation()
@@ -101,7 +101,7 @@ export default class RelationGraph {
       .text('')
   }
 
-  updateNodes(nodeData, linkData, centerId, nodeClick, type) {
+  updateNodes(nodeData, linkData, centerId, nodeClick) {
     // 隐藏C类
     this.nodes
       .attr('class', 'node-hidden')
@@ -192,7 +192,7 @@ export default class RelationGraph {
         .on('end', d => this.dragEnd(d)))
   }
 
-  drawLines(centerId, type, first = true) {
+  drawLines(centerId, first = true) {
     // 显示A和B的连线
     if (this.link) {
       this.link.remove()
@@ -221,11 +221,11 @@ export default class RelationGraph {
       .on('tick', () => tick(this.nodes, this.link, this.hoverLinks))
     this.force.force('link').links(this.links.data())
     this.force.alpha(1).restart()
-    setTimeout(() => {
-      const centerNode = this.nodes.filter(d => d.id === centerId).datum()
-      d3.select('.graph-g').transition().duration(1000)
-        .attr('transform', `translate(${(this.width / 2) - centerNode.x},${(this.height / 2) - centerNode.y})`)
-    }, 1000)
+    // setTimeout(() => {
+    //   const centerNode = this.nodes.filter(d => d.id === centerId).datum()
+    //   d3.select('.graph-g').transition().duration(1000)
+    //     .attr('transform', `translate(${(this.width / 2) - centerNode.x},${(this.height / 2) - centerNode.y})`)
+    // }, 1000)
   }
 
   dragStart(d) {
@@ -354,7 +354,6 @@ export default class RelationGraph {
   }
 
   hoverLeave() {
-    console.log('hoverLeave')
     // 恢复现有线段
     d3.selectAll('.line-show')
       .attr('opacity', 0.5)

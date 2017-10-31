@@ -4,7 +4,7 @@ import { Map, Range, List, fromJS } from 'immutable'
 import ListCard from 'components/cards/ListCard'
 import 'style/ProductDetailTab.styl'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class ProductDetailTab extends React.Component {

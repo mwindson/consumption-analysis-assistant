@@ -7,7 +7,7 @@ import CommonCard from 'components/cards/CommonCard'
 import ListCard from 'components/cards/ListCard'
 import textTruncated from 'utils/textTruncated'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class BrandKnowledgeTab extends React.Component {

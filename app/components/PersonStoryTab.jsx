@@ -3,7 +3,7 @@ import { List, Map, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import 'style/PersonStoryTab.styl'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class PersonKnowledgeTab extends React.Component {
@@ -30,7 +30,7 @@ export default class PersonKnowledgeTab extends React.Component {
               <div className="text">{cardData.get('description')}</div>
             </div> : null}
           {personStory.map((item, index) =>
-            <div key={index} className="story">
+            (<div key={index} className="story">
               <h3>{item.get('key')}</h3>
               {List.isList(item.get('value')) ?
                 item.get('value').map((d, i) =>
@@ -40,7 +40,7 @@ export default class PersonKnowledgeTab extends React.Component {
                   </div>)
                 : <div className="text">{item.get('value')}</div>
               }
-            </div>)
+            </div>))
           }
         </div>
       </div>

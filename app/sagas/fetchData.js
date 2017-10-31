@@ -33,6 +33,7 @@ function* handleFetchCount() {
 
 function* handleSearch({ keyword }) {
   try {
+    yield put({ type: A.RETURN_RESULT, noResult: false })
     const url = `${host}/search?keyword=${encodeURIComponent(keyword)}`
     const response = yield fetch(url, { mode: 'cors' })
     if (response.ok) {
@@ -47,8 +48,10 @@ function* handleSearch({ keyword }) {
         yield put({ type: A.UPDATE_SEARCH_RESULT, result })
       } else {
         console.log('暂无数据')
-        yield put({ type: A.RETURN_NO_RESULT })
+        yield put({ type: A.RETURN_RESULT, noResult: true })
       }
+    } else {
+      yield put({ type: A.RETURN_RESULT, noResult: true })
     }
   } catch (e) {
     console.log(e)
@@ -57,7 +60,7 @@ function* handleSearch({ keyword }) {
 
 function* handleUpdateGraphData({ id, resultType }) {
   try {
-    yield put({ type: A.SET_GRAPH_LOADING })
+    yield put({ type: A.SET_GRAPH_LOADING, isLoading: true })
     const url = `${host}/graph?id=${encodeURIComponent(id)}&type=${resultType}`
     const response = yield fetch(url, { mode: 'cors' })
     if (response.ok) {
@@ -72,7 +75,6 @@ function* handleUpdateGraphData({ id, resultType }) {
         const linkData = fromJS(data.relations).map(i => Map({
           source: i.get('objectA'),
           target: i.get('objectB'),
-          score: i.get('score'),
         }))
         yield put({
           type: A.UPDATE_CENTER_ID,
@@ -85,6 +87,7 @@ function* handleUpdateGraphData({ id, resultType }) {
         console.log('暂无此词条')
       }
     }
+    yield put({ type: A.SET_GRAPH_LOADING, isLoading: false })
   } catch (e) {
     console.log(e)
   }
@@ -97,9 +100,9 @@ function* handleUpdateCardData({ tab, id, cardType }) {
     const response = yield fetch(url, { mode: 'cors' })
     if (response.ok) {
       const json = yield response.json()
-      yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data), centerType: cardType })
+      yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data), tab })
     } else {
-      yield put({ type: A.CLEAR_CARD_DATA })
+      yield put({ type: A.UPDATE_CARD_DATA, cardData: Map(), tab })
     }
   } catch (e) {
     console.log(e)

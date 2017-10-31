@@ -11,7 +11,7 @@ import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
 import config from 'utils/config.yaml'
 
-const mapStateToProps = state => Object.assign({}, state.reducer.toObject(), state.routing)
+const mapStateToProps = state => Object.assign({}, state.graph.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class KnowledgeGraph extends React.Component {
@@ -27,9 +27,6 @@ export default class KnowledgeGraph extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      currentNodeId: 0,
-    }
     this.svgElement = null
     this.graphZoom = null
     this.resizeId = null
@@ -49,16 +46,10 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { nodeData, linkData, centerId, graphType, location } = this.props
-    if (!is(nextProps.nodeData, nodeData) || !is(nextProps.linkData, linkData)) {
-      this.graph.draw(nextProps.nodeData, nextProps.linkData, nextProps.location.state.id,
-        this.handleNodeClick, graphType, !nodeData.isEmpty(),
-      )
-    }
-    if (nextProps.graphType !== graphType) {
-      this.graph.drawLines(location.state.id, nextProps.graphType, false)
-      this.graph.updateNodes(nodeData, linkData, location.state.id, this.handleNodeClick, nextProps.graphType)
-      this.graph.restart(location.state.id)
+    const { nodeData, linkData, location } = nextProps
+    const { id } = querystring.parse(location.search.substring(1))
+    if (!is(nodeData, this.props.nodeData) || !is(linkData, this.props.linkData)) {
+      this.graph.draw(nodeData, linkData, id, this.handleNodeClick, !nodeData.isEmpty())
     }
   }
 
@@ -67,8 +58,9 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   resize = () => {
-    const { nodeData, linkData, graphType, location } = this.props
-    this.graph.draw(nodeData, linkData, location.state.id, this.handleNodeClick, graphType, !nodeData.isEmpty())
+    const { nodeData, linkData, location } = this.props
+    const { id } = querystring.parse(location.search.substring(1))
+    this.graph.draw(nodeData, linkData, id, this.handleNodeClick, !nodeData.isEmpty())
   }
   zoomed = () => {
     const g = d3.select('.graph-g')
@@ -76,16 +68,20 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   handleButtonClick = (type) => {
+    const { location } = this.props
+    const { id } = querystring.parse(location.search.substring(1))
     if (type === 'reset') {
-      zoomReset(this.svgElement, this.graphZoom, this.props.location.state.id, this.graph)
+      zoomReset(this.svgElement, this.graphZoom, id, this.graph)
     } else {
-      zoomClick(this.svgElement, this.graphZoom, type, this.props.location.state.id)
+      zoomClick(this.svgElement, this.graphZoom, type, id)
     }
   }
 
   handleNodeClick = (id, nodeType) => {
-    zoomReset(this.svgElement, this.graphZoom, this.props.location.state.id, this.graph)
-    this.props.dispatch(push(`?${querystring.stringify({ type: nodeType, id })}`, { type: nodeType, id }))
+    const { location } = this.props
+    const { id: currentId } = querystring.parse(location.search.substring(1))
+    zoomReset(this.svgElement, this.graphZoom, currentId, this.graph)
+    this.props.dispatch(push(`?${querystring.stringify({ type: nodeType, id })}`))
   }
 
   render() {

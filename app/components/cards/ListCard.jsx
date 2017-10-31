@@ -9,7 +9,7 @@ import * as A from 'actions'
 import { ArrowTop, ArrowBottom } from 'components/Icons'
 import 'style/CommonCard.styl'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class ListCard extends React.Component {
@@ -33,13 +33,6 @@ export default class ListCard extends React.Component {
     window.addEventListener('resize', this.setItemNum)
   }
 
-  componentWillReceiveProps(nextProps) {
-    // 其他页面展开或变更中心点时收起
-    if (nextProps.graphType === 'all' || nextProps.graphType !== this.props.type) {
-      if (this.state.expand) this.setState({ expand: false })
-    }
-  }
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.setItemNum)
   }
@@ -53,14 +46,11 @@ export default class ListCard extends React.Component {
   }
 
   handleExpand = () => {
-    const { dispatch, type } = this.props
     this.setState({ expand: !this.state.expand })
     // dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: this.state.expand ? 'all' : type })
   }
-  handleClick = (id, type, name) => {
-    // this.props.dispatch({ type: A.UPDATE_CENTER_ID, centerId: id, centerType: type, centerName: name })
-    // this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
-    this.props.dispatch(push(`?${querystring.stringify({ type, id })}`, { type, id }))
+  handleClick = (id, type) => {
+    this.props.dispatch(push(`?${querystring.stringify({ type, id })}`))
   }
 
   render() {
@@ -76,7 +66,7 @@ export default class ListCard extends React.Component {
               id={type}
               key={i}
               className={classNames('item', type)}
-              onClick={() => this.handleClick(l.get('id'), type, l.get('text'))}
+              onClick={() => this.handleClick(l.get('id'), type)}
             >
               <img src={l.get('url')} />
               <div className="name" title={l.get('text')}>{l.get('text')}</div>

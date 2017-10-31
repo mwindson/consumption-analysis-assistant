@@ -1,12 +1,14 @@
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import { replace, push } from 'react-router-redux'
+import querystring from 'querystring'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import * as A from 'actions'
 import CommonCard from 'components/cards/CommonCard'
 import textTruncated from 'utils/textTruncated'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class RelatedBrandTab extends React.Component {
@@ -44,6 +46,10 @@ export default class RelatedBrandTab extends React.Component {
     }
   }
 
+  relatedBrandClick = (id, type) => {
+    this.props.dispatch(push(`?${querystring.stringify({ type, id })}`))
+  }
+
   render() {
     const { cardData } = this.props
     const { num } = this.state
@@ -52,6 +58,8 @@ export default class RelatedBrandTab extends React.Component {
     }
     const brandList = cardData.map(i => Map({
       imgUrl: i.get('image') !== '' ? i.get('image') : 'app/static/image/logo.png',
+      id: i.get('id'),
+      type: i.get('type').last(),
       name: i.get('name'),
       content: i.get('description'),
       attr: Map(),
@@ -63,16 +71,16 @@ export default class RelatedBrandTab extends React.Component {
       <div className="cards">
         {brandList.slice(0, num > brandList.size ? brandList.size : num)
           .toArray().map((brand, i) =>
-            (<CommonCard
-              key={i}
-              imgUrl={brand.get('imgUrl')}
-              title={''}
-              name={brand.get('name')}
-              content={brand.get('content')}
-              hasExpand={false}
-              truncated={textTruncated(brand.get('content')).length > 120}
-              attr={brand.get('attr')}
-            />),
+            (<div key={i} Fstyle={{ cursor: 'pointer' }} onClick={() => this.relatedBrandClick(brand.get('id'), brand.get('type'))}>
+              <CommonCard
+                imgUrl={brand.get('imgUrl')}
+                title={''}
+                name={brand.get('name')}
+                content={brand.get('content')}
+                hasExpand={false}
+                truncated={textTruncated(brand.get('content')).length > 120}
+                attr={brand.get('attr')}
+              /></div>),
         )}
         {this.state.loading ?
           <div className="loading">

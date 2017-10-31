@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import CommonCard from 'components/cards/CommonCard'
 import 'style/CompanyKnowledge.styl'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class CompanyKnowledgeTab extends React.Component {
@@ -70,10 +70,10 @@ export default class CompanyKnowledgeTab extends React.Component {
             <div className="company-name">{companyAttr.get('name')}</div>
             <div className="company-attr">
               {companyAttr.get('attr').map((item, index) =>
-                <div key={index} className="attr">
+                (<div key={index} className="attr">
                   <div className="key">{item.get('key')}</div>
                   <div className="value">{item.get('value')}</div>
-                </div>)}
+                </div>))}
             </div>
           </div> : null}
       </div>

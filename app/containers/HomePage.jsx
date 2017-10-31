@@ -14,11 +14,12 @@ import { LogoIcon, SearchIcon, ErrorIcon, ArrowTop, ArrowBottom } from 'componen
 import 'style/HomePage.styl'
 import config from '../utils/config.yaml'
 
-const mapStateToProps = state => Object.assign({}, state.reducer.toObject(), state.routing)
+const mapStateToProps = state => Object.assign({}, state.cards.toObject(), state.main.toObject(), state.graph.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class HomePage extends React.Component {
   state = {
+    searching: this.props.location.search !== '', // 是否正在搜索
     editing: false, // 是否正在输入
     inputValue: '', // 搜索框输入内容
     searchState: 'none', // none | searching | error
@@ -32,30 +33,29 @@ export default class HomePage extends React.Component {
   componentDidMount() {
     const searchResult = document.getElementsByClassName('search-result')[0]
     searchResult.addEventListener('overflow', () => this.setState({ overflow: true }))
-    if (this.props.location.search === '') {
-      const para = { type: 'Brand', id: 'maigoo:brand:米家MIJIA' }
-      this.props.dispatch(push(`?${querystring.stringify(para)}`, para))
-      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id: 'maigoo:brand:米家MIJIA', resultType: 'Brand' })
-    } else {
+    // url的参数非空
+    if (this.props.location.search !== '') {
       const { type, id } = querystring.parse(this.props.location.search.substring(1))
-      this.props.dispatch(push(`?${querystring.stringify({ type, id })}`, { type, id }))
+      this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
+    } else {
+      // 品牌条目和产品条目统计数据查询
+      this.props.dispatch({ type: A.FETCH_COUNT_DATA })
     }
-    // 品牌条目和产品条目统计展示
-    this.props.dispatch({ type: A.FETCH_COUNT_DATA })
   }
 
   componentWillReceiveProps(nextProps) {
     const { searchResult, location } = this.props
     if (!is(nextProps.searchResult, searchResult)) {
-      this.handleResult(nextProps.searchResult.first().get('id'), nextProps.searchResult.first().get('type'))
+      this.handleResult(nextProps.searchResult.first().get('id'),
+        nextProps.searchResult.first().get('type'))
     }
     if (nextProps.noResult) {
       setTimeout(() => this.setState({ searchState: 'error', inputValue: '' }), 1000)
     } else {
       setTimeout(() => this.setState({ searchState: 'none' }), 1000)
     }
-    if (nextProps.location !== location && nextProps.location.state) {
-      const { type, id } = nextProps.location.state
+    if (nextProps.location !== location) {
+      const { type, id } = querystring.parse(nextProps.location.search.substring(1))
       this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type })
     }
   }
@@ -65,10 +65,11 @@ export default class HomePage extends React.Component {
   }
 
   handleBlur = () => {
-    this.setState({ editing: false })
+    if (this.state.inputValue === '') this.setState({ editing: false })
   }
 
   handleChange = (event) => {
+    if (!this.state.searching) this.setState({ searching: true })
     this.setState({ inputValue: event.target.value })
   }
   handleSearch = (event) => {
@@ -77,10 +78,10 @@ export default class HomePage extends React.Component {
       this.setState({ searchState: 'searching', overflow: false })
     }
   }
-  handleResult = (id, resultType) => {
+  handleResult = (id, type) => {
     this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'none', id: '' })
     this.setState({ listExpand: false })
-    this.props.dispatch(push(`?${querystring.stringify({ type: resultType, id })}`, { type: resultType, id }))
+    this.props.dispatch(push(`?${querystring.stringify({ type, id })}`))
   }
   popupSearchResult = () => {
     this.props.dispatch({ type: A.UPDATE_POPUP_TYPE, contentType: 'searchResult', id: '' })
@@ -96,46 +97,24 @@ export default class HomePage extends React.Component {
   }
 
   render() {
-    const { editing, inputValue, searchState, searchBarExpand, feedbackExpand } = this.state
-    const { count, footprint, centerName, centerId, centerType } = this.props
+    const { editing, inputValue, searchState, searchBarExpand, feedbackExpand, searching } = this.state
+    const { count, footprint, center } = this.props
     const isExpand = this.props.popupType !== 'none'
     return (
       <div className="main">
-        <div className="left-part">
+        <div className={classNames('left-part', { searching })}>
           <div className="top">
             <div className="logo">
               <LogoIcon />
             </div>
-            <div className="title" style={{ whiteSpace: 'nowrap' }}>Relationship diagram</div>
-            <div id="history" className="history">
+            <div className="title">Relationship diagram</div>
+            {searching ? <div id="history" className="history">
               <CollapseButton contentList={footprint} itemClick={this.handleResult} />
-            </div>
+              <button className="feedback-button" onClick={() => this.openFeedback()}>我要反馈</button>
+            </div> : null}
           </div>
-          <div className="top">
-            <div
-              className="statistic"
-            >当前已收录品牌
-              <span style={{ color: 'red', fontWeight: 'bold' }}>{count.get('brand') ? count.get('brand') : '0'}</span>个，
-              人物<span style={{
-                color: 'red',
-                fontWeight: 'bold',
-              }}
-              >{count.get('person') ? count.get('person') : '0'}</span>个，
-              公司<span style={{
-                color: 'red',
-                fontWeight: 'bold',
-              }}
-              >{count.get('company') ? count.get('company') : '0'}</span>个，
-              产品<span style={{
-                color: 'red',
-                fontWeight: 'bold',
-              }}
-              >{count.get('product') ? count.get('product') : '0'}</span>个
-            </div>
-            <button className="feedback-button" onClick={() => this.openFeedback()}>我要反馈</button>
-          </div>
-          <div className={classNames('search', { expand: searchBarExpand })}>
-            <div className="input">
+          <div className={classNames('search', { expand: searchBarExpand && searching, searching })}>
+            <div className={classNames('input', { searching })} >
               <input
                 type="text"
                 onFocus={this.handleFocus}
@@ -144,9 +123,9 @@ export default class HomePage extends React.Component {
                 onKeyDown={this.handleSearch}
                 value={inputValue}
               />
-              {!editing && inputValue === '' ? <SearchIcon /> : null}
+              {!editing ? <SearchIcon /> : null}
               {searchState === 'searching' ?
-                <div className="searching">
+                <div className="searching-logo">
                   <div className="searching-animation">
                     <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
                   </div>
@@ -154,7 +133,7 @@ export default class HomePage extends React.Component {
                 </div> : null
               }
               {searchState === 'error' ? <div className="no-result"><ErrorIcon />暂无相关内容</div> : null}
-              <div className="search-result">
+              <div className={classNames('search-result', { searching })}>
                 {this.props.searchResult.slice(0, 6).toArray().map((item, i) => (
                   <div
                     key={i}
@@ -170,24 +149,37 @@ export default class HomePage extends React.Component {
               </div>
             </div>
           </div>
-          <div
-            onClick={() => this.setState({ searchBarExpand: !searchBarExpand })}
-            className="search-bar-button"
-          >{searchBarExpand ? <ArrowTop fill={'white'} /> : <ArrowBottom fill={'white'} />}</div>
-          <div className="graph">
-            {this.props.graphLoading ?
-              <div className="mask">
-                <div className="loading">
-                  <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
-                </div>
-              </div> : null}
-            <KnowledgeGraph />
-          </div>
-        </div>
-        <div className="right-part">
+          {!searching ?
+            <div className="statistic"> 当前已收录品牌
+              <span>{count.get('brand') ? count.get('brand') : '0'}</span>个，人物
+              <span>{count.get('person') ? count.get('person') : '0'}</span>个，公司
+              <span>{count.get('company') ? count.get('company') : '0'}</span>个，产品
+              <span>{count.get('product') ? count.get('product') : '0'}</span>个
+            </div> : null
+          }
+          {
+            searching ? <div
+              onClick={() => this.setState({ searchBarExpand: !searchBarExpand })}
+              className="search-bar-button"
+            >{searchBarExpand ? <ArrowTop fill={'white'} /> : <ArrowBottom fill={'white'} />}</div> : null
+          }
+          {
+            searching ? <div className="graph">
+              {this.props.graphLoading ?
+                <div className="mask">
+                  <div className="loading">
+                    <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
+                  </div>
+                </div> : null}
+              <KnowledgeGraph />
+            </div> : null
+          }
+        </div >
+        {searching ? <div className="right-part">
           <KnowledgeCards />
-        </div>
-        <Feedback name={centerName} id={centerId} expand={feedbackExpand} closeFunc={this.closeFeedback} type={centerType} />
+        </div > : null
+        }
+        <Feedback name={center.get('name')} id={center.get('id')} expand={feedbackExpand} closeFunc={this.closeFeedback} type={center.get('type')} />
         <div className={classNames('popup', { listExpand: isExpand })}>
           <div className="mask" />
           <Motion style={{ y: spring(isExpand ? 100 : 0), opacity: spring(isExpand ? 1 : 0.5) }}>
@@ -210,7 +202,7 @@ export default class HomePage extends React.Component {
             }
           </Motion>
         </div>
-      </div>
+      </div >
     )
   }
 }

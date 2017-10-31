@@ -13,66 +13,88 @@ html, dy
   display flex
 
   .left-part
-    width 60%
+    width 100%
     background linear-gradient(135deg, #0D9AB7, #124D90)
-    padding 18px
     display flex
     flex-direction column
     position relative
+    padding 12% 0
+    &.searching
+      width 60%
+      padding 18px
+      .top
+        justify-content flex-start
+        .logo
+          width 30px
+        .title
+          font-size 18px
     .top
       min-height 30px
       display flex
       padding-bottom 15px
+      justify-content center
       .logo
-        width 30px
+        width 60px
       .title
-        font-size 18px
-        margin-right auto
+        margin-left 10px
+        font-size 45px
         color white
         display flex
         flex-wrap wrap
-      .statistic
-        margin-right auto
-        color white
-        font-size 18px
       .history
+        margin-left auto
         height 30px
+        display flex
         .history-button
           padding 5px
           background white
           border-radius 3px
           cursor pointer
-      .feedback-button
-        height 30px
-        font-size 18px
-        color #4990e2
+          margin-right 10px
+        .feedback-button
+          font-size 18px
+          color #4990e2
     .search
-      height 0
+      height 60px
       display flex
       justify-content center
       position relative
       transition height 1s ease
       overflow-y hidden
+      margin 20px 0
+      &.searching
+        height 0
+        margin 0
       &.expand
         height 135px
       .input
-        width 576px
-        height 46px
+        width 1150px
+        height 60px
         margin 0
         border-radius 4px
         box-shadow #000000 0 1px 3px 0
         position relative
+        &.searching
+          width 576px
+          height 46px
+          > svg
+            left 10px
+            top 9px
+            width 30px
+            height 30px
         > input
           width 100%
           height 100%
           padding 0
-          font-size 24px
+          font-size 36px
         > svg
           position absolute
-          left 20px
-          top 14px
+          left 10px
+          top 5px
+          width 50px
+          height 50px
           pointer-events none
-        .no-result, .searching
+        .no-result, .searching-logo
           width 130px
           height 25px
           position absolute
@@ -83,7 +105,7 @@ html, dy
           align-items center
           color #e98484
           font-size 18px
-        .searching
+        .searching-logo
           color #65AD11
           width 96px
           .searching-animation
@@ -135,7 +157,9 @@ html, dy
           position relative
           display flex
           flex-wrap wrap
-          height 85px
+          height 0
+          &.searching
+            height 85px
           .search-item
             background-color #E1F0F7
             color #69C
@@ -161,6 +185,14 @@ html, dy
             height 25px
             border-radius 3px
             cursor pointer
+    .statistic
+      color white
+      font-size 30px
+      display flex
+      justify-content center
+      > span
+        color red
+        font-weight bold
     .search-bar-button
       height 15px
       width 100%

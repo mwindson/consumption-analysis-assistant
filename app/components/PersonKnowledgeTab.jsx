@@ -3,7 +3,7 @@ import { List, Map, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import 'style/PersonKnowledgeTab.styl'
 
-const mapStateToProps = state => state.reducer.toObject()
+const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class PersonKnowledgeTab extends React.Component {
