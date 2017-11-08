@@ -13,24 +13,21 @@ export default class PersonKnowledgeTab extends React.Component {
     if (cardData.isEmpty()) {
       return null
     }
-    const infoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box')
-    const person = Map({
-      title: '人物简介',
-      imgUrl: cardData.get('image'),
+    const personKnowledge = Map({
+      image: cardData.get('image'),
       name: cardData.get('name'),
-      desc: cardData.get('description'),
-      attr: infoBox.isEmpty() ? null : infoBox.first().get('value'),
+      attr: fromJS(cardData.get('infoBox')),
     })
     return (
       <div className="cards">
         <div className="person-cards">
           <div className="title">人物介绍</div>
           <div className="person-content">
-            {person.get('imgUrl') ? <img src={person.get('imgUrl')} /> : null}
-            <div className="person-name">{person.get('name')}</div>
-            {person.get('attr') ?
+            {personKnowledge.get('image') ? <img src={personKnowledge.get('image')} alt="" /> : null}
+            <div className="person-name">{personKnowledge.get('name')}</div>
+            {personKnowledge.get('attr') ?
               <div className="person-attr">
-                {person.get('attr').map((item, index) =>
+                {personKnowledge.get('attr').map((item, index) =>
                   <div key={index} className="attr">{`${item.get('key')}：${item.get('value')}`}</div>)}
               </div>
               : null}

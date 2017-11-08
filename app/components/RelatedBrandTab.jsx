@@ -24,14 +24,12 @@ export default class RelatedBrandTab extends React.Component {
   }
 
   componentDidMount() {
-    // this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'Brand' })
     this.cards = document.getElementsByClassName('cards')[0]
     this.cards.addEventListener('scroll', this.onScroll)
   }
 
   componentWillUnmount() {
     this.cards.removeEventListener('scroll', this.onScroll)
-    // this.props.dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: 'all' })
   }
 
   onScroll = () => {
@@ -71,7 +69,7 @@ export default class RelatedBrandTab extends React.Component {
       <div className="cards">
         {brandList.slice(0, num > brandList.size ? brandList.size : num)
           .toArray().map((brand, i) =>
-            (<div key={i} Fstyle={{ cursor: 'pointer' }} onClick={() => this.relatedBrandClick(brand.get('id'), brand.get('type'))}>
+            (<div key={i} style={{ cursor: 'pointer' }} onClick={() => this.relatedBrandClick(brand.get('id'), brand.get('type'))}>
               <CommonCard
                 imgUrl={brand.get('imgUrl')}
                 title={''}

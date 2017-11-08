@@ -15,12 +15,14 @@ export default class CompanyKnowledgeTab extends React.Component {
       return null
     }
     let info = List()
-    const qixinInfoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'qixin_info_box')
-    const infoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box')
-    if (!qixinInfoBox.isEmpty() && !qixinInfoBox.first().get('value').isEmpty()) {
-      info = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'qixin_info_box').first().get('value')
-    } else if (!infoBox.isEmpty() && !fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box').first().get('value').isEmpty()) {
-      info = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box').first().get('value')
+    if (cardData.get('optional')) {
+      const qixinInfoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'qixin_info_box')
+      const infoBox = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box')
+      if (!qixinInfoBox.isEmpty() && !qixinInfoBox.first().get('value').isEmpty()) {
+        info = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'qixin_info_box').first().get('value')
+      } else if (!infoBox.isEmpty() && !fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box').first().get('value').isEmpty()) {
+        info = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'info_box').first().get('value')
+      }
     }
 
     let company = Map({

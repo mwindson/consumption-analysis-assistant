@@ -6,40 +6,35 @@ import 'style/PersonStoryTab.styl'
 const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
-export default class PersonKnowledgeTab extends React.Component {
+export default class PersonStoryTab extends React.Component {
 
   render() {
     const { cardData } = this.props
-    if (cardData.isEmpty()) {
-      return null
-    }
-    const detail = fromJS(cardData.get('optional')).filter(x => x.get('key') === 'detail')
-    if (!cardData.get('optional') || detail.isEmpty()) {
+    if (cardData.isEmpty() || !cardData.get('detail')) {
       return (
         <div className="cards">
           <div className="product-card">暂无更多信息</div>
         </div>
       )
     }
-    const personStory = detail.first().get('value')
+    const personStory = fromJS(cardData.get('detail'))
     return (
       <div className="cards">
         <div className="person-cards">
           {cardData.get('description') && cardData.get('description') !== '' ?
             <div className="story">
-              <div className="text">{cardData.get('description')}</div>
+              {fromJS(cardData.get('description').split('\u2764')).map((d, i) =>
+                (<div key={i}>
+                  <div className="text">{d}</div>
+                </div>))}
             </div> : null}
           {personStory.map((item, index) =>
             (<div key={index} className="story">
               <h3>{item.get('key')}</h3>
-              {List.isList(item.get('value')) ?
-                item.get('value').map((d, i) =>
-                  <div key={i}>
-                    <h4>{d.get('key')}</h4>
-                    <div className="text">{d.get('value')}</div>
-                  </div>)
-                : <div className="text">{item.get('value')}</div>
-              }
+              {fromJS(item.get('value').split('\u2764')).map((d, i) =>
+                (<div key={i}>
+                  <div className="text">{d}</div>
+                </div>))}
             </div>))
           }
         </div>

@@ -324,10 +324,10 @@ export default class RelationGraph {
       })
     relatedNode
       .selectAll('circle')
+      .attr('fill', d => nodeColor[d.type][1])
       .transition()
       .duration(500)
       .attr('r', this.radius)
-      .attr('fill', d => nodeColor[d.type][1])
     // 绘制临时连接线
     if (this.hoverLinks) {
       this.hoverLinks.attr('x1', (d) => {
@@ -372,10 +372,10 @@ export default class RelationGraph {
     d3.selectAll('.node-hidden')
       .attr('opacity', 0.5)
       .selectAll('circle')
-      .transition(500)
+      .attr('fill', d => nodeColor[d.type][0])
+      .transition()
       .duration(500)
       .attr('r', this.radius * 0.8)
-      .attr('fill', d => nodeColor[d.type][0])
     // 移除文字动画
     d3.selectAll('animateTransform').remove()
     // 删除hover时临时显示的线

@@ -30,7 +30,6 @@ export default function MainReducer(state = initialState, action) {
     if (footprint.size > 10) {
       footprint = footprint.pop()
     }
-    console.log(footprint)
     return state.set('center', Map({ id: centerId, name: centerName, type: centerType }))
       .set('footprint', footprint)
   } else if (action.type === A.RETURN_RESULT) {
