@@ -16,6 +16,10 @@ export default class CommonCard extends React.Component {
     attr: ImmutablePropTypes.map.isRequired,
     imgUrl: PropTypes.string,
   }
+  static defaultProps = {
+    imgUrl: 'app/static/image/no_picture.jpg',
+  }
+
 
   state = {
     expand: !this.props.truncated,
@@ -32,7 +36,7 @@ export default class CommonCard extends React.Component {
       <div className={classNames('common-card', { expand })}>
         <div className={classNames('title', { exist: title !== '' })}>{title}</div>
         <div className="content">
-          {imgUrl ? <div className="image"><img src={imgUrl} alt="" /></div> : null}
+          <div className="image"><img src={imgUrl || 'app/static/image/no_picture.jpg'} alt="" /></div>
           <div className="intro">
             <div className="name">{name}</div>
             {attr.size === 0 ?

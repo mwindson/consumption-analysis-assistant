@@ -4,7 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import querystring from 'querystring'
-import { push } from 'react-router-redux'
+import { replace } from 'react-router-redux'
 import * as A from 'actions'
 import { ArrowTop, ArrowBottom } from 'components/Icons'
 import 'style/CommonCard.styl'
@@ -39,7 +39,7 @@ export default class ListCard extends React.Component {
 
   setItemNum = () => {
     if (!this.props.list.isEmpty()) {
-      const width = document.querySelector('.list').clientWidth
+      const width = document.querySelector('.common-card').clientWidth - 80
       const itemWidth = document.querySelector(`div.item.${this.props.type}`).clientWidth + 30
       this.setState({ itemNum: Math.floor(width / itemWidth) })
     }
@@ -47,10 +47,10 @@ export default class ListCard extends React.Component {
 
   handleExpand = () => {
     this.setState({ expand: !this.state.expand })
-    // dispatch({ type: A.UPDATE_GRAPH_TYPE, graphType: this.state.expand ? 'all' : type })
   }
   handleClick = (id, type) => {
-    this.props.dispatch(push(`?${querystring.stringify({ type, id })}`))
+    this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true })
   }
 
   render() {

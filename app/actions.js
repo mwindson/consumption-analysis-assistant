@@ -10,6 +10,10 @@ export const UPDATE_NODES_AND_LINKS_DATA = 'UPDATE_NODES_AND_LINKS_DATA'
 export const FETCH_SEARCH_RESULT = 'FETCH_SEARCH_RESULT'
 export const UPDATE_SEARCH_RESULT = 'UPDATE_SEARCH_RESULT'
 export const RETURN_RESULT = 'RETURN_RESULT'
+export const UPDATE_KEYWORD = 'UPDATE_KEYWORD'
+
+// 更新浏览记录
+export const UPDATE_FOOTPRINT = 'UPDATE_FOOTPRINT'
 
 // 更新默认的中心节点
 export const UPDATE_CENTER_ID = 'UPDATE_CENTER_ID'
@@ -28,5 +32,6 @@ export const UPDATE_GRAPH_TYPE = 'UPDATE_GRAPH_TYPE'
 // 更改知识卡片tab页
 export const CHANGE_TAB = 'CHANGE_TAB'
 
-// 改变弹出窗口的内容种类并决定是否弹出
-export const UPDATE_POPUP_TYPE = 'UPDATE_POPUP_TYPE'
+// 决定弹出类型
+export const CHANGE_OPEN_TYPE = 'CHANGE_OPEN_TYPE'
+export const FLOAT_LAYER_OPEN = 'FLOAT_LAYER_OPEN'

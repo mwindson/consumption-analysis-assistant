@@ -34,6 +34,7 @@ function* handleFetchCount() {
 function* handleSearch({ keyword }) {
   try {
     yield put({ type: A.RETURN_RESULT, noResult: false })
+    yield put({ type: A.UPDATE_KEYWORD, keyword })
     const url = `${host}/search?keyword=${encodeURIComponent(keyword)}`
     const response = yield fetch(url, { mode: 'cors' })
     if (response.ok) {
@@ -58,7 +59,7 @@ function* handleSearch({ keyword }) {
   }
 }
 
-function* handleUpdateGraphData({ id, resultType }) {
+function* handleUpdateGraphData({ id, resultType, updateFootprint }) {
   try {
     yield put({ type: A.SET_GRAPH_LOADING, isLoading: true })
     const url = `${host}/graph?id=${encodeURIComponent(id)}&type=${resultType}`
@@ -82,6 +83,14 @@ function* handleUpdateGraphData({ id, resultType }) {
           centerType: resultType,
           centerName: data.centerName,
         })
+        if (updateFootprint) {
+          yield put({
+            type: A.UPDATE_FOOTPRINT,
+            centerId: data.centerId,
+            centerType: resultType,
+            centerName: data.centerName,
+          })
+        }
         yield put({ type: A.UPDATE_NODES_AND_LINKS_DATA, nodeData, linkData })
       } else {
         console.log('暂无此词条')

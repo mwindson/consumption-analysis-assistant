@@ -28,13 +28,13 @@ Product:
    name: 商品信息
  - key: spec
    name: 商品规格
- - key: priceSales
-   name: 价格销量
+# - key: priceSales
+#   name: 价格销量
 nameMap:
   Brand: 品牌
   Company: 公司
   Person: 人物
-  Product: 产品
+  Product: 商品
   brand: 品牌
   name: 名称
   sku: 商品编号

@@ -1,4 +1,21 @@
 layerWidth = 280px
+.step-button
+  color white
+  display flex
+  align-items center
+  font-size 12px
+  cursor pointer
+  margin-right 20px
+  &.disable
+    cursor default
+    color gray
+    > svg
+      color gray
+  &:nth-child(2)
+    margin-left 28px
+  > svg
+    margin 0 5px
+
 .bookmark-open
   width 43px
   height 50px
@@ -30,6 +47,8 @@ layerWidth = 280px
     height 0
     border-bottom 25px solid red
     border-left 25px solid transparent
+  &.hidden
+    visibility hidden
 
 .float-layer
   position absolute
@@ -54,13 +73,16 @@ layerWidth = 280px
     .bookmark-close
       @extend .bookmark-open
       margin-left auto
+
   .list
+    margin-top 10px
     display flex
     flex-wrap wrap
     padding 13px
+    overflow-y auto
     .item
       flex 1 0 auto
-      height 25px
+      min-height 25px
       background #cdecff
       padding 4px
       border-radius 2px
@@ -74,19 +96,20 @@ layerWidth = 280px
       cursor pointer
       &.long
         width 208px
-        height 30px
+        min-height 30px
         background rgba(255, 255, 255, .7)
         font-size 18px
         color black
-        &:last-child
+        padding-left 10px
+        &.chosen
           background red
           color white
-        &:before
-          content ""
-          position absolute
-          left 0
-          top 0
-          bottom 0
-          width 6px
-          background red
+      &:before
+        content ""
+        position absolute
+        left 0
+        top 0
+        bottom 0
+        width 6px
+        background red
 

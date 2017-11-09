@@ -1,4 +1,7 @@
-html, dy
+*
+  box-sizing border-box
+
+html, body
   margin 0
   height 100%
 
@@ -45,6 +48,7 @@ html, dy
         display flex
         flex-wrap wrap
       .history
+        margin-right 30px
         margin-left auto
         height 30px
         display flex
@@ -69,7 +73,7 @@ html, dy
         height 0
         margin 0
       &.expand
-        height 135px
+        height 90px
       .input
         width 1150px
         height 60px
@@ -159,42 +163,43 @@ html, dy
         .search-result
           position relative
           display flex
-          flex-wrap wrap
           height 0
+          margin-top 10px
+          font-size 12px
+          width 579px
+          overflow hidden
           &.searching
-            height 85px
+            height 25px
           .search-item
-            background-color #E1F0F7
-            color #69C
-            width 160px
+            background-color #CDEDFF
+            color #125091
+            flex 0 0 auto
             height 25px
-            border-radius 3px
-            margin-top 5px
-            margin-right 5px
+            border-radius 2px
             padding 5px
+            margin-right 8px
             cursor pointer
-            text-align center
-            text-overflow ellipsis
-            -o-text-overflow ellipsis
-            white-space nowrap
-            overflow hidden
+            display flex
+            align-items center
+            justify-content center
           .more-result
-            position absolute
-            bottom 2px
-            padding 5px
-            right 0
-            background-color #E1F0F7
-            color #69C
+            margin-left auto
+            background-color #7ED321
+            color white
+            width 73px
             height 25px
-            border-radius 3px
+            border-radius 2px
             cursor pointer
+            display flex
+            align-items center
+            justify-content center
     .statistic
       color white
       font-size 30px
       display flex
       justify-content center
       > span
-        color red
+        color #F8E900
         font-weight bold
     .search-bar-button
       height 15px

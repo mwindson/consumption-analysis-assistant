@@ -1,5 +1,5 @@
 import React from 'react'
-import { fromJS, Range } from 'immutable'
+import { fromJS, Range, Map } from 'immutable'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import querystring from 'querystring'
@@ -80,6 +80,7 @@ export default class KnowledgeCards extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.location !== this.props.location) {
       const { id, type } = querystring.parse(nextProps.location.search.substring(1))
+      this.props.dispatch({ type: A.UPDATE_CARD_DATA, cardData: Map(), tab: config[type][0].key })
       this.props.dispatch({
         type: A.FETCH_CARD_DATA,
         tab: config[type][0].key,

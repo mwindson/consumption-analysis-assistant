@@ -1,11 +1,12 @@
-import { Map, List, Set } from 'immutable'
+import { Map, List } from 'immutable'
 import * as A from 'actions'
-import config from 'utils/config.yaml'
 
 const initialState = Map({
   noResult: false,
-  popupType: 'none',  // none or searchResult or product -- none 不弹出
   searchResult: List(),
+  contentType: 'history', // 'history' / 'moreResult'
+  floatLayerOpen: false,
+  keyword: '',
   count: Map(), // 已有实体的统计数据
   footprint: List(),
   // 中心点相关属性
@@ -17,30 +18,29 @@ export default function MainReducer(state = initialState, action) {
     return state.set('searchResult', result).set('noResult', false)
   } else if (action.type === A.UPDATE_CENTER_ID) {
     const { centerId, centerType, centerName } = action
-    // 更新中心节点时，添加历史记录
-    const oldName = state.get('center').get('name')
-    const type = state.get('center').get('type')
-    const id = state.get('center').get('id')
+    const center = Map({ id: centerId, name: centerName, type: centerType })
+    return state.set('center', center)
+  } else if (action.type === A.UPDATE_FOOTPRINT) {
+    const { centerId, centerType, centerName } = action
+    // 添加历史记录
     let footprint = state.get('footprint')
-    if (oldName !== '') {
-      footprint = footprint.unshift(Map({
-        name: `${oldName}（${config.nameMap[type]}）`, id, type,
-      }))
-    }
-    if (footprint.size > 10) {
-      footprint = footprint.pop()
-    }
-    return state.set('center', Map({ id: centerId, name: centerName, type: centerType }))
-      .set('footprint', footprint)
+    footprint = footprint.push(Map({ id: centerId, name: centerName, type: centerType }))
+    return state.set('footprint', footprint)
   } else if (action.type === A.RETURN_RESULT) {
     const { noResult } = action
     return state.set('noResult', noResult)
-  } else if (action.type === A.UPDATE_POPUP_TYPE) {
+  } else if (action.type === A.CHANGE_OPEN_TYPE) {
     const { contentType } = action
-    return state.set('popupType', contentType)
+    return state.set('contentType', contentType)
+  } else if (action.type === A.FLOAT_LAYER_OPEN) {
+    const { isOpen } = action
+    return state.set('floatLayerOpen', isOpen)
   } else if (action.type === A.UPDATE_COUNT_DATA) {
     const { count } = action
     return state.set('count', count)
+  } else if (action.type === A.UPDATE_KEYWORD) {
+    const { keyword } = action
+    return state.set('keyword', keyword)
   } else {
     return state
   }

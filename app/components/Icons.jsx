@@ -92,3 +92,23 @@ export const ErrorIcon = () => (
     />
   </svg>
 )
+
+export const PrevStepIcon = ({ color = '#fff' }) => (
+  <svg width="11" height="21" viewBox="0 0 11 21">
+    <path
+      d="M10.46 1.165a1.088 1.088 0 0 0-1.545 0L.541 9.538a1.078 1.078 0 0 0-.284.962c-.06.34.023.7.284.962l8.374 8.376a1.093 1.093 0 1 0 1.545-1.548L2.673 10.5l7.787-7.788a1.09 1.09 0 0 0 0-1.547z"
+      fillRule="nonzero"
+      fill={color}
+    />
+  </svg>
+)
+
+export const NextStepIcon = ({ color = '#fff' }) => (
+  <svg width="11" height="21" viewBox="0 0 11 21">
+    <path
+      d="M.54 19.835c.426.43 1.118.43 1.545 0l8.374-8.373c.262-.265.344-.623.284-.962.06-.34-.023-.7-.284-.962L2.085 1.162A1.093 1.093 0 1 0 .54 2.71l7.787 7.79L.54 18.288a1.09 1.09 0 0 0 0 1.547z"
+      fillRule="nonzero"
+      fill={color}
+    />
+  </svg>
+)

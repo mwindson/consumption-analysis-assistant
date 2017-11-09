@@ -1,5 +1,4 @@
 import React from 'react'
-import ImmutablePropTypes from 'react-immutable-proptypes'
 import { replace, push } from 'react-router-redux'
 import querystring from 'querystring'
 import { connect } from 'react-redux'
@@ -45,7 +44,8 @@ export default class RelatedBrandTab extends React.Component {
   }
 
   relatedBrandClick = (id, type) => {
-    this.props.dispatch(push(`?${querystring.stringify({ type, id })}`))
+    this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
+    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true })
   }
 
   render() {
@@ -69,7 +69,9 @@ export default class RelatedBrandTab extends React.Component {
       <div className="cards">
         {brandList.slice(0, num > brandList.size ? brandList.size : num)
           .toArray().map((brand, i) =>
-            (<div key={i} style={{ cursor: 'pointer' }} onClick={() => this.relatedBrandClick(brand.get('id'), brand.get('type'))}>
+            (<div key={i}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => this.relatedBrandClick(brand.get('id'), brand.get('type'))}>
               <CommonCard
                 imgUrl={brand.get('imgUrl')}
                 title={''}
@@ -79,7 +81,7 @@ export default class RelatedBrandTab extends React.Component {
                 truncated={textTruncated(brand.get('content')).length > 120}
                 attr={brand.get('attr')}
               /></div>),
-        )}
+          )}
         {this.state.loading ?
           <div className="loading">
             <span />
