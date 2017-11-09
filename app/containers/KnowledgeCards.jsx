@@ -1,5 +1,5 @@
 import React from 'react'
-import { fromJS, Map, Range, is } from 'immutable'
+import { fromJS, Range } from 'immutable'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import querystring from 'querystring'
@@ -15,6 +15,8 @@ import ProductDetailTab from 'components/ProductDetailTab'
 import ProductSpecTab from 'components/ProductSpecTab'
 import CompanyKnowledgeTab from 'components/CompanyKnowledgeTab'
 import CompanyStoryTab from 'components/CompanyStoryTab'
+import DetailCard from 'components/DetailCard'
+import InfoBoxCard from 'components/cards/InfoBoxCard'
 import config from '../utils/config.yaml'
 
 const data = {
@@ -120,6 +122,8 @@ export default class KnowledgeCards extends React.Component {
             emotion={fromJS(data[chosen]).get('emotion')}
             trendData={fromJS(data[chosen]).get('trend')}
           /> : null}
+        {chosen === 'infoBox' && centerType === 'Brand' ? <InfoBoxCard /> : null}
+        {chosen === 'detail' && centerType === 'Brand' ? <DetailCard /> : null}
         {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
         {chosen === 'knowledge' && centerType === 'Brand' ? <BrandKnowledgeTab /> : null}
         {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}

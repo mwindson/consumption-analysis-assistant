@@ -1,0 +1,92 @@
+layerWidth = 280px
+.bookmark-open
+  width 43px
+  height 50px
+  background red
+  position relative
+  color white
+  display flex
+  align-items center
+  justify-content center
+  box-sizing border-box
+  padding 5px
+  font-size 12px
+  cursor pointer
+  &:before
+    content ""
+    position absolute
+    right 100%
+    top 0
+    width 0
+    height 0
+    border-top 25px solid red
+    border-left 25px solid transparent
+  &:before
+    content ""
+    position absolute
+    right 100%
+    bottom 0
+    width 0
+    height 0
+    border-bottom 25px solid red
+    border-left 25px solid transparent
+
+.float-layer
+  position absolute
+  top 0
+  right -280px
+  bottom 0
+  width layerWidth
+  background rgba(41, 41, 41, .7)
+  display flex
+  flex-direction column
+  z-index 2
+  .top-part
+    width 100%
+    display flex
+    margin-top 16px
+    .keyword
+      margin-left 19px
+      color white
+      font-size 16px
+      display flex
+      align-items center
+    .bookmark-close
+      @extend .bookmark-open
+      margin-left auto
+  .list
+    display flex
+    flex-wrap wrap
+    padding 13px
+    .item
+      flex 1 0 auto
+      height 25px
+      background #cdecff
+      padding 4px
+      border-radius 2px
+      color #125091
+      font-size 12px
+      margin 9px 5px
+      display flex
+      justify-content center
+      align-items center
+      position relative
+      cursor pointer
+      &.long
+        width 208px
+        height 30px
+        background rgba(255, 255, 255, .7)
+        font-size 18px
+        color black
+        &:last-child
+          background red
+          color white
+        &:before
+          content ""
+          position absolute
+          left 0
+          top 0
+          bottom 0
+          width 6px
+          background red
+

@@ -1,6 +1,10 @@
 Brand:
  - key: knowledge
    name: 品牌知识
+ - key: infoBox
+   name: 品牌信息
+ - key: detail
+   name: 品牌详情
 #  - key: hot
   #  name: 热点聚焦
 #  - key: trend

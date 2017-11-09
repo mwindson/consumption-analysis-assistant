@@ -10,9 +10,9 @@ export default function* graphSaga() {
   yield takeEvery(A.FETCH_COUNT_DATA, handleFetchCount)
 }
 
-// const host = 'http://10.214.208.50:9001'
+const host = 'http://10.214.208.50:9001'
 
-const host = 'http://10.214.224.126:9001'
+// const host = 'http://10.214.224.126:9001'
 
 function* handleFetchCount() {
   try {

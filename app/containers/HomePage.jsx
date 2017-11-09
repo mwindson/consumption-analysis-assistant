@@ -6,6 +6,7 @@ import KnowledgeCards from 'containers/KnowledgeCards'
 import KnowledgeGraph from 'containers/KnowledgeGraph'
 import CollapseButton from 'components/CollapseButton'
 import Feedback from 'components/Feedback'
+import FloatLayer from 'components/FloatLayer'
 import { is } from 'immutable'
 import querystring from 'querystring'
 import { replace, push } from 'react-router-redux'
@@ -102,7 +103,7 @@ export default class HomePage extends React.Component {
     const isExpand = this.props.popupType !== 'none'
     return (
       <div className="main">
-        <div className={classNames('left-part', { searching })}>
+        <div className={classNames('left-part', { searching })} id="left-part">
           <div className="top">
             <div className="logo">
               <LogoIcon />
@@ -112,9 +113,10 @@ export default class HomePage extends React.Component {
               <CollapseButton contentList={footprint} itemClick={this.handleResult} />
               <button className="feedback-button" onClick={() => this.openFeedback()}>我要反馈</button>
             </div> : null}
+            <FloatLayer />
           </div>
           <div className={classNames('search', { expand: searchBarExpand && searching, searching })}>
-            <div className={classNames('input', { searching })} >
+            <div className={classNames('input', { searching })}>
               <input
                 type="text"
                 onFocus={this.handleFocus}
@@ -174,12 +176,17 @@ export default class HomePage extends React.Component {
               <KnowledgeGraph />
             </div> : null
           }
-        </div >
+
+        </div>
         {searching ? <div className="right-part">
           <KnowledgeCards />
-        </div > : null
+        </div> : null
         }
-        <Feedback name={center.get('name')} id={center.get('id')} expand={feedbackExpand} closeFunc={this.closeFeedback} type={center.get('type')} />
+        <Feedback name={center.get('name')}
+                  id={center.get('id')}
+                  expand={feedbackExpand}
+                  closeFunc={this.closeFeedback}
+                  type={center.get('type')} />
         <div className={classNames('popup', { listExpand: isExpand })}>
           <div className="mask" />
           <Motion style={{ y: spring(isExpand ? 100 : 0), opacity: spring(isExpand ? 1 : 0.5) }}>
@@ -202,7 +209,7 @@ export default class HomePage extends React.Component {
             }
           </Motion>
         </div>
-      </div >
+      </div>
     )
   }
 }
