@@ -1,4 +1,5 @@
 import React from 'react'
+import { is } from 'immutable'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { Portal } from 'react-portal'
 import { Motion, spring } from 'react-motion'
@@ -18,12 +19,14 @@ class FloatLayer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      index: this.props.data.size, // 浏览记录的当前选中下标
+      index: this.props.data.size - 1, // 浏览记录的当前选中下标
     }
   }
 
-  componentWillUpdate() {
-
+  componentWillReceiveProps(nextProps) {
+    if (!is(nextProps.footprint, this.props.footprint)) {
+      this.setState({ index: nextProps.data.size - 1 })
+    }
   }
 
 
@@ -91,7 +94,7 @@ class FloatLayer extends React.Component {
                 {data.toArray().map((item, i) =>
                   <div
                     key={i}
-                    className={classNames('item', { long: contentType === 'history', chosen: index === i })}
+                    className={classNames('item', { long: contentType === 'history' }, { chosen: index === i })}
                     onClick={() => this.handleClick(item.get('id'), item.get('type'), i)}
                   >
                     {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
