@@ -29,11 +29,12 @@ class FloatLayer extends React.Component {
     }
   }
 
-
   handleClick = (id, type, index) => {
-    this.setState({ index })
+    if (this.props.contentType === 'history') this.setState({ index })
     this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: false })
+    this.props.dispatch({
+      type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: this.props.contentType !== 'history',
+    })
     this.props.dispatch({ type: A.FLOAT_LAYER_OPEN, isOpen: false })
   }
 
@@ -50,7 +51,9 @@ class FloatLayer extends React.Component {
       const type = this.props.data.get(this.state.index - 1).get('type')
       const id = this.props.data.get(this.state.index - 1).get('id')
       this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
-      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: false })
+      this.props.dispatch({
+        type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: false,
+      })
     }
   }
   toNext = () => {
@@ -59,12 +62,16 @@ class FloatLayer extends React.Component {
       const type = this.props.data.get(this.state.index + 1).get('type')
       const id = this.props.data.get(this.state.index + 1).get('id')
       this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
-      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: false })
+      this.props.dispatch({
+        type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: false,
+      })
     }
   }
 
   render() {
-    const { data, keyword, contentType, floatLayerOpen } = this.props
+    const {
+      data, keyword, contentType, floatLayerOpen,
+    } = this.props
     const { index } = this.state
     return [
       <div
@@ -79,7 +86,7 @@ class FloatLayer extends React.Component {
       >
         下一条<NextStepIcon color={index === data.size - 1 ? 'gray' : '#fff'} />
       </div>,
-      <div className="bookmark-open" onClick={this.openPortal}>
+      <div className={classNames('bookmark-open', { hidden: floatLayerOpen })} onClick={this.openPortal}>
         浏览记录
       </div>,
       <Portal node={document && document.getElementById('left-part')}>
@@ -92,13 +99,13 @@ class FloatLayer extends React.Component {
               </div>
               <div className="list">
                 {data.toArray().map((item, i) =>
-                  <div
+                  (<div
                     key={i}
                     className={classNames('item', { long: contentType === 'history' }, { chosen: index === i })}
                     onClick={() => this.handleClick(item.get('id'), item.get('type'), i)}
                   >
                     {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
-                  </div>)}
+                   </div>))}
               </div>
             </div>
           )}

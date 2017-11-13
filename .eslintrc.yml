@@ -39,4 +39,5 @@ rules:
   react/forbid-prop-types: off
   one-var: off
   linebreak-style: off
+  jsx-a11y/click-events-have-key-events: off
 

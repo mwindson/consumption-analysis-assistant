@@ -31,7 +31,9 @@ export default class HomePage extends React.Component {
     if (this.props.location.search !== '') {
       const { type, id } = querystring.parse(this.props.location.search.substring(1))
       this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
-      this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true })
+      this.props.dispatch({
+        type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true,
+      })
     } else {
       // 品牌条目和产品条目统计数据查询
       this.props.dispatch({ type: A.FETCH_COUNT_DATA })
@@ -41,8 +43,10 @@ export default class HomePage extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { searchResult } = this.props
     if (!is(nextProps.searchResult, searchResult)) {
-      this.handleResult(nextProps.searchResult.first().get('id'),
-        nextProps.searchResult.first().get('type'))
+      this.handleResult(
+        nextProps.searchResult.first().get('id'),
+        nextProps.searchResult.first().get('type'),
+      )
     }
     if (nextProps.noResult) {
       setTimeout(() => this.setState({ searchState: 'error', inputValue: '' }), 1000)
@@ -70,7 +74,9 @@ export default class HomePage extends React.Component {
   }
   handleResult = (id, type) => {
     this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true })
+    this.props.dispatch({
+      type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true,
+    })
   }
   moreResult = () => {
     this.props.dispatch({ type: A.CHANGE_OPEN_TYPE, contentType: 'moreResult' })
@@ -105,8 +111,12 @@ export default class HomePage extends React.Component {
   }
 
   render() {
-    const { editing, inputValue, searchState, searchBarExpand, feedbackExpand, searching } = this.state
-    const { count, footprint, center, searchResult, contentType } = this.props
+    const {
+      editing, inputValue, searchState, searchBarExpand, feedbackExpand, searching,
+    } = this.state
+    const {
+      count, footprint, center, searchResult, contentType,
+    } = this.props
     const floatData = (type) => {
       if (type === 'history') {
         return footprint
@@ -150,13 +160,13 @@ export default class HomePage extends React.Component {
               {searchState === 'error' ? <div className="no-result"><ErrorIcon />暂无相关内容</div> : null}
               <div className={classNames('search-result', { searching })}>
                 {searchResult.slice(0, this.sliceIndex(searchResult)).toArray().map((item, i) =>
-                  <div
+                  (<div
                     key={i}
                     className="search-item"
                     onClick={() => this.handleResult(item.get('id'), item.get('type'))}
                   >
                     {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
-                  </div>)}
+                   </div>))}
                 {searchResult.size > this.sliceIndex(searchResult) ?
                   <div className="more-result" onClick={() => this.moreResult()}>更多</div> : null}
               </div>
@@ -173,7 +183,7 @@ export default class HomePage extends React.Component {
             <div
               onClick={() => this.setState({ searchBarExpand: !searchBarExpand })}
               className="search-bar-button"
-            >{searchBarExpand ? <ArrowTop fill={'white'} /> : <ArrowBottom fill={'white'} />}
+            >{searchBarExpand ? <ArrowTop fill="white" /> : <ArrowBottom fill="white" />}
             </div> : null}
           {searching ?
             <div className="graph">
