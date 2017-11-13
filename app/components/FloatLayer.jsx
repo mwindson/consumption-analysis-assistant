@@ -43,6 +43,7 @@ class FloatLayer extends React.Component {
     this.props.dispatch({ type: A.FLOAT_LAYER_OPEN, isOpen: true })
   }
   closePortal = () => {
+    this.props.dispatch({ type: A.CHANGE_OPEN_TYPE, contentType: 'history' })
     this.props.dispatch({ type: A.FLOAT_LAYER_OPEN, isOpen: false })
   }
   toPrev = () => {
@@ -75,16 +76,16 @@ class FloatLayer extends React.Component {
     const { index } = this.state
     return [
       <div
-        className={classNames('step-button', { disable: index === 0 })}
+        className={classNames('step-button', { disable: index === 0 || contentType === 'moreResult' })}
         onClick={() => (index > 0 ? this.toPrev() : null)}
       >
-        <PrevStepIcon color={index === 0 ? 'gray' : '#fff'} />上一条
+        <PrevStepIcon color={index === 0 || contentType === 'moreResult' ? 'gray' : '#fff'} />上一条
       </div>,
       <div
-        className={classNames('step-button', { disable: index === data.size - 1 })}
-        onClick={() => (index < data.size - 1 ? this.toNext() : null)}
+        className={classNames('step-button', { disable: index === data.size - 1 || contentType === 'moreResult' })}
+        onClick={() => (index < data.size - 1 || contentType === 'moreResult' ? this.toNext() : null)}
       >
-        下一条<NextStepIcon color={index === data.size - 1 ? 'gray' : '#fff'} />
+        下一条<NextStepIcon color={index === data.size - 1 || contentType === 'moreResult' ? 'gray' : '#fff'} />
       </div>,
       <div className={classNames('bookmark-open', { hidden: floatLayerOpen })} onClick={this.openPortal}>
         浏览记录
@@ -105,7 +106,7 @@ class FloatLayer extends React.Component {
                     onClick={() => this.handleClick(item.get('id'), item.get('type'), i)}
                   >
                     {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
-                   </div>))}
+                  </div>))}
               </div>
             </div>
           )}
