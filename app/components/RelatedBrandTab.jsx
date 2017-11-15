@@ -24,11 +24,11 @@ export default class RelatedBrandTab extends React.Component {
 
   componentDidMount() {
     this.cards = document.getElementsByClassName('cards')[0]
-    this.cards.addEventListener('scroll', this.onScroll)
+    if (this.cards) this.cards.addEventListener('scroll', this.onScroll)
   }
 
   componentWillUnmount() {
-    this.cards.removeEventListener('scroll', this.onScroll)
+    if (this.cards) this.cards.removeEventListener('scroll', this.onScroll)
   }
 
   onScroll = () => {
@@ -51,18 +51,18 @@ export default class RelatedBrandTab extends React.Component {
   render() {
     const { cardData } = this.props
     const { num } = this.state
-    if (cardData.isEmpty()) {
+    if (!cardData || cardData.isEmpty()) {
       return (<div className="cards" />)
     }
     const brandList = cardData.map(i => Map({
-      imgUrl: i.get('image') !== '' ? i.get('image') : 'app/static/image/logo.png',
+      imgUrl: i.get('image') !== '' ? i.get('image') : 'app/static/image/no_picture.jpg',
       id: i.get('id'),
       type: i.get('type').last(),
       name: i.get('name'),
       content: i.get('description'),
       attr: Map(),
     }))
-    if (num > brandList.size) {
+    if (num > brandList.size && this.cards) {
       this.cards.removeEventListener('scroll', this.onScroll)
     }
     return (

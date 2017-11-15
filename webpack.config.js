@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const packageInfo = require('./package.json')
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -71,6 +72,7 @@ module.exports = {
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
+    new CleanWebpackPlugin(`dist/${packageInfo.version}`),
   ],
 
   devServer: {

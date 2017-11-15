@@ -1,5 +1,5 @@
 import React from 'react'
-import { fromJS } from 'immutable'
+import { fromJS, List } from 'immutable'
 import { connect } from 'react-redux'
 import 'style/PersonStoryTab.styl'
 
@@ -18,6 +18,16 @@ export default class DetailCard extends React.Component {
       )
     }
     const detail = fromJS(cardData.get('detail'))
+    const splitDetail = (textMap) => (
+      textMap.map((item, index) =>
+        (<div key={index} className="story">
+          <h3>{item.get('key')}</h3>
+          {!List.isList(item.get('value')) ? fromJS(item.get('value').split('\u2764')).map((d, i) =>
+            (<div key={i}>
+              <div className="text">{d}</div>
+            </div>)) : splitDetail(item.get('value'))}
+        </div>))
+    )
     return (
       <div className="cards">
         <div className="person-cards">
@@ -28,15 +38,7 @@ export default class DetailCard extends React.Component {
                   <div className="text">{d}</div>
                 </div>))}
             </div> : null}
-          {detail.map((item, index) =>
-            (<div key={index} className="story">
-              <h3>{item.get('key')}</h3>
-              {fromJS(item.get('value').split('\u2764')).map((d, i) =>
-                (<div key={i}>
-                  <div className="text">{d}</div>
-                </div>))}
-            </div>))
-          }
+          {splitDetail(detail)}
         </div>
       </div>
     )

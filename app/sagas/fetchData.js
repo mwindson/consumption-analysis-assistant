@@ -12,12 +12,12 @@ export default function* graphSaga() {
 
 const host = 'http://10.214.208.50:9001'
 
-// const host = 'http://10.214.224.126:9001'
+// const host = 'http://10.214.224.126:9003'
 
 function* handleFetchCount() {
   try {
     const url = `${host}/statistic/count`
-    const response = yield fetch(url, { mode: 'core' })
+    const response = yield fetch(url)
     if (response.ok) {
       const data = yield response.json()
       if (data && data.length !== 0) {
@@ -36,7 +36,7 @@ function* handleSearch({ keyword }) {
     yield put({ type: A.RETURN_RESULT, noResult: false })
     yield put({ type: A.UPDATE_KEYWORD, keyword })
     const url = `${host}/search?keyword=${encodeURIComponent(keyword)}`
-    const response = yield fetch(url, { mode: 'cors' })
+    const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
       const data = json.data
@@ -63,7 +63,7 @@ function* handleUpdateGraphData({ id, resultType, updateFootprint }) {
   try {
     yield put({ type: A.SET_GRAPH_LOADING, isLoading: true })
     const url = `${host}/graph?id=${encodeURIComponent(id)}&type=${resultType}`
-    const response = yield fetch(url, { mode: 'cors' })
+    const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
       const data = json.data
@@ -106,7 +106,7 @@ function* handleUpdateGraphData({ id, resultType, updateFootprint }) {
 function* handleUpdateCardData({ tab, id, cardType }) {
   try {
     const url = `${host}/${cardType.toLowerCase()}/${tab}?${cardType.toLowerCase()}Id=${encodeURIComponent(id)}`
-    const response = yield fetch(url, { mode: 'cors' })
+    const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
       yield put({ type: A.UPDATE_CARD_DATA, cardData: fromJS(json.data), tab })
