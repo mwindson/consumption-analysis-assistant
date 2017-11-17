@@ -6,8 +6,7 @@ import 'style/PersonStoryTab.styl'
 const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
-export default class DetailCard extends React.Component {
-
+export default class StoryCard extends React.Component {
   render() {
     const { cardData } = this.props
     if (cardData.isEmpty() || !cardData.get('detail')) {
@@ -18,16 +17,14 @@ export default class DetailCard extends React.Component {
       )
     }
     const detail = fromJS(cardData.get('detail'))
-    const splitDetail = (textMap) => (
-      textMap.map((item, index) =>
-        (<div key={index} className="story">
-          <h3>{item.get('key')}</h3>
-          {!List.isList(item.get('value')) ? fromJS(item.get('value').split('\u2764')).map((d, i) =>
-            (<div key={i}>
-              <div className="text">{d}</div>
-            </div>)) : splitDetail(item.get('value'))}
-        </div>))
-    )
+    const splitDetail = textMap => textMap.map((item, index) =>
+      (<div key={index} className="story">
+        <h3>{item.get('key')}</h3>
+        {!List.isList(item.get('value')) ? fromJS(item.get('value').split('\u2764')).map((d, i) =>
+          (<div key={i}>
+            <div className="text">{d}</div>
+           </div>)) : splitDetail(item.get('value'))}
+       </div>))
     return (
       <div className="cards">
         <div className="person-cards">
@@ -36,7 +33,7 @@ export default class DetailCard extends React.Component {
               {fromJS(cardData.get('description').split('\u2764')).map((d, i) =>
                 (<div key={i}>
                   <div className="text">{d}</div>
-                </div>))}
+                 </div>))}
             </div> : null}
           {splitDetail(detail)}
         </div>

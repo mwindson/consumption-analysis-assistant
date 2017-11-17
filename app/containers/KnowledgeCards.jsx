@@ -9,13 +9,12 @@ import NewsCards from 'components/NewsTab'
 import BrandTrendCards from 'components/BrandTrendTab'
 import RelatedBrandCards from 'components/RelatedBrandTab'
 import PersonKnowledgeTab from 'components/PersonKnowledgeTab'
-import PersonStoryTab from 'components/PersonStoryTab'
 import BrandKnowledgeTab from 'components/BrandKnowledgeTab'
 import ProductDetailTab from 'components/ProductDetailTab'
 import ProductSpecTab from 'components/ProductSpecTab'
 import CompanyKnowledgeTab from 'components/CompanyKnowledgeTab'
 import CompanyStoryTab from 'components/CompanyStoryTab'
-import DetailCard from 'components/DetailCard'
+import StoryCard from 'components/StoryCard'
 import InfoBoxCard from 'components/cards/InfoBoxCard'
 import config from '../utils/config.yaml'
 
@@ -92,7 +91,9 @@ export default class KnowledgeCards extends React.Component {
 
   handleClick = (tab) => {
     const { id, type } = querystring.parse(this.props.location.search.substring(1))
-    this.props.dispatch({ type: A.FETCH_CARD_DATA, tab, id, cardType: type })
+    this.props.dispatch({
+      type: A.FETCH_CARD_DATA, tab, id, cardType: type,
+    })
   }
 
   render() {
@@ -124,11 +125,11 @@ export default class KnowledgeCards extends React.Component {
             trendData={fromJS(data[chosen]).get('trend')}
           /> : null}
         {chosen === 'infoBox' && centerType === 'Brand' ? <InfoBoxCard /> : null}
-        {chosen === 'detail' && centerType === 'Brand' ? <DetailCard /> : null}
+        {chosen === 'detail' && centerType === 'Brand' ? <StoryCard /> : null}
         {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
         {chosen === 'knowledge' && centerType === 'Brand' ? <BrandKnowledgeTab /> : null}
         {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
-        {chosen === 'story' && centerType === 'Person' ? <PersonStoryTab /> : null}
+        {chosen === 'story' && centerType === 'Person' ? <StoryCard /> : null}
         {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
         {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
         {chosen === 'detail' && centerType === 'Company' ? <CompanyKnowledgeTab /> : null}
