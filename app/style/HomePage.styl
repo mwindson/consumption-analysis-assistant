@@ -22,39 +22,49 @@ html, body
     flex-direction column
     position relative
     padding 12% 0
+
     &.searching
       width 60%
-      padding 18px
+      padding 18px 0 0 18px
+
       .top
         justify-content flex-start
-        height 50px
+        min-height 50px
         display flex
         align-items center
+
         .logo
           width 30px
+
         .title
           font-size 18px
+
     .top
       min-height 30px
       display flex
       padding-bottom 15px
       justify-content center
+
       .logo
         width 60px
+
       .title
         margin-left 10px
         font-size 45px
         color white
         display flex
         flex-wrap wrap
+
       .history
         margin-right 30px
         margin-left auto
         height 30px
         display flex
+
         .feedback-button
           font-size 18px
           color #4990e2
+
     .search
       height 60px
       display flex
@@ -63,11 +73,14 @@ html, body
       transition height 1s ease
       overflow-y hidden
       margin 20px 0
+
       &.searching
         height 0
         margin 0
+
       &.expand
         height 90px
+
       .input
         width 1150px
         height 60px
@@ -75,19 +88,23 @@ html, body
         border-radius 4px
         box-shadow #000000 0 1px 3px 0
         position relative
+
         &.searching
           width 576px
           height 46px
+
           > svg
             left 10px
             top 9px
             width 30px
             height 30px
+
         > input
           width 100%
           height 100%
           padding 0
           font-size 36px
+
         > svg
           position absolute
           left 10px
@@ -95,6 +112,7 @@ html, body
           width 50px
           height 50px
           pointer-events none
+
         .no-result, .searching-logo
           width 130px
           height 25px
@@ -106,13 +124,16 @@ html, body
           align-items center
           color #e98484
           font-size 18px
+
         .searching-logo
           color #65AD11
           width 96px
+
           .searching-animation
             position relative
             height 15px
             width 15px
+
             > span
               display inline-block
               width 1px
@@ -123,37 +144,48 @@ html, body
               transform-origin 50% 7.5px
               left 50%
               top 0
-              animation: search 1.0s ease infinite
+              animation search 1s ease infinite
+
               &:nth-child(1)
                 transform rotate(0deg)
                 -webkit-animation-delay 0.1s
+
               &:nth-child(2)
                 transform rotate(36deg)
                 -webkit-animation-delay 0.2s
+
               &:nth-child(3)
                 transform rotate(72deg)
                 -webkit-animation-delay 0.3s
+
               &:nth-child(4)
                 transform rotate(108deg)
                 -webkit-animation-delay 0.4s
+
               &:nth-child(5)
                 transform rotate(144deg)
                 -webkit-animation-delay 0.5s
+
               &:nth-child(6)
                 transform rotate(180deg)
                 -webkit-animation-delay 0.6s
+
               &:nth-child(7)
                 transform rotate(216deg)
                 -webkit-animation-delay 0.7s
+
               &:nth-child(8)
                 transform rotate(252deg)
                 -webkit-animation-delay 0.8s
+
               &:nth-child(9)
                 transform rotate(288deg)
                 -webkit-animation-delay 0.9s
+
               &:nth-child(10)
                 transform rotate(324deg)
-                -webkit-animation-delay 1.0s
+                -webkit-animation-delay 1s
+
         .search-result
           position relative
           display flex
@@ -162,8 +194,10 @@ html, body
           font-size 12px
           width 579px
           overflow hidden
+
           &.searching
             height 25px
+
           .search-item
             background-color #CDEDFF
             color #125091
@@ -176,6 +210,7 @@ html, body
             display flex
             align-items center
             justify-content center
+
           .more-result
             margin-left auto
             background-color #7ED321
@@ -187,14 +222,17 @@ html, body
             display flex
             align-items center
             justify-content center
+
     .statistic
       color white
       font-size 30px
       display flex
       justify-content center
+
       > span
         color #F8E900
         font-weight bold
+
     .search-bar-button
       height 15px
       width 100%
@@ -204,9 +242,11 @@ html, body
       align-items center
       cursor pointer
       color white
+
     .graph
       flex 1 0 500px
       position relative
+
       .mask
         position absolute
         top 0
@@ -215,6 +255,7 @@ html, body
         bottom 0
         z-index 5
         background rgba(0, 0, 0, 0.1)
+
         .loading
           position absolute
           top 0
@@ -224,6 +265,7 @@ html, body
           margin auto
           height 100px
           width 100px
+
           > span
             display inline-block
             width 6px
@@ -234,44 +276,57 @@ html, body
             transform-origin 50% 40px
             left 50%
             top 0
-            animation: search 1.0s ease infinite
+            animation search 1s ease infinite
+
             &:nth-child(1)
               transform rotate(0deg)
               -webkit-animation-delay 0.1s
+
             &:nth-child(2)
               transform rotate(36deg)
               -webkit-animation-delay 0.2s
+
             &:nth-child(3)
               transform rotate(72deg)
               -webkit-animation-delay 0.3s
+
             &:nth-child(4)
               transform rotate(108deg)
               -webkit-animation-delay 0.4s
+
             &:nth-child(5)
               transform rotate(144deg)
               -webkit-animation-delay 0.5s
+
             &:nth-child(6)
               transform rotate(180deg)
               -webkit-animation-delay 0.6s
+
             &:nth-child(7)
               transform rotate(216deg)
               -webkit-animation-delay 0.7s
+
             &:nth-child(8)
               transform rotate(252deg)
               -webkit-animation-delay 0.8s
+
             &:nth-child(9)
               transform rotate(288deg)
               -webkit-animation-delay 0.9s
+
             &:nth-child(10)
               transform rotate(324deg)
-              -webkit-animation-delay 1.0s
+              -webkit-animation-delay 1s
+
       .graph-svg
         min-height 500px
+
   .right-part
     width 40%
     height 100%
     background white
     z-index 3
+
   .popup
     position absolute
     top 0
@@ -279,15 +334,18 @@ html, body
     right 0
     bottom 0
     z-index -10
+
     &.listExpand
       z-index 5
+
     .mask
       position absolute
       top 0
       left 0
       right 0
       bottom 0
-      background rgba(0, 0, 0, .6)
+      background rgba(0, 0, 0, 0.6)
+
     .search-result-list
       position absolute
       top 0
@@ -300,18 +358,21 @@ html, body
       border-radius 10px
       background white
       border solid 1px black
+
       .close
         margin-left auto
         width 60px
         height 25px
         cursor pointer
         text-align center
+
       .list
         display flex
         flex-wrap wrap
         padding 3px
         max-height 800px
         overflow-y auto
+
         .search-item
           background-color #E1F0F7
           color #69C
@@ -331,5 +392,6 @@ html, body
 @keyframes search
   0%
     opacity 0.5
+
   100%
     opacity 1

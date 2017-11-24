@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server",
-    "build": "set NODE_ENV=production&& webpack",
+    "start": "webpack-dev-server --env.port=9001",
+    "build": "set NODE_ENV=production&& webpack --env.port=9001&& webpack --env.port=9002&& webpack --env.port=9003",
     "lint": "eslint app --ext .js,.jsx",
     "lint-fix": "eslint --fix app --ext .js,jsx"
   },

@@ -12,8 +12,6 @@ import PersonKnowledgeTab from 'components/PersonKnowledgeTab'
 import BrandKnowledgeTab from 'components/BrandKnowledgeTab'
 import ProductDetailTab from 'components/ProductDetailTab'
 import ProductSpecTab from 'components/ProductSpecTab'
-import CompanyKnowledgeTab from 'components/CompanyKnowledgeTab'
-import CompanyStoryTab from 'components/CompanyStoryTab'
 import StoryCard from 'components/StoryCard'
 import InfoBoxCard from 'components/cards/InfoBoxCard'
 import config from '../utils/config.yaml'
@@ -124,16 +122,14 @@ export default class KnowledgeCards extends React.Component {
             emotion={fromJS(data[chosen]).get('emotion')}
             trendData={fromJS(data[chosen]).get('trend')}
           /> : null}
+        {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
         {chosen === 'infoBox' && centerType === 'Brand' ? <InfoBoxCard /> : null}
         {chosen === 'detail' && centerType === 'Brand' ? <StoryCard /> : null}
-        {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
         {chosen === 'knowledge' && centerType === 'Brand' ? <BrandKnowledgeTab /> : null}
         {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
         {chosen === 'story' && centerType === 'Person' ? <StoryCard /> : null}
         {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
         {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
-        {chosen === 'detail' && centerType === 'Company' ? <CompanyKnowledgeTab /> : null}
-        {chosen === 'story' && centerType === 'Company' ? <CompanyStoryTab /> : null}
       </div>
     )
   }

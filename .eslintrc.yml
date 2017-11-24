@@ -13,6 +13,9 @@ parserOptions:
     destructuring: true
     spread: true
 
+globals:
+  PORT: true
+
 env:
   browser: true
 

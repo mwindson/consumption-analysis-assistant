@@ -1,4 +1,5 @@
 layerWidth = 280px
+
 .step-button
   color white
   display flex
@@ -6,20 +7,24 @@ layerWidth = 280px
   font-size 12px
   cursor pointer
   margin-right 20px
+
   &.disable
     cursor default
     color gray
+
     > svg
       color gray
+
   &:nth-child(2)
     margin-left 28px
+
   > svg
     margin 0 5px
 
 .bookmark-open
   width 43px
   height 50px
-  background red
+  background rgba(255, 255, 255, 0.5)
   position relative
   color white
   display flex
@@ -29,24 +34,27 @@ layerWidth = 280px
   padding 5px
   font-size 12px
   cursor pointer
+
   &:before
-    content ""
+    content ''
     position absolute
     right 100%
     top 0
     width 0
     height 0
-    border-top 25px solid red
+    border-top 25px solid rgba(255, 255, 255, 0.5)
     border-left 25px solid transparent
+
   &:before
-    content ""
+    content ''
     position absolute
     right 100%
     bottom 0
     width 0
     height 0
-    border-bottom 25px solid red
+    border-bottom 25px solid rgba(255, 255, 255, 0.5)
     border-left 25px solid transparent
+
   &.hidden
     visibility hidden
 
@@ -56,20 +64,23 @@ layerWidth = 280px
   right -280px
   bottom 0
   width layerWidth
-  background rgba(41, 41, 41, .7)
+  background rgba(41, 41, 41, 0.7)
   display flex
   flex-direction column
   z-index 2
+
   .top-part
     width 100%
     display flex
     margin-top 16px
+
     .keyword
       margin-left 19px
       color white
       font-size 16px
       display flex
       align-items center
+
     .bookmark-close
       @extend .bookmark-open
       margin-left auto
@@ -80,6 +91,7 @@ layerWidth = 280px
     flex-wrap wrap
     padding 13px
     overflow-y auto
+
     .item
       flex 1 0 auto
       min-height 25px
@@ -94,22 +106,24 @@ layerWidth = 280px
       align-items center
       position relative
       cursor pointer
+
       &.long
         width 208px
         min-height 30px
-        background rgba(255, 255, 255, .7)
+        background rgba(255, 255, 255, 0.7)
         font-size 18px
         color black
         padding-left 10px
+
         &.chosen
-          background red
+          background #1077A5
           color white
+
         &:before
-          content ""
+          content ''
           position absolute
           left 0
           top 0
           bottom 0
           width 6px
-          background red
-
+          background #1077A5
