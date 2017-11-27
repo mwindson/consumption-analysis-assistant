@@ -116,12 +116,7 @@ export default class KnowledgeCards extends React.Component {
             wordList={fromJS(data[chosen]).get('keywords')}
             newsList={fromJS(data[chosen]).get('newsList')}
           /> : null}
-        {chosen === 'trend' ?
-          <BrandTrendCards
-            comments={fromJS(data[chosen]).get('comments')}
-            emotion={fromJS(data[chosen]).get('emotion')}
-            trendData={fromJS(data[chosen]).get('trend')}
-          /> : null}
+        {chosen === 'comments' && centerType === 'Brand' ? <BrandTrendCards /> : null}
         {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
         {chosen === 'infoBox' && centerType === 'Brand' ? <InfoBoxCard /> : null}
         {chosen === 'detail' && centerType === 'Brand' ? <StoryCard /> : null}

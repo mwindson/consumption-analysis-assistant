@@ -2,8 +2,6 @@ root: true
 
 parser: babel-eslint
 
-settings:
-  import/resolver: webpack
 
 parserOptions:
   ecmaVersion: 7
@@ -15,6 +13,7 @@ parserOptions:
 
 globals:
   PORT: true
+  PRODUCTION: true
 
 env:
   browser: true

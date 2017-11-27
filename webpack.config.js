@@ -22,13 +22,11 @@ module.exports = (env) => {
       'web',
     devtool: isProduction ? false : 'cheap-module-source-map',
 
-    output:
-      {
-        path: path.resolve(__dirname, 'dist', packageInfo.version, JSON.stringify(env.port)),
-        filename: isProduction ? '[name].[hash].js' : '[name].js',
-        publicPath: isProduction ? './' : '/',
-      }
-    ,
+    output: {
+      path: path.resolve(__dirname, 'dist', packageInfo.version),
+      filename: isProduction ? '[name].[hash].js' : '[name].js',
+      publicPath: isProduction ? './' : '/',
+    },
 
     module: {
       rules: [
@@ -57,8 +55,7 @@ module.exports = (env) => {
           ],
         },
       ],
-    }
-    ,
+    },
 
     resolve: {
       // 解析模块请求的选项
@@ -71,8 +68,7 @@ module.exports = (env) => {
       extensions:
         ['.js', '.json', '.jsx', '.css'],
       // 使用的扩展名
-    }
-    ,
+    },
 
     plugins: [
       new HtmlWebpackPlugin({
@@ -82,6 +78,7 @@ module.exports = (env) => {
       new webpack.HotModuleReplacementPlugin(),
       new webpack.DefinePlugin({
         PORT: JSON.stringify(env.port),
+        PRODUCTION: JSON.stringify(isProduction),
       }),
     ].concat(isProduction ? [new CleanWebpackPlugin(`dist/${packageInfo.version}/${env.port}`)] : []),
 

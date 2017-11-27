@@ -10,14 +10,14 @@ const sagaMiddleware = createSagaMiddleware()
 // Create a history of your choosing (we're using a browser history in this case)
 const history = createHistory()
 // Build the middleware for intercepting and dispatching navigation actions
-const middleware = routerMiddleware(history)
+const historyMiddleware = routerMiddleware(history)
 // mount it on the Store
 const store = createStore(
   reducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   compose(
     applyMiddleware(sagaMiddleware),
-    applyMiddleware(middleware),
+    applyMiddleware(historyMiddleware),
   ),
 )
 

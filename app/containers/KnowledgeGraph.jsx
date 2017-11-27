@@ -4,11 +4,11 @@ import * as d3 from 'd3'
 import { connect } from 'react-redux'
 import querystring from 'querystring'
 import { replace } from 'react-router-redux'
-import * as A from 'actions'
-import RelationGraph from 'components/graph/RelationGraph'
-import { zoomClick, zoomReset } from 'components/graph/zoomClick'
-import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
-import 'style/KnowledgeGraph.styl'
+import * as A from '../actions'
+import RelationGraph from '../components/graph/RelationGraph'
+import { zoomClick, zoomReset } from '../components/graph/zoomClick'
+import { ResetIcon, ZoomInIcon, ZoomOutIcon } from '../components/Icons'
+import '../style/KnowledgeGraph.styl'
 
 const mapStateToProps = state => Object.assign({}, state.graph.toObject(), state.routing)
 
@@ -81,7 +81,9 @@ export default class KnowledgeGraph extends React.Component {
     const { id: currentId } = querystring.parse(location.search.substring(1))
     zoomReset(this.svgElement, this.graphZoom, currentId, this.graph)
     this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true })
+    this.props.dispatch({
+ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true 
+})
   }
 
   render() {
