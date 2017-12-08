@@ -13,7 +13,7 @@ import BrandKnowledgeTab from 'components/BrandKnowledgeTab'
 import ProductDetailTab from 'components/ProductDetailTab'
 import ProductSpecTab from 'components/ProductSpecTab'
 import StoryCard from 'components/StoryCard'
-import InfoBoxCard from 'components/cards/InfoBoxCard'
+import BrandInfoBox from 'components/BrandInfoBox'
 import config from '../utils/config.yaml'
 
 const data = {
@@ -111,20 +111,22 @@ export default class KnowledgeCards extends React.Component {
             </div>
           ))}
         </div>
-        {chosen === 'hot' ?
-          <NewsCards
-            wordList={fromJS(data[chosen]).get('keywords')}
-            newsList={fromJS(data[chosen]).get('newsList')}
-          /> : null}
-        {chosen === 'comments' && centerType === 'Brand' ? <BrandTrendCards /> : null}
-        {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
-        {chosen === 'infoBox' && centerType === 'Brand' ? <InfoBoxCard /> : null}
-        {chosen === 'detail' && centerType === 'Brand' ? <StoryCard /> : null}
-        {chosen === 'knowledge' && centerType === 'Brand' ? <BrandKnowledgeTab /> : null}
-        {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
-        {chosen === 'story' && centerType === 'Person' ? <StoryCard /> : null}
-        {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
-        {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
+        <div className="cards">
+          {chosen === 'hot' ?
+            <NewsCards
+              wordList={fromJS(data[chosen]).get('keywords')}
+              newsList={fromJS(data[chosen]).get('newsList')}
+            /> : null}
+          {chosen === 'comments' && centerType === 'Brand' ? <BrandTrendCards /> : null}
+          {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
+          {chosen === 'infoBox' && centerType === 'Brand' ? <BrandInfoBox /> : null}
+          {chosen === 'detail' && centerType === 'Brand' ? <StoryCard /> : null}
+          {chosen === 'knowledge' && centerType === 'Brand' ? <BrandKnowledgeTab /> : null}
+          {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
+          {chosen === 'story' && centerType === 'Person' ? <StoryCard /> : null}
+          {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
+          {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
+        </div>
       </div>
     )
   }

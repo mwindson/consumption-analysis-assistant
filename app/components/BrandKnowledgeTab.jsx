@@ -10,7 +10,6 @@ const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class BrandKnowledgeTab extends React.Component {
-
   render() {
     const { cardData } = this.props
     if (!cardData || cardData.isEmpty()) {
@@ -52,27 +51,25 @@ export default class BrandKnowledgeTab extends React.Component {
       })
       lists = lists.push(product)
     }
-    return (
-      <div className="cards">
-        {cards.toArray().map((data, i) => (
-          <CommonCard
-            key={i}
-            imgUrl={data.get('imgUrl')}
-            title={data.get('title')}
-            name={data.get('name')}
-            content={data.get('desc')}
-            attr={data.get('attr')}
-            hasExpand
-            truncated={textTruncated(data.get('desc')).length > 120}
-          />))}
-        {lists.toArray().map((l, i) => (
-          <ListCard
-            key={i}
-            title={l.get('title')}
-            list={l.get('list')}
-            type={l.get('type')}
-          />))}
-      </div>
-    )
+    return [
+      cards.toArray().map((data, i) => (
+        <CommonCard
+          key={i}
+          imgUrl={data.get('imgUrl')}
+          title={data.get('title')}
+          name={data.get('name')}
+          content={data.get('desc')}
+          attr={data.get('attr')}
+          hasExpand
+          truncated={textTruncated(data.get('desc')).length > 120}
+        />)),
+      lists.toArray().map((l, i) => (
+        <ListCard
+          key={i}
+          title={l.get('title')}
+          list={l.get('list')}
+          type={l.get('type')}
+        />)),
+    ]
   }
 }

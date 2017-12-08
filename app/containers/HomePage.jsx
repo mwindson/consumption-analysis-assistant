@@ -9,7 +9,7 @@ import { is, List } from 'immutable'
 import querystring from 'querystring'
 import { replace } from 'react-router-redux'
 import * as A from 'actions'
-import { LogoIcon, SearchIcon, ErrorIcon, ArrowTop, ArrowBottom } from 'components/Icons'
+import { LogoIcon, SearchIcon, ErrorIcon, ArrowTop, ArrowBottom, FeedBackIcon } from 'components/Icons'
 import 'style/HomePage.styl'
 import config from '../utils/config.yaml'
 
@@ -135,7 +135,7 @@ export default class HomePage extends React.Component {
             <div className="title">Relationship diagram</div>
             {searching ?
               <div id="history" className="history">
-                <button className="feedback-button" onClick={() => this.openFeedback()}>我要反馈</button>
+                <div className="feedback-button" onClick={() => this.openFeedback()}><FeedBackIcon />反馈</div>
               </div> : null}
             {searching ? <FloatLayer data={floatData(contentType)} /> : null}
           </div>
@@ -166,7 +166,7 @@ export default class HomePage extends React.Component {
                     onClick={() => this.handleResult(item.get('id'), item.get('type'))}
                   >
                     {`${item.get('name')}（${config.nameMap[item.get('type')]}）`}
-                   </div>))}
+                  </div>))}
                 {searchResult.size > this.sliceIndex(searchResult) ?
                   <div className="more-result" onClick={() => this.moreResult()}>更多</div> : null}
               </div>

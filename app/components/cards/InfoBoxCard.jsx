@@ -1,33 +1,28 @@
 import React from 'react'
-import { fromJS } from 'immutable'
-import { connect } from 'react-redux'
-import 'style/PersonKnowledgeTab.styl'
+import PropTypes from 'prop-types'
+import ImmutablePropTypes from 'react-immutable-proptypes'
+import 'style/InfoBoxCard.styl'
 
-const mapStateToProps = state => state.cards.toObject()
-
-@connect(mapStateToProps)
 export default class InfoBoxCard extends React.Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    infoBoxData: ImmutablePropTypes.map.isRequired,
+  }
 
   render() {
-    const { cardData } = this.props
-    if (cardData.isEmpty() || !cardData.get('infoBox')) {
-      return (
-        <div className="cards">
-          <div className="product-card">暂无更多信息</div>
-        </div>
-      )
+    const { name, infoBoxData } = this.props
+    if (!infoBoxData || infoBoxData.isEmpty()) {
+      return null
     }
-    const infoBox = fromJS(cardData.get('infoBox'))
-
     return (
-      <div className="cards">
-        <div className="person-cards">
-          <div className="person-content">
-            <div className="person-attr">
-              {infoBox.map((item, index) =>
-                <div key={index} className="attr">{`${item.get('key')}：${item.get('value')}`}</div>)}
-            </div>
-          </div>
+      <div className="info-box-card">
+        <div className="info-box-card_title">{name}</div>
+        <div className="info-box-card_attrs">
+          {infoBoxData.map((item, index) =>
+            <div key={index} className="info-box-card_attr">
+              <div className="info-box-card_key">{`${item.get('key')}`}</div>
+              <div className="info-box-card_value">{`${item.get('value')}`}</div>
+            </div>)}
         </div>
       </div>
     )

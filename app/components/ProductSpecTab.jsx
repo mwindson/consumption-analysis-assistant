@@ -22,23 +22,19 @@ export default class ProductSpecTab extends React.Component {
     })
     if (productSpec.isEmpty()) {
       return (
-        <div className="cards">
-          <div className="product-card">暂无更多信息</div>
-        </div>
+        <div className="product-card">暂无更多信息</div>
       )
     }
-    return (
-      <div className="cards">
-        {productSpec.map((item, index) =>
-          (<div key={index} className="product-card">
-            <div className="title">{item.get('key')}</div>
-            {item.get('value').map((attr, i) =>
-              (<div key={i} className="model">
-                <div className="key">{attr.get('key')}</div>
-                <div className="value">{attr.get('value')}</div>
-              </div>))}
-          </div>))}
-      </div>
-    )
+    return [
+      productSpec.map((item, index) =>
+        (<div key={index} className="product-card">
+          <div className="title">{item.get('key')}</div>
+          {item.get('value').map((attr, i) =>
+            (<div key={i} className="model">
+              <div className="key">{attr.get('key')}</div>
+              <div className="value">{attr.get('value')}</div>
+            </div>))}
+        </div>)),
+    ]
   }
 }

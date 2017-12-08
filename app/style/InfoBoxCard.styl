@@ -1,0 +1,31 @@
+.info-box-card
+  padding 30px 30px 30px 50px
+  border-bottom solid #DDDDDD 1px
+  position relative
+  &:last-child
+    border-bottom none
+
++prefix-classes(info-box-card_)
+  .title
+    color #125091
+    font-size 18px
+    margin-bottom 15px
+  .attrs
+    margin-top 25px
+    display flex
+    flex-direction column
+    .attr
+      font-size 18px
+      display flex
+      border 1px solid #125091
+      border-bottom none
+      &:last-child
+        border-bottom 1px solid #125091
+      .key
+        flex 0 0 100px
+        border-right 1px solid #125091
+        padding 5px
+      .value
+        flex 1 0 50px
+        padding 5px
+

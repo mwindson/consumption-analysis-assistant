@@ -154,7 +154,7 @@ export default class RelationGraph {
     this.nodes
       .attr('cursor', 'pointer')
       .on('click', () => {
-        const id = d3.select(d3.event.target).datum().id
+        const { id } = d3.select(d3.event.target).datum()
         this.force.stop()
         // 移除文字动画
         d3.selectAll('animateTransform').remove()
@@ -244,6 +244,7 @@ export default class RelationGraph {
     d.fx = null
     d.fy = null
   }
+
   hoverOn(linkData, centerId, currentId) {
     // 透明现有线段和点
     d3.selectAll('.line-show')
@@ -292,7 +293,7 @@ export default class RelationGraph {
           !this.hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
     }
     // 显示相关联的节点
-    const radius = this.radius
+    const { radius } = this
     relatedNode
       .attr('opacity', 1)
       .selectAll('text')
@@ -387,14 +388,14 @@ export default class RelationGraph {
 }
 
 function calDistance(source, target) {
-  return Math.sqrt(
-    ((target.y - source.y) * (target.y - source.y))
-    + ((target.x - source.x) * (target.x - source.x)),
-  )
+  if (source.x === target.x && source.y === target.y) return 1
+  return Math.sqrt(((target.y - source.y) * (target.y - source.y)) + ((target.x - source.x) * (target.x - source.x)))
 }
 
 function tick(nodes, link, hoverLinks) {
-  nodes.each(function () { d3.select(this).attr('transform', d => `translate(${d.x}, ${d.y})`) })
+  nodes.each(function () {
+    d3.select(this).attr('transform', d => `translate(${d.x}, ${d.y})`)
+  })
   link
     .attr('x1', (d) => {
       const r = nodes.filter(n => n.id === d.source.id).select('circle').attr('r')

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import classNames from 'classnames'
-import { Map } from 'immutable'
+import { fromJS, Map } from 'immutable'
 import { ArrowTop, ArrowBottom } from 'components/Icons'
 import 'style/CommonCard.styl'
 
@@ -41,7 +41,7 @@ export default class CommonCard extends React.Component {
             <div className="name">{name}</div>
             {attr.size === 0 ?
               <div className={classNames('text', { truncated: expand })}>
-                <div id="text" dangerouslySetInnerHTML={{ __html: content }} />
+                {fromJS(content.split('\u2764')).map((d, i) => (<div key={i}>{d}</div>))}
               </div> :
               <div className={classNames('text', { truncated: expand })}>
                 {attr.entrySeq().map((v, k) => {

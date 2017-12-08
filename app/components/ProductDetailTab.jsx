@@ -26,35 +26,33 @@ export default class ProductDetailTab extends React.Component {
       productDetail = productDetail.concat(main.first().get('value').filter(x => x.get('key') !== '品牌'))
     }
     const category = cardData.get('category')
-    return (
-      <div className="cards">
-        <div className="product-card">
-          <div className="title">商品信息</div>
-          <img src={cardData.get('image')} alt="" />
-          {productDetail.map((attr, index) => (<div key={index} className="attr">
-            <div className="key">{attr.get('key')}</div>
-            <div className="value">{attr.get('key') === '链接' ?
-              <a
-                href={attr.get('value')}
-                target="_blank"
-                style={{ color: '#4990E2' }}
-              > 京东页面</a> : attr.get('value')}
-            </div>
-          </div>))}
+    return [
+      <div className="product-card">
+        <div className="title">商品信息</div>
+        <img src={cardData.get('image')} alt="" />
+        {productDetail.map((attr, index) => (<div key={index} className="attr">
+          <div className="key">{attr.get('key')}</div>
+          <div className="value">{attr.get('key') === '链接' ?
+            <a
+              href={attr.get('value')}
+              target="_blank"
+              style={{ color: '#4990E2' }}
+            > 京东页面</a> : attr.get('value')}
+          </div>
+        </div>))}
+      </div>,
+      <div className="product-card">
+        <div className="title">商品类别</div>
+        <div className="category">一级类别：
+          <div className="tag">{category.get(0)}</div>
         </div>
-        <div className="product-card">
-          <div className="title">商品类别</div>
-          <div className="category">一级类别：
-            <div className="tag">{category.get(0)}</div>
-          </div>
-          <div className="category">二级类别：
-            <div className="tag">{category.get(1)}</div>
-          </div>
-          <div className="category">商品标签：
-            {Range(0, category.size).map(i => <div key={i} className="tag">{category.get(i)}</div>)}
-          </div>
+        <div className="category">二级类别：
+          <div className="tag">{category.get(1)}</div>
         </div>
-      </div>
-    )
+        <div className="category">商品标签：
+          {Range(0, category.size).map(i => <div key={i} className="tag">{category.get(i)}</div>)}
+        </div>
+      </div>,
+    ]
   }
 }

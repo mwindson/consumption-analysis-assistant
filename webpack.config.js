@@ -23,7 +23,7 @@ module.exports = (env) => {
     devtool: isProduction ? false : 'cheap-module-source-map',
 
     output: {
-      path: path.resolve(__dirname, 'dist', packageInfo.version),
+      path: path.resolve(__dirname, 'dist', `${packageInfo.version}/${env.port}`),
       filename: isProduction ? '[name].[hash].js' : '[name].js',
       publicPath: isProduction ? './' : '/',
     },
@@ -61,12 +61,12 @@ module.exports = (env) => {
       // 解析模块请求的选项
       // （不适用于对 loader 解析）
       modules: [
-        'node_modules',
         path.resolve(__dirname, 'app'),
+        'node_modules',
       ],
       // 用于查找模块的目录
       extensions:
-        ['.js', '.json', '.jsx', '.css'],
+        ['.js', '.json', '.jsx', '.css', '.styl'],
       // 使用的扩展名
     },
 

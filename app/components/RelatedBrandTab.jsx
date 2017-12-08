@@ -52,7 +52,7 @@ export default class RelatedBrandTab extends React.Component {
     const { cardData } = this.props
     const { num } = this.state
     if (!cardData || cardData.isEmpty()) {
-      return (<div className="cards" />)
+      return (<div className="product-card">暂无更多信息</div>)
     }
     const brandList = cardData.map(i => Map({
       imgUrl: i.get('image') !== '' ? i.get('image') : 'app/static/image/no_picture.jpg',
@@ -65,35 +65,35 @@ export default class RelatedBrandTab extends React.Component {
     if (num > brandList.size && this.cards) {
       this.cards.removeEventListener('scroll', this.onScroll)
     }
-    return (
-      <div className="cards">
-        {brandList.slice(0, num > brandList.size ? brandList.size : num)
-          .toArray().map((brand, i) =>
-            (<div key={i}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => this.relatedBrandClick(brand.get('id'), brand.get('type'))}>
-              <CommonCard
-                imgUrl={brand.get('imgUrl')}
-                title={''}
-                name={brand.get('name')}
-                content={brand.get('content')}
-                hasExpand={false}
-                truncated={textTruncated(brand.get('content')).length > 120}
-                attr={brand.get('attr')}
-              /></div>),
-          )}
-        {this.state.loading ?
-          <div className="loading">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-          </div> : null}
-      </div>
-    )
+    return [
+      (brandList.slice(0, num > brandList.size ? brandList.size : num)
+        .toArray().map((brand, i) =>
+          (<div
+            key={i}
+            style={{ cursor: 'pointer' }}
+            onClick={() => this.relatedBrandClick(brand.get('id'), brand.get('type'))}
+          >
+            <CommonCard
+              imgUrl={brand.get('imgUrl')}
+              title={''}
+              name={brand.get('name')}
+              content={brand.get('content')}
+              hasExpand={false}
+              truncated={textTruncated(brand.get('content')).length > 120}
+              attr={brand.get('attr')}
+            /></div>),
+        )),
+      (this.state.loading ?
+        <div className="loading">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div> : null),
+    ]
   }
 }

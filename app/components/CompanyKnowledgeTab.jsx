@@ -56,29 +56,27 @@ export default class CompanyKnowledgeTab extends React.Component {
       name: '企业资料',
       attr: info.isEmpty() ? null : info,
     })
-    return (
-      <div className="cards">
-        <CommonCard
-          imgUrl={company.get('imgUrl')}
-          title={company.get('title')}
-          name={company.get('name')}
-          content={company.get('desc')}
-          attr={company.get('attr')}
-          hasExpand
-          truncated={false}
-        />
-        {companyAttr.get('attr') ?
-          <div className="company-cards">
-            <div className="company-name">{companyAttr.get('name')}</div>
-            <div className="company-attr">
-              {companyAttr.get('attr').map((item, index) =>
-                (<div key={index} className="attr">
-                  <div className="key">{item.get('key')}</div>
-                  <div className="value">{item.get('value')}</div>
-                </div>))}
-            </div>
-          </div> : null}
-      </div>
-    )
+    return [
+      <CommonCard
+        imgUrl={company.get('imgUrl')}
+        title={company.get('title')}
+        name={company.get('name')}
+        content={company.get('desc')}
+        attr={company.get('attr')}
+        hasExpand
+        truncated={false}
+      />,
+      (companyAttr.get('attr') ?
+        <div className="company-cards">
+          <div className="company-name">{companyAttr.get('name')}</div>
+          <div className="company-attr">
+            {companyAttr.get('attr').map((item, index) =>
+              (<div key={index} className="attr">
+                <div className="key">{item.get('key')}</div>
+                <div className="value">{item.get('value')}</div>
+              </div>))}
+          </div>
+        </div> : null),
+    ]
   }
 }
