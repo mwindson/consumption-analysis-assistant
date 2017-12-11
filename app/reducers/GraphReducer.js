@@ -1,6 +1,5 @@
 import { Map, Set } from 'immutable'
 import * as A from 'actions'
-import config from 'utils/config.yaml'
 
 const initialState = Map({
   // 实体数据与关系数据

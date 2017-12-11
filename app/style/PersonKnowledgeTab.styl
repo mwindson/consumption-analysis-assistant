@@ -29,9 +29,20 @@
     flex-direction column
     .attr
       font-size 18px
-      line-height 20px
       display flex
-      min-height 30px
-      align-items center
-      white-space nowrap
-      word-wrap normal
+      border 1px solid #125091
+      border-bottom none
+      &:last-child
+        border-bottom 1px solid #125091
+      .key
+        flex 0 0 100px
+        border-right 1px solid #125091
+        padding 5px
+      .value
+        flex 1 0 50px
+        padding 5px
+        display flex
+        justify-content flex-start
+        align-items center
+        text-align justify
+

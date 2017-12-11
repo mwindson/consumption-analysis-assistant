@@ -8,9 +8,12 @@ export default function* graphSaga() {
   yield takeEvery(A.FETCH_NODES_AND_LINKS_DATA, handleUpdateGraphData)
   yield takeEvery(A.FETCH_CARD_DATA, handleUpdateCardData)
   yield takeEvery(A.FETCH_COUNT_DATA, handleFetchCount)
+  yield takeEvery(A.FETCH_ORIGIN_DATA, fetchOriginData)
 }
 
-const host = PRODUCTION ? `http://10.214.208.50:${PORT}` : `http://10.214.224.126:${PORT}`
+const host = `http://10.214.208.50:${PORT}`
+
+// const host = `http://10.214.224.126:${PORT}`
 
 function* handleFetchCount() {
   try {
@@ -113,5 +116,20 @@ function* handleUpdateCardData({ tab, id, cardType }) {
     }
   } catch (e) {
     console.log(e)
+  }
+}
+
+function* fetchOriginData({ id }) {
+  try {
+    const url = `${host}/outEntity/detail?entityId=${id}`
+    const response = yield fetch(url)
+    if (response.ok) {
+      const json = yield response.json()
+      if (json.data) {
+        yield put({ type: A.UPDATE_ORIGIN_DATA, originData: fromJS(json.data) })
+      }
+    }
+  } catch (e) {
+    console.error(e)
   }
 }

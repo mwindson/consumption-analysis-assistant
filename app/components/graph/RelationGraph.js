@@ -31,7 +31,7 @@ export default class RelationGraph {
     this.restart(centerId)
   }
 
-  initForce(nodeData, linkData, centerId, nodeClick, firstLoad) {
+  initForce(nodeData, linkData, centerId) {
     this.width = this.svg.style('width').replace('px', '')
     this.height = this.svg.style('height').replace('px', '')
     this.force = d3.forceSimulation()
@@ -64,7 +64,7 @@ export default class RelationGraph {
       }))
     this.svg.select('#textClip')
       .append('rect')
-      .attr('x', -this.radius)
+      .attr('x', -this.radius * 0.9)
       .attr('y', -this.radius / 2)
       .attr('width', this.radius * 1.8)
       .attr('height', this.radius)
@@ -167,7 +167,7 @@ export default class RelationGraph {
       })
       .on('mouseover', () => {
         const n = d3.select(d3.event.target).datum()
-        const id = n.id
+        const { id } = n
         this.hoverOn(linkData, centerId, id)
         d3.select(d3.event.target)
           .classed('highlight', true)
@@ -216,7 +216,7 @@ export default class RelationGraph {
       .attr('stroke-width', 3)
   }
 
-  restart(centerId) {
+  restart() {
     this.force.nodes(this.nodes.data())
       .on('tick', () => tick(this.nodes, this.link, this.hoverLinks))
     this.force.force('link').links(this.links.data())

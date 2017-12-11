@@ -46,3 +46,4 @@ rules:
   linebreak-style: off
   jsx-a11y/click-events-have-key-events: off
   import/extensions: off
+  react/no-typos: off

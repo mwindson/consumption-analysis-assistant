@@ -1,0 +1,19 @@
+@import "button.styl"
+.component-with-source
+  position relative
+  .source-buttons
+    position absolute
+    display flex
+    top 30px
+    right 30px
+    align-items center
+    z-index 2
+    .source-button
+      @extends .button
+      margin-left 10px
+      &.hudong
+        background #d0fe9b
+        color black
+      &.wiki
+        background darkgoldenrod
+        color white

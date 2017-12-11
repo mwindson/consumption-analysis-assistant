@@ -1,14 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import * as Immutable from 'immutable'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import 'style/InfoBoxCard.styl'
 
 export default class InfoBoxCard extends React.Component {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    infoBoxData: ImmutablePropTypes.map.isRequired,
-  }
-
   render() {
     const { name, infoBoxData } = this.props
     if (!infoBoxData || infoBoxData.isEmpty()) {
@@ -28,3 +24,8 @@ export default class InfoBoxCard extends React.Component {
     )
   }
 }
+InfoBoxCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  infoBoxData: ImmutablePropTypes.list.isRequired,
+}
+

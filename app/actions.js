@@ -35,3 +35,8 @@ export const CHANGE_TAB = 'CHANGE_TAB'
 // 决定弹出类型
 export const CHANGE_OPEN_TYPE = 'CHANGE_OPEN_TYPE'
 export const FLOAT_LAYER_OPEN = 'FLOAT_LAYER_OPEN'
+
+// 获取原始数据
+export const FETCH_ORIGIN_DATA = 'FETCH_ORIGIN_DATA'
+export const UPDATE_ORIGIN_DATA = 'UPDATE_ORIGIN_DATA'
+

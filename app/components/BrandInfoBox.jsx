@@ -1,11 +1,13 @@
 import React from 'react'
-import { fromJS } from 'immutable'
+import { fromJS, List } from 'immutable'
 import InfoBoxCard from 'components/cards/InfoBoxCard'
 import { connect } from 'react-redux'
+import addSourceHoc from 'hoc/addSourceHoc'
 
 const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
+@addSourceHoc
 export default class BrandInfoBox extends React.Component {
 
   render() {
@@ -16,9 +18,11 @@ export default class BrandInfoBox extends React.Component {
       )
     }
     const infoBox = fromJS(cardData.get('infoBox'))
-    const qxInfoBox = fromJS((cardData.get('qxInfoBox')))
+    const qxInfoBox = fromJS((cardData.get('qxInfoBox'))) || List()
 
-    return [<InfoBoxCard name={'品牌信息'} infoBoxData={infoBox} />, <InfoBoxCard name={'启信宝信息'} infoBoxData={qxInfoBox} />]
+    return [
+      <InfoBoxCard name={'品牌信息'} infoBoxData={infoBox} key={'0'} />,
+      <InfoBoxCard name={'启信宝信息'} infoBoxData={qxInfoBox} key={'1'} />,
+    ]
   }
 }
-
