@@ -12,7 +12,8 @@ import { PrevStepIcon, NextStepIcon } from 'components/Icons'
 import 'style/FloatLayer.styl'
 import config from '../utils/config.yaml'
 
-const mapStateToProps = (state, ownProps) => Object.assign({}, state.main.toObject(), state.routing, ownProps)
+const mapStateToProps = (state, ownProps) =>
+  Object.assign({}, state.main.toObject(), state.routing, ownProps)
 
 @connect(mapStateToProps)
 class FloatLayer extends React.Component {
@@ -99,8 +100,8 @@ class FloatLayer extends React.Component {
                 <div className="bookmark-close" onClick={this.closePortal}>收起</div>
               </div>
               <div className="list">
-                {data.toArray().map((item, i) =>
-                  (<div
+                {data.toArray().map((item, i) => (
+                  <div
                     key={i}
                     className={classNames('item', { long: contentType === 'history' }, { chosen: index === i })}
                     onClick={() => this.handleClick(item.get('id'), item.get('type'), i)}

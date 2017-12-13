@@ -14,7 +14,7 @@ import ProductDetailTab from 'components/ProductDetailTab'
 import ProductSpecTab from 'components/ProductSpecTab'
 import StoryCard from 'components/StoryCard'
 import BrandInfoBox from 'components/BrandInfoBox'
-import config from '../utils/config.yaml'
+import config from 'utils/config.yaml'
 
 const data = {
   hot: {

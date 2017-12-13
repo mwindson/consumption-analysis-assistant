@@ -11,7 +11,6 @@ const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class RelatedBrandTab extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -45,7 +44,9 @@ export default class RelatedBrandTab extends React.Component {
 
   relatedBrandClick = (id, type) => {
     this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true })
+    this.props.dispatch({
+      type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true,
+    })
   }
 
   render() {
@@ -67,22 +68,23 @@ export default class RelatedBrandTab extends React.Component {
     }
     return [
       (brandList.slice(0, num > brandList.size ? brandList.size : num)
-        .toArray().map((brand, i) =>
-          (<div
+        .toArray().map((brand, i) => (
+          <div
             key={i}
             style={{ cursor: 'pointer' }}
             onClick={() => this.relatedBrandClick(brand.get('id'), brand.get('type'))}
           >
             <CommonCard
               imgUrl={brand.get('imgUrl')}
-              title={''}
+              title=""
               name={brand.get('name')}
               content={brand.get('content')}
               hasExpand={false}
               truncated={textTruncated(brand.get('content')).length > 120}
               attr={brand.get('attr')}
-            /></div>),
-        )),
+            />
+          </div>))
+      ),
       (this.state.loading ?
         <div className="loading">
           <span />

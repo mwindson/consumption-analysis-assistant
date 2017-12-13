@@ -13,7 +13,8 @@ import { LogoIcon, SearchIcon, ErrorIcon, ArrowTop, ArrowBottom, FeedBackIcon } 
 import 'style/HomePage.styl'
 import config from '../utils/config.yaml'
 
-const mapStateToProps = state => Object.assign({}, state.cards.toObject(), state.main.toObject(), state.graph.toObject(), state.routing)
+const mapStateToProps = state =>
+  Object.assign({}, state.cards.toObject(), state.main.toObject(), state.graph.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class HomePage extends React.Component {
@@ -159,8 +160,8 @@ export default class HomePage extends React.Component {
                 </div> : null}
               {searchState === 'error' ? <div className="no-result"><ErrorIcon />暂无相关内容</div> : null}
               <div className={classNames('search-result', { searching })}>
-                {searchResult.slice(0, this.sliceIndex(searchResult)).toArray().map((item, i) =>
-                  (<div
+                {searchResult.slice(0, this.sliceIndex(searchResult)).toArray().map((item, i) => (
+                  <div
                     key={i}
                     className="search-item"
                     onClick={() => this.handleResult(item.get('id'), item.get('type'))}
@@ -175,8 +176,7 @@ export default class HomePage extends React.Component {
           {!searching ?
             <div className="statistic"> 当前已收录品牌
               <span>{count.get('brand') ? count.get('brand') : '0'}</span>个，人物
-              <span>{count.get('person') ? count.get('person') : '0'}</span>个，公司
-              <span>{count.get('company') ? count.get('company') : '0'}</span>个，产品
+              <span>{count.get('person') ? count.get('person') : '0'}</span>个，产品
               <span>{count.get('product') ? count.get('product') : '0'}</span>个
             </div> : null}
           {searching ?

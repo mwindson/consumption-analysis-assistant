@@ -30,7 +30,9 @@ export default class CommonCard extends React.Component {
   }
 
   render() {
-    const { title, imgUrl, name, content, hasExpand, truncated, attr } = this.props
+    const {
+      title, imgUrl, name, content, hasExpand, truncated, attr,
+    } = this.props
     const { expand } = this.state
     return (
       <div className={classNames('common-card', { expand })}>

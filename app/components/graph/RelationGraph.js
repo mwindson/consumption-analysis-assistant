@@ -36,6 +36,7 @@ export default class RelationGraph {
     this.height = this.svg.style('height').replace('px', '')
     this.force = d3.forceSimulation()
       .force('link', d3.forceLink().id(d => d.id).distance(350))
+      .force('charge', d3.forceManyBody().strength(-1000))
       .force('collide', d3.forceCollide().radius(this.radius + 5))
       .force('center', d3.forceCenter(this.width / 2, this.height / 2))
       .force('x', d3.forceX((d) => {
@@ -173,8 +174,8 @@ export default class RelationGraph {
           .classed('highlight', true)
         tooltip
           .html(`<p>${n.name}</p>`)
-          .style('left', `${n.x + 60}px`)
-          .style('top', `${n.y - 70}px`)
+          .style('left', `${Math.min(this.width - 250, Math.max(0, n.x + this.radius))}px`)
+          .style('top', `${Math.min(this.height - 150, Math.max(0, n.y))}px`)
           .transition()
           .duration(500)
           .style('opacity', 0.8)
@@ -220,7 +221,7 @@ export default class RelationGraph {
     this.force.nodes(this.nodes.data())
       .on('tick', () => tick(this.nodes, this.link, this.hoverLinks))
     this.force.force('link').links(this.links.data())
-    this.force.alpha(1).restart()
+    this.force.alpha(0.5).restart()
     // setTimeout(() => {
     //   const centerNode = this.nodes.filter(d => d.id === centerId).datum()
     //   d3.select('.graph-g').transition().duration(1000)

@@ -9,7 +9,6 @@ const mapStateToProps = state => state.cards.toObject()
 @connect(mapStateToProps)
 @addSourceHoc
 export default class BrandInfoBox extends React.Component {
-
   render() {
     const { cardData } = this.props
     if (cardData.isEmpty() || !cardData.get('infoBox')) {
@@ -21,8 +20,8 @@ export default class BrandInfoBox extends React.Component {
     const qxInfoBox = fromJS((cardData.get('qxInfoBox'))) || List()
 
     return [
-      <InfoBoxCard name={'品牌信息'} infoBoxData={infoBox} key={'0'} />,
-      <InfoBoxCard name={'启信宝信息'} infoBoxData={qxInfoBox} key={'1'} />,
+      <InfoBoxCard name="品牌信息" infoBoxData={infoBox} key="0" />,
+      <InfoBoxCard name="启信宝信息" infoBoxData={qxInfoBox} key="1" />,
     ]
   }
 }

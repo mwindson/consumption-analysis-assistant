@@ -9,7 +9,6 @@ const mapStateToProps = state => state.cards.toObject()
 @connect(mapStateToProps)
 @addSourceHoc
 export default class PersonKnowledgeTab extends React.Component {
-
   render() {
     const { cardData } = this.props
     if (cardData.isEmpty()) {
@@ -29,10 +28,10 @@ export default class PersonKnowledgeTab extends React.Component {
           {personKnowledge.get('attr') ?
             <div className="person-attr">
               {personKnowledge.get('attr').map((item, index) =>
-                <div key={index} className="attr">
+                (<div key={index} className="attr">
                   <div className="key">{item.get('key')}</div>
                   <div className="value">{item.get('value')}</div>
-                </div>)}
+                 </div>))}
             </div>
             : null}
         </div>

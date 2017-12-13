@@ -26,11 +26,11 @@ export default class ProductSpecTab extends React.Component {
       )
     }
     return [
-      productSpec.map((item, index) =>
-        (<div key={index} className="product-card">
+      productSpec.map((item, index) => (
+        <div key={index} className="product-card">
           <div className="title">{item.get('key')}</div>
-          {item.get('value').map((attr, i) =>
-            (<div key={i} className="model">
+          {item.get('value').map((attr, i) => (
+            <div key={i} className="model">
               <div className="key">{attr.get('key')}</div>
               <div className="value">{attr.get('value')}</div>
             </div>))}

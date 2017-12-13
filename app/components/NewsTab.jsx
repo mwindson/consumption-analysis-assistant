@@ -29,15 +29,14 @@ export default class NewsCards extends React.Component {
       <div className="news-card">
         <div className="title">更多关键词</div>
         <div className="content">
-          {wordList.toArray().map((word, i) =>
-            (<div
+          {wordList.toArray().map((word, i) => (
+            <div
               key={i}
               className={classNames('keyword', { selected: selectedKeyword === word })}
               onClick={() => this.handleWordClick(word)}
             >
               {word}
-            </div>))
-          }
+            </div>))}
         </div>
       </div>,
       (currentNewsList.toArray().map((news, i) => (
@@ -49,7 +48,7 @@ export default class NewsCards extends React.Component {
           </div>
           <a className="news-link" href={news.get('url')} target="_blank"><ArrowRight />阅读全文</a>
         </div>
-      )))
+      ))),
     ]
   }
 }

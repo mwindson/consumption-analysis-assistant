@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import { restart } from 'components/graph/drawGraph'
 
 export function zoomClick(svg, zoom, type) {
   // const g = svg.select('.graph-g')

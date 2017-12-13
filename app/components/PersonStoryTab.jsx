@@ -7,7 +7,6 @@ const mapStateToProps = state => state.cards.toObject()
 
 @connect(mapStateToProps)
 export default class PersonStoryTab extends React.Component {
-
   render() {
     const { cardData } = this.props
     if (cardData.isEmpty() || !cardData.get('detail')) {

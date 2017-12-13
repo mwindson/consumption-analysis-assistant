@@ -50,7 +50,9 @@ export default class ListCard extends React.Component {
   }
   handleClick = (id, type) => {
     this.props.dispatch(replace(`?${querystring.stringify({ type, id })}`))
-    this.props.dispatch({ type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true })
+    this.props.dispatch({
+      type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true,
+    })
   }
 
   render() {
@@ -68,7 +70,7 @@ export default class ListCard extends React.Component {
               className={classNames('item', type)}
               onClick={() => this.handleClick(l.get('id'), type)}
             >
-              <img src={l.get('url')} />
+              <img src={l.get('url')} alt="" />
               <div className="name" title={l.get('text')}>{l.get('text')}</div>
             </div>
           ))}

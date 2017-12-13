@@ -1,23 +1,33 @@
 @import "button.styl"
 .component-with-source
   position relative
+
   .source-buttons
     position absolute
     display flex
-    top 30px
-    right 30px
-    align-items center
+    top 10px
+    right 10px
     z-index 2
-    .source-button
-      @extends .button
-      margin-left 10px
-      max-width 100px
-      overflow hidden
-      text-overflow ellipsis
-      white-space nowrap
-      &.hudong
-        background #d0fe9b
-        color black
-      &.wiki
-        background darkgoldenrod
-        color white
+    .text
+      height 30px
+      line-height 30px
+    .buttons
+      max-width 420px
+      display flex
+      flex-wrap wrap
+      overflow-y auto
+      height 67px
+      .source-button
+        @extends .button
+        height 30px
+        margin 0 5px 5px 0
+        max-width 100px
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+        &.hudong
+          background #d0fe9b
+          color black
+        &.wiki
+          background darkgoldenrod
+          color white

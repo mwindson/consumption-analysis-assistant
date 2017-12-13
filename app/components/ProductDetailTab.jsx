@@ -37,7 +37,8 @@ export default class ProductDetailTab extends React.Component {
               href={attr.get('value')}
               target="_blank"
               style={{ color: '#4990E2' }}
-            > 京东页面</a> : attr.get('value')}
+            > 京东页面
+            </a> : attr.get('value')}
           </div>
         </div>))}
       </div>,

@@ -30,7 +30,7 @@ export function drawGraph(svg, nodeData, linkData, centerId, nodeClick, type, fi
   width = svg.style('width').replace('px', '')
   height = svg.style('height').replace('px', '')
   force = d3.forceSimulation()
-    .force('link', d3.forceLink().id(d => d.id).distance(d => d.source.id === centerId ? 100 : 500))
+    .force('link', d3.forceLink().id(d => d.id).distance(d => (d.source.id === centerId ? 100 : 500)))
     .force('charge', d3.forceManyBody())
     .force('collide', d3.forceCollide().radius(60))
     .force('center', d3.forceCenter(width / 2, height / 2))
@@ -163,8 +163,8 @@ export function updateNodes(svg, nodeData, linkData, centerId, nodeClick, type) 
     .text(d => d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
-    .attr('font-size', d => d.id === centerId ? 20 : 14)
-    .attr('font-weight', d => d.id === centerId ? 'bold' : 'null')
+    .attr('font-size', d => (d.id === centerId ? 20 : 14))
+    .attr('font-weight', d => (d.id === centerId ? 'bold' : 'null'))
     .attr('fill', '#125091')
     .each(function () {
       const textWidth = d3.select(this).node().getBBox().width
@@ -270,8 +270,8 @@ function hoverOn(linkData, centerId, currentId) {
     .text(d => d.name)
     .attr('class', 'node-text')
     .attr('pointer-events', 'none')
-    .attr('font-size', d => d.id === centerId ? 20 : 14)
-    .attr('font-weight', d => d.id === centerId ? 'bold' : 'null')
+    .attr('font-size', d => (d.id === centerId ? 20 : 14))
+    .attr('font-weight', d => (d.id === centerId ? 'bold' : 'null'))
     .attr('fill', '#125091')
     .each(function () {
       const textWidth = d3.select(this).node().getBBox().width

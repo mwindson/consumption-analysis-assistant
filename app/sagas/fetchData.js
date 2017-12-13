@@ -40,7 +40,7 @@ function* handleSearch({ keyword }) {
     const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
-      const data = json.data
+      const { data } = json
       if (data && data.length !== 0) {
         const result = fromJS(data).map(i => Map({
           id: i.get('id'),
@@ -67,7 +67,7 @@ function* handleUpdateGraphData({ id, resultType, updateFootprint }) {
     const response = yield fetch(url)
     if (response.ok) {
       const json = yield response.json()
-      const data = json.data
+      const { data } = json
       if (data && data.length !== 0) {
         const nodeData = fromJS(data.entities).map(i => Map({
           id: i.get('id'),

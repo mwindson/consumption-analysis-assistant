@@ -32,22 +32,25 @@ export default function addSourceHoc(Component) {
       }
       return (
         <div className="component-with-source">
-          {dataSource ? <div className="source-buttons">
-            <div>数据来源：</div>
-            {dataSource.map((s, i) => {
-              const source = s.get('id').split(':')[0]
-              return (
-                <div
-                  key={`source-${i}`}
-                  className={classNames('source-button', { hudong: source === 'hudong' }, { wiki: source === 'wiki' })}
-                  onClick={() => this.fetchOriginData(s.get('id'))}
-                  title={`${getSourceName(source)}:${s.get('name')}`}
-                >
-                  {s.get('name')}
-                </div>
-              )
-            })}
-          </div> : null}
+          {dataSource ?
+            <div className="source-buttons">
+              <div className="text">数据来源：</div>
+              <div className="buttons">
+                {dataSource.map((s, i) => {
+                  const source = s.get('id').split(':')[0]
+                  return (
+                    <div
+                      key={`source-${i}`}
+                      className={classNames('source-button', { hudong: source === 'hudong' }, { wiki: source === 'wiki' })}
+                      onClick={() => this.fetchOriginData(s.get('id'))}
+                      title={`${getSourceName(source)}:${s.get('name')}`}
+                    >
+                      {s.get('name')}
+                    </div>
+                  )
+                })}
+              </div>
+            </div> : null}
           <Component {...this.props} />
           <OriginData show={this.state.show} onClose={this.close} />
         </div>

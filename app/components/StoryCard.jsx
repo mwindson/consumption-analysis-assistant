@@ -13,11 +13,11 @@ export default class StoryCard extends React.Component {
       return (<div className="product-card">暂无更多信息</div>)
     }
     const detail = fromJS(cardData.get('detail'))
-    const splitDetail = textMap => textMap.map((item, index) =>
-      (<div key={index} className="story">
+    const splitDetail = textMap => textMap.map((item, index) => (
+      <div key={index} className="story">
         <h3>{item.get('key')}</h3>
-        {!List.isList(item.get('value')) ? fromJS(item.get('value').split('\u2764')).map((d, i) =>
-          (<div key={i}>
+        {!List.isList(item.get('value')) ? fromJS(item.get('value').split('\u2764')).map((d, i) => (
+          <div key={i}>
             <div className="text">{d}</div>
           </div>)) : splitDetail(item.get('value'))}
       </div>))

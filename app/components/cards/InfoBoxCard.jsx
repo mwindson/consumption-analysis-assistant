@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import * as Immutable from 'immutable'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import 'style/InfoBoxCard.styl'
 
@@ -14,11 +13,11 @@ export default class InfoBoxCard extends React.Component {
       <div className="info-box-card">
         <div className="info-box-card_title">{name}</div>
         <div className="info-box-card_attrs">
-          {infoBoxData.map((item, index) =>
+          {infoBoxData.map((item, index) => (
             <div key={index} className="info-box-card_attr">
               <div className="info-box-card_key">{`${item.get('key')}`}</div>
               <div className="info-box-card_value">{`${item.get('value')}`}</div>
-            </div>)}
+            </div>))}
         </div>
       </div>
     )

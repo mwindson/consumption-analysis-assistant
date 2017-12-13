@@ -13,7 +13,7 @@ const initialState = Map({
   graphType: 'all',
   tab: 'knowledge',
   noResult: false,
-  popupType: 'none',  // none or searchResult or product -- none 不弹出
+  popupType: 'none', // none or searchResult or product -- none 不弹出
   searchResult: List(),
   productDetail: Map(),
   graphLoading: false,
@@ -31,7 +31,7 @@ export default function reducer(state = initialState, action) {
     const { nodeData, linkData } = action
     return state.set('nodeData', nodeData).set('linkData', linkData).set('noResult', false).set('graphLoading', false)
   } else if (action.type === A.UPDATE_CENTER_ID) {
-    const { centerId, centerType, centerName } = action
+    const { centerType, centerName } = action
     // 更新中心节点时，添加历史记录
     const oldName = state.get('centerName')
     let history = state.get('footprint')

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { LineChart, Line, Tooltip, XAxis, YAxis, Legend, CartesianGrid } from 'recharts'
+import math from 'mathjs'
 import 'style/BrandTrendCards.styl'
 
 const mapStateToProps = state => Object.assign({}, state.cards.toObject())
@@ -15,7 +16,7 @@ export default class BrandTrendCards extends React.Component {
       )
     }
     const trendData = null
-    const positive = cardData.get('posPercent').toFixed(3)
+    const positive = cardData.get('posPercent')
     const posComments = cardData.get('pos')
     const negComments = cardData.get('neg')
     return [trendData ?
@@ -47,8 +48,18 @@ export default class BrandTrendCards extends React.Component {
         <div className="emotion">
           正向
           <div className="bar">
-            <div className="positive" style={{ width: `${positive * 100}%` }}>{positive * 100}%</div>
-            <div className="negative" style={{ width: `${100 - (positive * 100)}%` }}>{100 - (positive * 100)}%</div>
+            <div
+              className="positive"
+              style={{ width: `${(positive * 100).toFixed(2)}%` }}
+            >
+              {(positive * 100).toFixed(2)}%
+            </div>
+            <div
+              className="negative"
+              style={{ width: `${(100 - (positive * 100)).toFixed(2)}%` }}
+            >
+              {(100 - (positive * 100)).toFixed(2)}%
+            </div>
           </div>
           负向
         </div>
@@ -58,14 +69,14 @@ export default class BrandTrendCards extends React.Component {
         <div className="title">正面评论</div>
         <div className="comments">
           <div className="comment-list">
-            {posComments.toArray().map((c, i) =>
-              (<div key={i} className="comment">
+            {posComments.toArray().map((c, i) => (
+              <div key={i} className="comment">
                 <div className="text">{c.get(0)}</div>
               </div>))}
           </div>
           <div className="comment-list">
-            {negComments.toArray().map((c, i) =>
-              (<div key={i} className="comment">
+            {negComments.toArray().map((c, i) => (
+              <div key={i} className="comment">
                 <div className="text">{c.get(0)}</div>
               </div>))}
           </div>
