@@ -36,7 +36,7 @@ export default class RelationGraph {
     this.height = this.svg.style('height').replace('px', '')
     this.force = d3.forceSimulation()
       .force('link', d3.forceLink().id(d => d.id).distance(350))
-      .force('charge', d3.forceManyBody().strength(-1000))
+      .force('charge', d3.forceManyBody().strength(-500))
       .force('collide', d3.forceCollide().radius(this.radius + 5))
       .force('center', d3.forceCenter(this.width / 2, this.height / 2))
       .force('x', d3.forceX((d) => {

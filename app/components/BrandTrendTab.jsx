@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import classNames from 'classnames'
 import { LineChart, Line, Tooltip, XAxis, YAxis, Legend, CartesianGrid } from 'recharts'
-import math from 'mathjs'
 import 'style/BrandTrendCards.styl'
 
 const mapStateToProps = state => Object.assign({}, state.cards.toObject())
@@ -65,19 +65,17 @@ export default class BrandTrendCards extends React.Component {
         </div>
       </div>,
       <div className="trend-card">
-        <div className="title" style={{ float: 'right' }}>负面评论</div>
-        <div className="title">正面评论</div>
+        <div className="title">评论</div>
         <div className="comments">
           <div className="comment-list">
             {posComments.toArray().map((c, i) => (
               <div key={i} className="comment">
                 <div className="text">{c.get(0)}</div>
-              </div>))}
-          </div>
-          <div className="comment-list">
+              </div>
+            ))}
             {negComments.toArray().map((c, i) => (
               <div key={i} className="comment">
-                <div className="text">{c.get(0)}</div>
+                <div className={classNames('text', 'negative')}> {c.get(0)}</div>
               </div>))}
           </div>
         </div>

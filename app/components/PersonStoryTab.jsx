@@ -1,7 +1,7 @@
 import React from 'react'
-import { List, Map, fromJS } from 'immutable'
+import { fromJS } from 'immutable'
 import { connect } from 'react-redux'
-import 'style/PersonStoryTab.styl'
+import 'style/StoryTab.styl'
 
 const mapStateToProps = state => state.cards.toObject()
 

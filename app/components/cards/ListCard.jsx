@@ -23,25 +23,15 @@ export default class ListCard extends React.Component {
     super(props)
     this.state = {
       expand: false,
-      itemNum: this.props.list.size,
+      overflow: false,
     }
+    this.list = null
   }
 
 
   componentDidMount() {
-    this.setItemNum()
-    window.addEventListener('resize', this.setItemNum)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.setItemNum)
-  }
-
-  setItemNum = () => {
-    if (!this.props.list.isEmpty()) {
-      const width = document.querySelector('.common-card').clientWidth - 80
-      const itemWidth = document.querySelector(`div.item.${this.props.type}`).clientWidth + 30
-      this.setState({ itemNum: Math.floor(width / itemWidth) })
+    if (this.list.scrollHeight > 200) {
+      this.setState({ overflow: true })
     }
   }
 
@@ -57,13 +47,18 @@ export default class ListCard extends React.Component {
 
   render() {
     const { title, list, type } = this.props
-    const { expand, itemNum } = this.state
+    const { expand, overflow } = this.state
 
     return (
       <div className={classNames('common-card', { expand })}>
         <div className={classNames('title', { exist: title !== '' })}>{title}</div>
-        <div className="list">
-          {(expand ? list : list.slice(0, itemNum)).toArray().map((l, i) => (
+        <div
+          className="list"
+          ref={(node) => {
+            this.list = node
+          }}
+        >
+          {list.toArray().map((l, i) => (
             <div
               id={type}
               key={i}
@@ -75,11 +70,10 @@ export default class ListCard extends React.Component {
             </div>
           ))}
         </div>
-        {list.size > itemNum ?
+        {overflow ? (
           <div className="expand" onClick={this.handleExpand}>
             {expand ? <div><ArrowTop />收起</div> : <div><ArrowBottom />展开</div>}
-          </div>
-          : null}
+          </div>) : null}
       </div>
     )
   }

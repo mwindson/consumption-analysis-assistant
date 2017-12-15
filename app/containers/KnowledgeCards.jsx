@@ -5,16 +5,17 @@ import classNames from 'classnames'
 import querystring from 'querystring'
 import * as A from 'actions'
 import 'style/KnowledgeCards.styl'
-import NewsCards from 'components/NewsTab'
-import BrandTrendCards from 'components/BrandTrendTab'
-import RelatedBrandCards from 'components/RelatedBrandTab'
+import NewsTab from 'components/NewsTab'
+import BrandTrendTab from 'components/BrandTrendTab'
+import RelatedBrandTab from 'components/RelatedBrandTab'
 import PersonKnowledgeTab from 'components/PersonKnowledgeTab'
 import BrandKnowledgeTab from 'components/BrandKnowledgeTab'
 import ProductDetailTab from 'components/ProductDetailTab'
 import ProductSpecTab from 'components/ProductSpecTab'
-import StoryCard from 'components/StoryCard'
+import StoryCard from 'components/cards/StoryCard'
 import BrandInfoBox from 'components/BrandInfoBox'
 import config from 'utils/config.yaml'
+import WeiboCard from 'components/WeiboCard'
 
 const data = {
   hot: {
@@ -113,17 +114,18 @@ export default class KnowledgeCards extends React.Component {
         </div>
         <div className="cards">
           {chosen === 'hot' ?
-            <NewsCards
+            <NewsTab
               wordList={fromJS(data[chosen]).get('keywords')}
               newsList={fromJS(data[chosen]).get('newsList')}
             /> : null}
-          {chosen === 'comments' && centerType === 'Brand' ? <BrandTrendCards /> : null}
-          {chosen === 'relatedBrands' ? <RelatedBrandCards /> : null}
+          {chosen === 'comments' && centerType === 'Brand' ? <BrandTrendTab /> : null}
+          {chosen === 'relatedBrands' ? <RelatedBrandTab /> : null}
           {chosen === 'infoBox' && centerType === 'Brand' ? <BrandInfoBox /> : null}
           {chosen === 'detail' && centerType === 'Brand' ? <StoryCard /> : null}
           {chosen === 'knowledge' && centerType === 'Brand' ? <BrandKnowledgeTab /> : null}
           {chosen === 'detail' && centerType === 'Person' ? <PersonKnowledgeTab /> : null}
           {chosen === 'story' && centerType === 'Person' ? <StoryCard /> : null}
+          {chosen === 'weibo' && centerType === 'Person' ? <WeiboCard /> : null}
           {chosen === 'detail' && centerType === 'Product' ? <ProductDetailTab /> : null}
           {chosen === 'spec' && centerType === 'Product' ? <ProductSpecTab /> : null}
         </div>

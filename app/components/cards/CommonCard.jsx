@@ -2,22 +2,25 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import classNames from 'classnames'
-import { fromJS, Map } from 'immutable'
-import { ArrowTop, ArrowBottom } from 'components/Icons'
+import { fromJS } from 'immutable'
+import { ArrowTop, ArrowBottom, SkipIcon } from 'components/Icons'
 import 'style/CommonCard.styl'
 
 export default class CommonCard extends React.Component {
   static propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     name: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     hasExpand: PropTypes.bool.isRequired,
-    truncated: PropTypes.bool.isRequired,
-    attr: ImmutablePropTypes.map.isRequired,
+    truncated: PropTypes.bool,
+    attr: ImmutablePropTypes.list,
     imgUrl: PropTypes.string,
   }
   static defaultProps = {
+    title: '',
     imgUrl: 'app/static/image/no_picture.jpg',
+    truncated: false,
+    attr: fromJS([]),
   }
 
 
@@ -41,21 +44,22 @@ export default class CommonCard extends React.Component {
           <div className="image"><img src={imgUrl || 'app/static/image/no_picture.jpg'} alt="" /></div>
           <div className="intro">
             <div className="name">{name}</div>
-            {attr.size === 0 ?
-              <div className={classNames('text', { truncated: expand })}>
-                {fromJS(content.split('\u2764')).map((d, i) => (<div key={i}>{d}</div>))}
-              </div> :
-              <div className={classNames('text', { truncated: expand })}>
-                {attr.entrySeq().map((v, k) => {
-                  if (!Map.isMap(v[1]) && v[0] && v[1]) {
-                    return v[0] !== '官网' ?
-                      <div key={k}>{`${v[0]}: ${v[1]}`}</div> :
-                      <div key={k}>{`${v[0]}: `}<a href={v[1]} target="_blank">{v[1]}</a></div>
-                  } else {
-                    return null
-                  }
-                })}
-              </div>}
+            <div className={classNames('text', { truncated: expand })}>
+              {fromJS(content.split('\u2764')).map((d, i) => (<div key={i}>{d}</div>))}
+              {attr.map((v, i) => {
+                if (!v.get('value')) {
+                  return null
+                } else if (typeof v.get('value') === 'string' && v.get('value').match(/[http://]|[https://]/)) {
+                  return (
+                    <div className="url" key={`attr-${i}`}>
+                      <a href={v.get('value')} target="about_blank"><SkipIcon /></a>
+                    </div>
+                  )
+                } else {
+                  return (<div key={`attr-${i}`}>{`${v.get('key')}：${v.get('value')}`}</div>)
+                }
+              })}
+            </div>
           </div>
         </div>
         {hasExpand && truncated ?

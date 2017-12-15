@@ -1,7 +1,7 @@
 import React from 'react'
 import { fromJS, List } from 'immutable'
 import { connect } from 'react-redux'
-import 'style/PersonStoryTab.styl'
+import 'style/StoryTab.styl'
 
 const mapStateToProps = state => state.cards.toObject()
 
@@ -25,8 +25,8 @@ export default class StoryCard extends React.Component {
       <div className="person-cards">
         {cardData.get('description') && cardData.get('description') !== '' ?
           <div className="story">
-            {fromJS(cardData.get('description').split('\u2764')).map((d, i) =>
-              (<div key={i}>
+            {fromJS(cardData.get('description').split('\u2764')).map((d, i) => (
+              <div key={i}>
                 <div className="text">{d}</div>
               </div>))}
           </div> : null}

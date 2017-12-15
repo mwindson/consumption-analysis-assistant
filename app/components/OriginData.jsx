@@ -20,7 +20,7 @@ export default class OriginData extends React.Component {
       } else if (Map.isMap(data)) {
         return (<div>{data.get('key')}{dataShow(data.get('value'))}</div>)
       } else {
-        return fromJS(data.split('\u2764')).map((d, i) => (<div className="text">{d}</div>))
+        return fromJS(data.split('\u2764')).map((d, i) => (<div className="origin-data_text">{d}</div>))
       }
     }
     return (

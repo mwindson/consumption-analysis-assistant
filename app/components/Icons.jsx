@@ -125,3 +125,12 @@ export const FeedBackIcon = ({ color = '#FFF', width = 30, height = 30 }) => (
     />
   </svg>
 )
+
+export const SkipIcon = ({ color = '#1296db', width = 20, height = 20 }) => (
+  <svg viewBox="0 0 1024 1024" width={width} height={height}>
+    <path
+      d="M751.616 881.152H144.384v-606.72h392.192v-86.528H57.344v780.288h780.288V493.568h-86.528v387.584zM621.568 57.344l.512 90.624 198.144-2.048-458.752 458.752 61.44 61.44 459.776-459.776.512 198.144h85.504V57.856H621.568z"
+      fill={color}
+    />
+  </svg>
+)

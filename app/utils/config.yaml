@@ -16,6 +16,8 @@ Person:
    name: 人物简介
  - key: story
    name: 人物故事
+ - key: weibo
+   name: 微博信息
 Company:
  - key: detail
    name: 企业信息
