@@ -8,6 +8,9 @@ const nodeColor = {
   Person: ['url(#personGradient)', '#2095FF'],
   empty: ['url(#brandGradient)', '#4AF7FF'],
   Product: ['url(#productGradient)', '#EA8484'],
+  category1: ['#fff', '#fff'],
+  category2: ['#ffa421', '#ffa421'],
+  category3: ['#38ff8f', '#38ff8f'],
 }
 
 export default class RelationGraph {
@@ -153,6 +156,7 @@ export default class RelationGraph {
     // 更新节点点击和拖动事件
     const tooltip = d3.select('.tooltip')
     this.nodes
+      .filter(d => d.type !== 'category')
       .attr('cursor', 'pointer')
       .on('click', () => {
         const { id } = d3.select(d3.event.target).datum()
@@ -166,6 +170,7 @@ export default class RelationGraph {
           nodeClick(id, nodeType)
         }
       })
+    this.nodes
       .on('mouseover', () => {
         const n = d3.select(d3.event.target).datum()
         const { id } = n

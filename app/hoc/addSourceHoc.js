@@ -27,7 +27,7 @@ export default function addSourceHoc(Component) {
       const dataSource = cardData.get('outEntities')
       const getSourceName = (source) => {
         if (source === 'hudong') return '互动百科'
-        if (source === 'wiki') return '中文维基'
+        if (source === 'maigoo') return '买购网'
         return '百度百科'
       }
       return (
@@ -41,7 +41,7 @@ export default function addSourceHoc(Component) {
                   return (
                     <div
                       key={`source-${i}`}
-                      className={classNames('source-button', { hudong: source === 'hudong' }, { wiki: source === 'wiki' })}
+                      className={classNames('source-button', { hudong: source === 'hudong' }, { maigoo: source === 'maigoo' })}
                       onClick={() => this.fetchOriginData(s.get('id'))}
                       title={`${getSourceName(source)}:${s.get('name')}`}
                     >

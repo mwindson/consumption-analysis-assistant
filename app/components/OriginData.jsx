@@ -25,13 +25,10 @@ export default class OriginData extends React.Component {
     }
     return (
       <div className="origin-data">
-        {originData.toArray().map((value, key) => {
-          if (key === 'image') {
-            return null
-          } else {
-            return dataShow(value)
-          }
-        })}
+        {originData
+          .filterNot((v, k) => k === 'image' || k === 'type')
+          .valueSeq()
+          .map((value, key) => dataShow(value))}
       </div>
     )
   }

@@ -49,7 +49,7 @@ export default class CommonCard extends React.Component {
               {attr.map((v, i) => {
                 if (!v.get('value')) {
                   return null
-                } else if (typeof v.get('value') === 'string' && v.get('value').match(/[http://]|[https://]/)) {
+                } else if (typeof v.get('value') === 'string' && v.get('value').match(/(http:\/\/[\s]*|https:\/\/[\s]*)/)) {
                   return (
                     <div className="url" key={`attr-${i}`}>
                       <a href={v.get('value')} target="about_blank"><SkipIcon /></a>

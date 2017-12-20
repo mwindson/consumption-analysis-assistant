@@ -28,9 +28,8 @@ export default class ListCard extends React.Component {
     this.list = null
   }
 
-
   componentDidMount() {
-    if (this.list.scrollHeight > 200) {
+    if (this.list.scrollHeight > this.list.offsetHeight) {
       this.setState({ overflow: true })
     }
   }
@@ -50,14 +49,9 @@ export default class ListCard extends React.Component {
     const { expand, overflow } = this.state
 
     return (
-      <div className={classNames('common-card', { expand })}>
+      <div className={classNames('common-card', { expand })} ref={(node) => this.list = node}>
         <div className={classNames('title', { exist: title !== '' })}>{title}</div>
-        <div
-          className="list"
-          ref={(node) => {
-            this.list = node
-          }}
-        >
+        <div className="list">
           {list.toArray().map((l, i) => (
             <div
               id={type}
