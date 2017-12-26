@@ -80,7 +80,9 @@ module.exports = (env) => {
         PORT: JSON.stringify(env.port),
         PRODUCTION: JSON.stringify(isProduction),
       }),
-    ].concat(isProduction ? [new CleanWebpackPlugin(`dist/${packageInfo.version}/${env.port}`)] : []),
+    ].concat(isProduction ? [
+      new CleanWebpackPlugin(`dist/${packageInfo.version}/${env.port}`),
+      new webpack.optimize.UglifyJsPlugin({})] : []),
 
     devServer: {
       host: '0.0.0.0',

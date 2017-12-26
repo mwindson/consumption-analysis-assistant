@@ -50,13 +50,13 @@ export default class BrandTrendCards extends React.Component {
           <div className="bar">
             <div
               className="positive"
-              style={{ width: `${(positive * 100).toFixed(2)}%` }}
+              style={{ width: `${((positive * 80) + 10).toFixed(2)}%` }}
             >
               {(positive * 100).toFixed(2)}%
             </div>
             <div
               className="negative"
-              style={{ width: `${(100 - (positive * 100)).toFixed(2)}%` }}
+              style={{ width: `${(((1 - positive) * 100) + 10).toFixed(2)}%` }}
             >
               {(100 - (positive * 100)).toFixed(2)}%
             </div>

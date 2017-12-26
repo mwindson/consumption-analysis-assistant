@@ -11,11 +11,13 @@ const sagaMiddleware = createSagaMiddleware()
 const history = createHistory()
 // Build the middleware for intercepting and dispatching navigation actions
 const historyMiddleware = routerMiddleware(history)
+// redux devtools extenstion
+const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
+!PRODUCTION ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose
 // mount it on the Store
 const store = createStore(
   reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  compose(
+  composeEnhancers(
     applyMiddleware(sagaMiddleware),
     applyMiddleware(historyMiddleware),
   ),
