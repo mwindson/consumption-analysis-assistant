@@ -71,8 +71,15 @@ export default class HomePage extends React.Component {
   }
   handleSearch = (event) => {
     if (event.keyCode === 13) {
-      this.props.dispatch({ type: A.FETCH_SEARCH_RESULT, keyword: this.state.inputValue })
-      this.setState({ searchState: 'searching' })
+      if (this.state.inputValue !== this.props.keyword) {
+        this.props.dispatch({ type: A.FETCH_SEARCH_RESULT, keyword: this.state.inputValue })
+        this.setState({ searchState: 'searching' })
+      } else {
+        this.handleResult(
+          this.props.searchResult.first().get('id'),
+          this.props.searchResult.first().get('type'),
+        )
+      }
     }
   }
   handleResult = (id, type) => {
