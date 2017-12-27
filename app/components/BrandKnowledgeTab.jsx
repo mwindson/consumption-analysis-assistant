@@ -22,7 +22,7 @@ export default class BrandKnowledgeTab extends React.Component {
         imgUrl: cardData.get('brand').get('image'),
         name: cardData.get('brand').get('name'),
         desc: cardData.get('brand').get('description'),
-        attr: Map(),
+        attr: List(),
       })
       cards = cards.push(brand)
     }

@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { fromJS } from 'immutable'
 import 'style/graph.styl'
 
 const nodeColor = {
@@ -172,15 +173,15 @@ export default class RelationGraph {
       })
     this.nodes
       .on('mouseover', () => {
-        const n = d3.select(d3.event.target).datum()
-        const { id } = n
+        const datum = d3.select(d3.event.target).datum()
+        const { id, name, x, y } = datum
         this.hoverOn(linkData, centerId, id)
         d3.select(d3.event.target)
           .classed('highlight', true)
         tooltip
-          .html(`<p>${n.name}</p>`)
-          .style('left', `${Math.min(this.width - 250, Math.max(0, n.x + this.radius))}px`)
-          .style('top', `${Math.min(this.height - 150, Math.max(0, n.y))}px`)
+          .html(`<p>${name}</p>`)
+          .style('left', `${Math.min(this.width - 250, Math.max(0, x + this.radius))}px`)
+          .style('top', `${Math.min(this.height - 150, Math.max(0, y))}px`)
           .transition()
           .duration(500)
           .style('opacity', 0.8)
@@ -258,32 +259,30 @@ export default class RelationGraph {
     d3.selectAll('.node-show')
       .attr('opacity', 0.5)
     const hoverNode = this.nodes.filter(d => d.id === currentId)
-    // A类实体，Hover上去时高亮和B1的连线。
-    // B1类实体，Hover上去时高亮和A的连线，以及显示和C1的连线。
-    // B2以及其他类实体，默认不显示和A的连线，Hover时会显示在当前视角里，和它有关系的第一类实体的连线。
+    // A类实体，Hover上去时高亮和B的连线。
+    // B类实体，Hover上去时高亮和A的连线，以及显示和C 的连线。
     let relatedNode
     if (hoverNode.attr('type') === 'A') {
       this.link.filter(d => d.source.id === centerId)
         .attr('opacity', 1)
       relatedNode = this.nodes
-        .filter(d => d.id === currentId || linkData.filter(x => (x.get('target') === d.id && x.get('source') === currentId
-          && x.get('score') === 1)).size !== 0)
-    } else if (hoverNode.attr('type') === 'B1' || hoverNode.attr('type') === 'B2') {
-      this.link.filter(d => (d.source.id === centerId && d.target.id === currentId) ||
-        (d.source.id === currentId && d.target.id === centerId))
-        .attr('opacity', 1)
-      this.hoverLinks = this.links
-        .filter(d => (d.source.id === currentId) ||
-          (d.target.id === currentId && d.source.id === centerId))
-        .append('line')
-        .attr('class', 'line-hover')
-        .attr('stroke', '#fff')
-        .attr('opacity', 1)
-        .attr('stroke-width', 3)
-      relatedNode = this.nodes
-        .filter(d => d.id === currentId
-          || d.id === centerId || linkData.filter(x => (x.get('target') === d.id && x.get('source') === currentId
-            && x.get('score') === 1)).size !== 0)
+        .filter(d => d.id === currentId || linkData.includes(fromJS(({ target: d.id, source: currentId }))))
+    // } else if (hoverNode.attr('type') === 'B1' || hoverNode.attr('type') === 'B2') {
+    //   this.link.filter(d => (d.source.id === centerId && d.target.id === currentId) ||
+    //     (d.source.id === currentId && d.target.id === centerId))
+    //     .attr('opacity', 1)
+    //   this.hoverLinks = this.links
+    //     .filter(d => (d.source.id === currentId) ||
+    //       (d.target.id === currentId && d.source.id === centerId))
+    //     .append('line')
+    //     .attr('class', 'line-hover')
+    //     .attr('stroke', '#fff')
+    //     .attr('opacity', 1)
+    //     .attr('stroke-width', 3)
+    //   relatedNode = this.nodes
+    //     .filter(d => d.id === currentId
+    //       || d.id === centerId
+    //       || linkData.includes(fromJS(({ target: d.id, source: currentId }))))
       // || !hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
     } else {
       this.hoverLinks = this.links

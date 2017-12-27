@@ -14,18 +14,19 @@ const initialState = Map({
 })
 export default function MainReducer(state = initialState, action) {
   if (action.type === A.UPDATE_SEARCH_RESULT) {
-    const { result } = action
-    return state.set('searchResult', result).set('noResult', false)
+    const { result, keyword } = action
+    return state.set('searchResult', result).set('noResult', false).set('keyword', keyword)
   } else if (action.type === A.UPDATE_CENTER_ID) {
-    const { centerId, centerType, centerName } = action
+    const { centerId, centerType, centerName, updateFootprint } = action
     const center = Map({ id: centerId, name: centerName, type: centerType })
-    return state.set('center', center)
-  } else if (action.type === A.UPDATE_FOOTPRINT) {
-    const { centerId, centerType, centerName } = action
     // 添加历史记录
     let footprint = state.get('footprint')
-    footprint = footprint.push(Map({ id: centerId, name: centerName, type: centerType }))
-    return state.set('footprint', footprint)
+    if (updateFootprint) {
+      footprint = footprint.push(Map({ id: centerId, name: centerName, type: centerType }))
+      return state.set('center', center).set('footprint', footprint)
+    } else {
+      return state.set('center', center)
+    }
   } else if (action.type === A.RETURN_RESULT) {
     const { noResult } = action
     return state.set('noResult', noResult)
@@ -38,9 +39,6 @@ export default function MainReducer(state = initialState, action) {
   } else if (action.type === A.UPDATE_COUNT_DATA) {
     const { count } = action
     return state.set('count', count)
-  } else if (action.type === A.UPDATE_KEYWORD) {
-    const { keyword } = action
-    return state.set('keyword', keyword)
   } else {
     return state
   }

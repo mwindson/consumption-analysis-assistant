@@ -35,7 +35,6 @@ function* handleFetchCount() {
 function* handleSearch({ keyword }) {
   try {
     yield put({ type: A.RETURN_RESULT, noResult: false })
-    yield put({ type: A.UPDATE_KEYWORD, keyword })
     const url = `${host}/search?keyword=${encodeURIComponent(keyword)}`
     const response = yield fetch(url)
     if (response.ok) {
@@ -47,9 +46,8 @@ function* handleSearch({ keyword }) {
           type: i.get('type').last(),
           name: i.get('name'),
         }))
-        yield put({ type: A.UPDATE_SEARCH_RESULT, result })
+        yield put({ type: A.UPDATE_SEARCH_RESULT, result, keyword })
       } else {
-        console.log('暂无数据')
         yield put({ type: A.RETURN_RESULT, noResult: true })
       }
     } else {
@@ -83,15 +81,8 @@ function* handleUpdateGraphData({ id, resultType, updateFootprint }) {
           centerId: data.centerId,
           centerType: resultType,
           centerName: data.centerName,
+          updateFootprint,
         })
-        if (updateFootprint) {
-          yield put({
-            type: A.UPDATE_FOOTPRINT,
-            centerId: data.centerId,
-            centerType: resultType,
-            centerName: data.centerName,
-          })
-        }
         yield put({ type: A.UPDATE_NODES_AND_LINKS_DATA, nodeData, linkData })
       } else {
         console.log('暂无此词条')

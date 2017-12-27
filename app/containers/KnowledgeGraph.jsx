@@ -89,6 +89,12 @@ export default class KnowledgeGraph extends React.Component {
   render() {
     return (
       <div className="knowledge-graph">
+        {this.props.graphLoading ?
+          <div className="mask">
+            <div className="loading">
+              <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
+            </div>
+          </div> : null}
         <div className="diagram">
           <svg className="graph-svg">
             <defs>

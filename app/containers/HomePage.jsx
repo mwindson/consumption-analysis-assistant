@@ -13,8 +13,7 @@ import { LogoIcon, SearchIcon, ErrorIcon, ArrowTop, ArrowBottom, FeedBackIcon } 
 import 'style/HomePage.styl'
 import config from '../utils/config.yaml'
 
-const mapStateToProps = state =>
-  Object.assign({}, state.cards.toObject(), state.main.toObject(), state.graph.toObject(), state.routing)
+const mapStateToProps = state => Object.assign({}, state.main.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class HomePage extends React.Component {
@@ -43,16 +42,18 @@ export default class HomePage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { searchResult } = this.props
-    if (!is(nextProps.searchResult, searchResult)) {
-      this.handleResult(
-        nextProps.searchResult.first().get('id'),
-        nextProps.searchResult.first().get('type'),
-      )
+    if (nextProps.searchResult.size > 0) {
+      if (!is(nextProps.searchResult, searchResult)) {
+        this.handleResult(
+          nextProps.searchResult.first().get('id'),
+          nextProps.searchResult.first().get('type'),
+        )
+      }
     }
     if (nextProps.noResult) {
-      setTimeout(() => this.setState({ searchState: 'error', inputValue: '' }), 1000)
+      setTimeout(() => this.setState({ searchState: 'error', inputValue: '' }), 300)
     } else {
-      setTimeout(() => this.setState({ searchState: 'none' }), 1000)
+      setTimeout(() => this.setState({ searchState: 'none' }), 300)
     }
   }
 
@@ -71,6 +72,7 @@ export default class HomePage extends React.Component {
   handleSearch = (event) => {
     if (event.keyCode === 13) {
       this.props.dispatch({ type: A.FETCH_SEARCH_RESULT, keyword: this.state.inputValue })
+      this.setState({ searchState: 'searching' })
     }
   }
   handleResult = (id, type) => {
@@ -187,12 +189,6 @@ export default class HomePage extends React.Component {
             </div> : null}
           {searching ?
             <div className="graph">
-              {this.props.graphLoading ?
-                <div className="mask">
-                  <div className="loading">
-                    <span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
-                  </div>
-                </div> : null}
               <KnowledgeGraph />
             </div> : null}
         </div>
