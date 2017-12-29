@@ -79,10 +79,17 @@ module.exports = (env) => {
       new webpack.DefinePlugin({
         PORT: JSON.stringify(env.port),
         PRODUCTION: JSON.stringify(isProduction),
+        'process.env': {
+          NODE_ENV: JSON.stringify('production'),
+        },
       }),
     ].concat(isProduction ? [
       new CleanWebpackPlugin(`dist/${packageInfo.version}/${env.port}`),
-      new webpack.optimize.UglifyJsPlugin({})] : []),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false,
+        },
+      })] : []),
 
     devServer: {
       host: '0.0.0.0',
