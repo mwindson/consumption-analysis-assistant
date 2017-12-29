@@ -9,9 +9,6 @@ import * as A from 'actions'
 import { ArrowTop, ArrowBottom } from 'components/Icons'
 import 'style/CommonCard.styl'
 
-const mapStateToProps = state => state.cards.toObject()
-
-@connect(mapStateToProps)
 export default class ListCard extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
@@ -24,13 +21,17 @@ export default class ListCard extends React.Component {
     this.state = {
       expand: false,
       overflow: false,
+      imageLoaded: Array(this.props.list.size).fill(false), // 判断图片是否加载完成
     }
     this.list = null
   }
 
-  componentDidMount() {
-    if (this.list.scrollHeight > this.list.offsetHeight) {
-      this.setState({ overflow: true })
+  checkImageLoaded = () => {
+    if (this.state.imageLoaded.includes(false)) {
+      return false
+    } else {
+      this.setState({ overflow: this.list.scrollHeight > 200 })
+      return true
     }
   }
 
@@ -43,23 +44,29 @@ export default class ListCard extends React.Component {
       type: A.FETCH_NODES_AND_LINKS_DATA, id, resultType: type, updateFootprint: true,
     })
   }
+  handleImageLoaded = (index) => {
+    const status = this.state.imageLoaded
+    status[index] = true
+    this.setState({ imageLoaded: status })
+    this.checkImageLoaded()
+  }
 
   render() {
     const { title, list, type } = this.props
-    const { expand, overflow } = this.state
-
+    const { expand, overflow, imageLoaded } = this.state
     return (
-      <div className={classNames('common-card', { expand })} ref={(node) => this.list = node}>
+      <div className={classNames('common-card', { expand })}>
         <div className={classNames('title', { exist: title !== '' })}>{title}</div>
-        <div className="list">
+        <div className="list" ref={node => this.list = node}>
           {list.toArray().map((l, i) => (
             <div
               id={type}
               key={i}
               className={classNames('item', type)}
               onClick={() => this.handleClick(l.get('id'), type)}
+              style={{ visibility: imageLoaded.includes(false) }}
             >
-              <img src={l.get('url')} alt="" />
+              <img src={l.get('url')} alt="" onLoad={() => this.handleImageLoaded(i)} />
               <div className="name" title={l.get('text')}>{l.get('text')}</div>
             </div>
           ))}
