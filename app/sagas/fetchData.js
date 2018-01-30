@@ -11,9 +11,9 @@ export default function* graphSaga() {
   yield takeEvery(A.FETCH_ORIGIN_DATA, fetchOriginData)
 }
 
-const host = `http://10.214.208.50:${PORT}`
+// const host = `http://10.214.208.50:${PORT}`
 
-// const host = `http://10.214.224.126:${PORT}`
+const host = `http://10.214.224.126:${PORT}`
 
 function* handleFetchCount() {
   try {
@@ -41,11 +41,12 @@ function* handleSearch({ keyword }) {
       const json = yield response.json()
       const { data } = json
       if (data && data.length !== 0) {
-        const result = fromJS(data).map(i => Map({
-          id: i.get('id'),
-          type: i.get('type').last(),
-          name: i.get('name'),
-        }))
+        const result = fromJS(data).map(i =>
+          Map({
+            id: i.get('id'),
+            type: i.get('type').last(),
+            name: i.get('name'),
+          }),)
         yield put({ type: A.UPDATE_SEARCH_RESULT, result, keyword })
       } else {
         yield put({ type: A.RETURN_RESULT, noResult: true })
@@ -67,15 +68,18 @@ function* handleUpdateGraphData({ id, resultType, updateFootprint }) {
       const json = yield response.json()
       const { data } = json
       if (data && data.length !== 0) {
-        const nodeData = fromJS(data.entities).map(i => Map({
-          id: i.get('id'),
-          name: i.get('name'),
-          type: i.get('type').get(i.get('type').size - 1),
-        }))
-        const linkData = fromJS(data.relations).map(i => Map({
-          source: i.get('objectA'),
-          target: i.get('objectB'),
-        }))
+        const nodeData = fromJS(data.entities).map(i =>
+          Map({
+            id: i.get('id'),
+            name: i.get('name'),
+            type: i.get('type').get(i.get('type').size - 1),
+          }),)
+        const linkData = fromJS(data.relations).map(i =>
+          Map({
+            source: i.get('objectA'),
+            target: i.get('objectB'),
+            relation: i.get('detail'),
+          }),)
         yield put({
           type: A.UPDATE_CENTER_ID,
           centerId: data.centerId,
@@ -93,7 +97,6 @@ function* handleUpdateGraphData({ id, resultType, updateFootprint }) {
     console.log(e)
   }
 }
-
 
 function* handleUpdateCardData({ tab, id, cardType }) {
   try {

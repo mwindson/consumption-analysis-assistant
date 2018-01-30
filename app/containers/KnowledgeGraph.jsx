@@ -9,12 +9,12 @@ import RelationGraph from 'components/graph/RelationGraph'
 import { zoomClick, zoomReset } from 'components/graph/zoomClick'
 import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
+import NodeRelation from 'components/NodeRelation'
 
 const mapStateToProps = state => Object.assign({}, state.graph.toObject(), state.routing)
 
 @connect(mapStateToProps)
 export default class KnowledgeGraph extends React.Component {
-  // todo react-redux 有bug
   static propTypes = {
     // nodeData: ImmutablePropTypes.list.isRequired,
     // linkData: ImmutablePropTypes.list.isRequired,
@@ -26,6 +26,10 @@ export default class KnowledgeGraph extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      show: false,
+      relations: null,
+    }
     this.svgElement = null
     this.graphZoom = null
     this.resizeId = null
@@ -48,7 +52,7 @@ export default class KnowledgeGraph extends React.Component {
     const { nodeData, linkData, location } = nextProps
     const { id } = querystring.parse(location.search.substring(1))
     if (!is(nodeData, this.props.nodeData) || !is(linkData, this.props.linkData)) {
-      this.graph.draw(nodeData, linkData, id, this.handleNodeClick, !nodeData.isEmpty())
+      this.graph.draw(nodeData, linkData, id, this.handleNodeClick, this.relationShow, !nodeData.isEmpty())
     }
   }
 
@@ -59,13 +63,18 @@ export default class KnowledgeGraph extends React.Component {
   resize = () => {
     const { nodeData, linkData, location } = this.props
     const { id } = querystring.parse(location.search.substring(1))
-    this.graph.draw(nodeData, linkData, id, this.handleNodeClick, !nodeData.isEmpty())
+    this.graph.draw(nodeData, linkData, id, this.handleNodeClick, this.relationShow, !nodeData.isEmpty())
   }
   zoomed = () => {
     const g = d3.select('.graph-g')
     g.attr('transform', d3.event.transform)
   }
-
+  relationClose = () => {
+    this.setState({ show: false })
+  }
+  relationShow = (relations) => {
+    this.setState({ show: true, relations })
+  }
   handleButtonClick = (type) => {
     const { location } = this.props
     const { id } = querystring.parse(location.search.substring(1))
@@ -87,6 +96,7 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   render() {
+    const { show, relations } = this.state
     return (
       <div className="knowledge-graph">
         {this.props.graphLoading ?
@@ -134,6 +144,7 @@ export default class KnowledgeGraph extends React.Component {
           <div className="zoom-in" onClick={() => this.handleButtonClick('zoom_in')}><ZoomInIcon /></div>
           <div className="zoom-out" onClick={() => this.handleButtonClick('zoom_out')}><ZoomOutIcon /></div>
         </div>
+        <NodeRelation show={show} relations={relations} onClose={this.relationClose} />
       </div>
     )
   }

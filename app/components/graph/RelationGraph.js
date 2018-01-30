@@ -27,47 +27,61 @@ export default class RelationGraph {
     this.radius = 50
   }
 
-  draw(nodeData, linkData, centerId, nodeClick, firstLoad) {
+  draw(nodeData, linkData, centerId, nodeClick, linkClick, firstLoad) {
     this.initForce(nodeData, linkData, centerId, nodeClick, firstLoad)
     this.initNodes(nodeData)
     this.updateNodes(nodeData, linkData, centerId, nodeClick)
-    this.drawLines(centerId, firstLoad)
+    this.drawLines(centerId, linkClick, firstLoad)
     this.restart(centerId)
   }
 
   initForce(nodeData, linkData, centerId) {
     this.width = this.svg.style('width').replace('px', '')
     this.height = this.svg.style('height').replace('px', '')
-    this.force = d3.forceSimulation()
-      .force('link', d3.forceLink().id(d => d.id).distance(350))
+    this.force = d3
+      .forceSimulation()
+      .force(
+        'link',
+        d3
+          .forceLink()
+          .id(d => d.id)
+          .distance(350),
+      )
       .force('charge', d3.forceManyBody().strength(-500))
       .force('collide', d3.forceCollide().radius(this.radius + 5))
       .force('center', d3.forceCenter(this.width / 2, this.height / 2))
-      .force('x', d3.forceX((d) => {
-        if (d.id !== centerId) {
-          if (d.type === 'Brand') {
-            return 0
-          } else if (d.type === 'Product') {
-            return this.width
-          } else {
-            return this.width / 2
+      .force(
+        'x',
+        d3.forceX((d) => {
+          if (d.id !== centerId) {
+            if (d.type === 'Brand') {
+              return 0
+            } else if (d.type === 'Product') {
+              return this.width
+            } else {
+              return this.width / 2
+            }
           }
-        }
-        return this.width / 2
-      }))
-      .force('y', d3.forceY((d) => {
-        if (d.id !== centerId) {
-          if (d.type === 'Company') {
-            return this.height
-          } else if (d.type === 'Person') {
-            return 0
-          } else {
-            return this.height / 2
+          return this.width / 2
+        }),
+      )
+      .force(
+        'y',
+        d3.forceY((d) => {
+          if (d.id !== centerId) {
+            if (d.type === 'Company') {
+              return this.height
+            } else if (d.type === 'Person') {
+              return 0
+            } else {
+              return this.height / 2
+            }
           }
-        }
-        return this.height / 2
-      }))
-    this.svg.select('#textClip')
+          return this.height / 2
+        }),
+      )
+    this.svg
+      .select('#textClip')
       .append('rect')
       .attr('x', -this.radius * 0.9)
       .attr('y', -this.radius / 2)
@@ -117,7 +131,8 @@ export default class RelationGraph {
       .attr('stroke-width', 5)
       .attr('r', this.radius * 0.8)
     // 更新当前中心点的A类
-    this.nodes.filter(d => d.id === centerId)
+    this.nodes
+      .filter(d => d.id === centerId)
       .attr('type', 'A')
       .attr('class', 'node-show')
       .attr('opacity', 1)
@@ -127,7 +142,8 @@ export default class RelationGraph {
       .attr('stroke', '#4AF7FF')
       .attr('stroke-width', 5)
     // 更新当前中心点的B类
-    this.nodes.filter(d => linkData.filter(x => x.get('source') === centerId && x.get('target') === d.id).size !== 0)
+    this.nodes
+      .filter(d => linkData.filter(x => x.get('source') === centerId && x.get('target') === d.id).size !== 0)
       .attr('type', 'B')
       .attr('class', 'node-show')
       .attr('opacity', 1)
@@ -138,7 +154,8 @@ export default class RelationGraph {
 
     // 显示和删除文字
     const r = this.radius
-    d3.selectAll('.node-show')
+    d3
+      .selectAll('.node-show')
       .selectAll('text')
       .text(d => d.name)
       .attr('class', 'node-text')
@@ -147,11 +164,15 @@ export default class RelationGraph {
       .attr('font-weight', d => (d.id === centerId ? 'bold' : 'null'))
       .attr('fill', '#125091')
       .each(function () {
-        const textWidth = d3.select(this).node().getBBox().width
+        const textWidth = d3
+          .select(this)
+          .node()
+          .getBBox().width
         d3.select(this).attr('transform', `translate(${textWidth <= r * 1.8 ? -textWidth / 2 : -r},7)`)
       })
 
-    d3.selectAll('.node-hidden')
+    d3
+      .selectAll('.node-hidden')
       .selectAll('text')
       .text('')
     // 更新节点点击和拖动事件
@@ -174,58 +195,74 @@ export default class RelationGraph {
     this.nodes
       .on('mouseover', () => {
         const datum = d3.select(d3.event.target).datum()
-        const { id, name, x, y } = datum
+        const {
+          id, name, x, y,
+        } = datum
         this.hoverOn(linkData, centerId, id)
-        d3.select(d3.event.target)
-          .classed('highlight', true)
+        d3.select(d3.event.target).classed('highlight', true)
         tooltip
           .html(`<p>${name}</p>`)
-          .style('left', `${Math.min(this.width - 250, Math.max(0, x + this.radius))}px`)
-          .style('top', `${Math.min(this.height - 150, Math.max(0, y))}px`)
+          .style(
+            'transform',
+            `translate(${Math.min(this.width - 250, Math.max(0, x + this.radius))}px,
+          ${Math.min(this.height - 150, Math.max(0, y))}px)`,
+          )
           .transition()
           .duration(500)
           .style('opacity', 0.8)
       })
       .on('mouseout', () => {
         this.hoverLeave()
-        d3.select(d3.event.target)
-          .classed('highlight', false)
-        tooltip.transition().duration(100).style('opacity', 0)
+        d3.select(d3.event.target).classed('highlight', false)
+        tooltip
+          .transition()
+          .duration(100)
+          .style('opacity', 0)
       })
-    this.nodes
-      .call(d3.drag()
-        .on('start', d => this.dragStart(d))
-        .on('drag', d => this.dragged(d))
-        .on('end', d => this.dragEnd(d)))
+    this.nodes.call(d3
+      .drag()
+      .on('start', d => this.dragStart(d))
+      .on('drag', d => this.dragged(d))
+      .on('end', d => this.dragEnd(d)))
   }
 
-  drawLines(centerId, first = true) {
+  drawLines(centerId, linkClick, first = true) {
     // 显示A和B的连线
     if (this.link) {
       this.link.remove()
       if (first) {
-        this.link = this.links
-          .filter(d => d.source === centerId)
-          .append('line')
+        this.link = this.links.filter(d => d.source === centerId).append('g')
       } else {
-        this.link = this.links
-          .filter(d => d.source.id === centerId)
-          .append('line')
+        this.link = this.links.filter(d => d.source.id === centerId).append('g')
       }
     } else {
-      this.link = this.links
-        .filter(d => d.source === centerId)
-        .append('line')
+      this.link = this.links.filter(d => d.source === centerId).append('g')
     }
-    this.link.attr('class', 'line-show')
-      .attr('stroke', '#fff')
-      .attr('opacity', 0.5)
-      .attr('stroke-width', 3)
+    this.link
+      .attr('class', 'line-show')
+    this.link
+      .append('line')
+      .attr('stroke', 'white')
+      .attr('stroke-width', 20)
+      .attr('opacity', 0)
+      .filter(d => d.relation)
+      .attr('cursor', 'pointer')
+    this.link
+      .append('line')
+      .attr('stroke', 'white')
+      .attr('stroke-width', 5)
+      .filter(d => d.relation)
+      .attr('cursor', 'pointer')
+    this.link
+      .filter(d => d.relation)
+      .on('click', (d) => {
+        const { source, target, relation } = d
+        linkClick({ source: source.name, target: target.name, relation })
+      })
   }
 
   restart() {
-    this.force.nodes(this.nodes.data())
-      .on('tick', () => tick(this.nodes, this.link, this.hoverLinks))
+    this.force.nodes(this.nodes.data()).on('tick', () => tick(this.nodes, this.link, this.hoverLinks))
     this.force.force('link').links(this.links.data())
     this.force.alpha(0.5).restart()
     // setTimeout(() => {
@@ -254,48 +291,43 @@ export default class RelationGraph {
 
   hoverOn(linkData, centerId, currentId) {
     // 透明现有线段和点
-    d3.selectAll('.line-show')
-      .attr('opacity', 0)
-    d3.selectAll('.node-show')
-      .attr('opacity', 0.5)
+    d3.selectAll('.line-show').attr('opacity', 0)
+    d3.selectAll('.node-show').attr('opacity', 0.5)
     const hoverNode = this.nodes.filter(d => d.id === currentId)
     // A类实体，Hover上去时高亮和B的连线。
     // B类实体，Hover上去时高亮和A的连线，以及显示和C 的连线。
     let relatedNode
     if (hoverNode.attr('type') === 'A') {
-      this.link.filter(d => d.source.id === centerId)
-        .attr('opacity', 1)
-      relatedNode = this.nodes
-        .filter(d => d.id === currentId || linkData.includes(fromJS(({ target: d.id, source: currentId }))))
-    // } else if (hoverNode.attr('type') === 'B1' || hoverNode.attr('type') === 'B2') {
-    //   this.link.filter(d => (d.source.id === centerId && d.target.id === currentId) ||
-    //     (d.source.id === currentId && d.target.id === centerId))
-    //     .attr('opacity', 1)
-    //   this.hoverLinks = this.links
-    //     .filter(d => (d.source.id === currentId) ||
-    //       (d.target.id === currentId && d.source.id === centerId))
-    //     .append('line')
-    //     .attr('class', 'line-hover')
-    //     .attr('stroke', '#fff')
-    //     .attr('opacity', 1)
-    //     .attr('stroke-width', 3)
-    //   relatedNode = this.nodes
-    //     .filter(d => d.id === currentId
-    //       || d.id === centerId
-    //       || linkData.includes(fromJS(({ target: d.id, source: currentId }))))
+      this.link.filter(d => d.source.id === centerId).attr('opacity', 1)
+      relatedNode =
+        this.nodes.filter(d => d.id === currentId || linkData.includes(fromJS({ target: d.id, source: currentId })))
+      // } else if (hoverNode.attr('type') === 'B1' || hoverNode.attr('type') === 'B2') {
+      //   this.link.filter(d => (d.source.id === centerId && d.target.id === currentId) ||
+      //     (d.source.id === currentId && d.target.id === centerId))
+      //     .attr('opacity', 1)
+      //   this.hoverLinks = this.links
+      //     .filter(d => (d.source.id === currentId) ||
+      //       (d.target.id === currentId && d.source.id === centerId))
+      //     .append('line')
+      //     .attr('class', 'line-hover')
+      //     .attr('stroke', '#fff')
+      //     .attr('opacity', 1)
+      //     .attr('stroke-width', 3)
+      //   relatedNode = this.nodes
+      //     .filter(d => d.id === currentId
+      //       || d.id === centerId
+      //       || linkData.includes(fromJS(({ target: d.id, source: currentId }))))
       // || !hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
     } else {
       this.hoverLinks = this.links
-        .filter(d => (d.source.id === currentId) ||
-          isLink(d, linkData, currentId, centerId))
+        .filter(d => d.source.id === currentId || isLink(d, linkData, currentId, centerId))
         .append('line')
         .attr('class', 'line-hover')
         .attr('stroke', '#fff')
         .attr('opacity', 1)
         .attr('stroke-width', 3)
       relatedNode = this.nodes
-        .filter(d => d.id === currentId ||
-          !this.hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
+        .filter(d => d.id === currentId || !this.hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
     }
     // 显示相关联的节点
     const { radius } = this
@@ -309,16 +341,23 @@ export default class RelationGraph {
       .attr('font-weight', d => (d.id === centerId ? 'bold' : 'null'))
       .attr('fill', '#125091')
       .each(function () {
-        const textWidth = d3.select(this).node().getBBox().width
+        const textWidth = d3
+          .select(this)
+          .node()
+          .getBBox().width
         d3.select(this).attr('transform', `translate(${textWidth <= radius * 1.8 ? -textWidth / 2 : -radius},7)`)
       })
     relatedNode
       .filter(d => d.id === currentId)
       .selectAll('text')
       .each(function () {
-        const textWidth = d3.select(this).node().getBBox().width
+        const textWidth = d3
+          .select(this)
+          .node()
+          .getBBox().width
         if (textWidth > radius * 1.8) {
-          d3.select(this)
+          d3
+            .select(this)
             .append('animateTransform')
             .attr('attributeName', 'transform')
             .attr('type', 'translate')
@@ -336,24 +375,37 @@ export default class RelationGraph {
       .attr('r', this.radius)
     // 绘制临时连接线
     if (this.hoverLinks) {
-      this.hoverLinks.attr('x1', (d) => {
-        const r = this.nodes.filter(n => n.id === d.source.id).select('circle').attr('r')
-        const xDistance = ((d.target.x - d.source.x) / calDistance(d.source, d.target)) * r
-        return d.source.x + xDistance
-      })
+      this.hoverLinks
+        .attr('x1', (d) => {
+          const r = this.nodes
+            .filter(n => n.id === d.source.id)
+            .select('circle')
+            .attr('r')
+          const xDistance = (d.target.x - d.source.x) / calDistance(d.source, d.target) * r
+          return d.source.x + xDistance
+        })
         .attr('y1', (d) => {
-          const r = this.nodes.filter(n => n.id === d.source.id).select('circle').attr('r')
-          const yDistance = ((d.target.y - d.source.y) / calDistance(d.source, d.target)) * r
+          const r = this.nodes
+            .filter(n => n.id === d.source.id)
+            .select('circle')
+            .attr('r')
+          const yDistance = (d.target.y - d.source.y) / calDistance(d.source, d.target) * r
           return d.source.y + yDistance
         })
         .attr('x2', (d) => {
-          const r = this.nodes.filter(n => n.id === d.target.id).select('circle').attr('r')
-          const xDistance = ((d.target.x - d.source.x) / calDistance(d.source, d.target)) * r
+          const r = this.nodes
+            .filter(n => n.id === d.target.id)
+            .select('circle')
+            .attr('r')
+          const xDistance = (d.target.x - d.source.x) / calDistance(d.source, d.target) * r
           return d.target.x - xDistance
         })
         .attr('y2', (d) => {
-          const r = this.nodes.filter(n => n.id === d.target.id).select('circle').attr('r')
-          const yDistance = ((d.target.y - d.source.y) / calDistance(d.source, d.target)) * r
+          const r = this.nodes
+            .filter(n => n.id === d.target.id)
+            .select('circle')
+            .attr('r')
+          const yDistance = (d.target.y - d.source.y) / calDistance(d.source, d.target) * r
           return d.target.y - yDistance
         })
     }
@@ -361,21 +413,24 @@ export default class RelationGraph {
 
   hoverLeave() {
     // 恢复现有线段
-    d3.selectAll('.line-show')
-      .attr('opacity', 0.5)
+    d3.selectAll('.line-show').attr('opacity', 0.5)
     // 恢复现有节点
-    d3.selectAll('.node-show')
+    d3
+      .selectAll('.node-show')
       .attr('opacity', 1)
       .selectAll('circle')
       .attr('fill', d => nodeColor[d.type][0])
-    d3.selectAll('[type=A]')
+    d3
+      .selectAll('[type=A]')
       .selectAll('circle')
       .attr('fill', d => nodeColor[d.type][1])
-    d3.selectAll('.node-hidden')
+    d3
+      .selectAll('.node-hidden')
       .attr('opacity', 0.5)
       .selectAll('text')
       .text('')
-    d3.selectAll('.node-hidden')
+    d3
+      .selectAll('.node-hidden')
       .attr('opacity', 0.5)
       .selectAll('circle')
       .attr('fill', d => nodeColor[d.type][0])
@@ -394,7 +449,7 @@ export default class RelationGraph {
 
 function calDistance(source, target) {
   if (source.x === target.x && source.y === target.y) return 1
-  return Math.sqrt(((target.y - source.y) * (target.y - source.y)) + ((target.x - source.x) * (target.x - source.x)))
+  return Math.sqrt((target.y - source.y) * (target.y - source.y) + (target.x - source.x) * (target.x - source.x))
 }
 
 function tick(nodes, link, hoverLinks) {
@@ -402,54 +457,86 @@ function tick(nodes, link, hoverLinks) {
     d3.select(this).attr('transform', d => `translate(${d.x}, ${d.y})`)
   })
   link
+    .selectAll('line')
     .attr('x1', (d) => {
-      const r = nodes.filter(n => n.id === d.source.id).select('circle').attr('r')
-      const xDistance = ((d.target.x - d.source.x) / calDistance(d.source, d.target)) * r
+      const r = nodes
+        .filter(n => n.id === d.source.id)
+        .select('circle')
+        .attr('r')
+      const xDistance = (d.target.x - d.source.x) / calDistance(d.source, d.target) * r
       return d.source.x + xDistance
     })
     .attr('y1', (d) => {
-      const r = nodes.filter(n => n.id === d.source.id).select('circle').attr('r')
-      const yDistance = ((d.target.y - d.source.y) / calDistance(d.source, d.target)) * r
+      const r = nodes
+        .filter(n => n.id === d.source.id)
+        .select('circle')
+        .attr('r')
+      const yDistance = (d.target.y - d.source.y) / calDistance(d.source, d.target) * r
       return d.source.y + yDistance
     })
     .attr('x2', (d) => {
-      const r = nodes.filter(n => n.id === d.target.id).select('circle').attr('r')
-      const xDistance = ((d.target.x - d.source.x) / calDistance(d.source, d.target)) * r
+      const r = nodes
+        .filter(n => n.id === d.target.id)
+        .select('circle')
+        .attr('r')
+      const xDistance = (d.target.x - d.source.x) / calDistance(d.source, d.target) * r
       return d.target.x - xDistance
     })
     .attr('y2', (d) => {
-      const r = nodes.filter(n => n.id === d.target.id).select('circle').attr('r')
-      const yDistance = ((d.target.y - d.source.y) / calDistance(d.source, d.target)) * r
+      const r = nodes
+        .filter(n => n.id === d.target.id)
+        .select('circle')
+        .attr('r')
+      const yDistance = (d.target.y - d.source.y) / calDistance(d.source, d.target) * r
       return d.target.y - yDistance
     })
 
   if (hoverLinks) {
-    hoverLinks.attr('x1', (d) => {
-      const r = nodes.filter(n => n.id === d.source.id).select('circle').attr('r')
-      const xDistance = ((d.target.x - d.source.x) / calDistance(d.source, d.target)) * r
-      return d.source.x + xDistance
-    })
+    hoverLinks
+      .attr('x1', (d) => {
+        const r = nodes
+          .filter(n => n.id === d.source.id)
+          .select('circle')
+          .attr('r')
+        const xDistance = (d.target.x - d.source.x) / calDistance(d.source, d.target) * r
+        return d.source.x + xDistance
+      })
       .attr('y1', (d) => {
-        const r = nodes.filter(n => n.id === d.source.id).select('circle').attr('r')
-        const yDistance = ((d.target.y - d.source.y) / calDistance(d.source, d.target)) * r
+        const r = nodes
+          .filter(n => n.id === d.source.id)
+          .select('circle')
+          .attr('r')
+        const yDistance = (d.target.y - d.source.y) / calDistance(d.source, d.target) * r
         return d.source.y + yDistance
       })
       .attr('x2', (d) => {
-        const r = nodes.filter(n => n.id === d.target.id).select('circle').attr('r')
-        const xDistance = ((d.target.x - d.source.x) / calDistance(d.source, d.target)) * r
+        const r = nodes
+          .filter(n => n.id === d.target.id)
+          .select('circle')
+          .attr('r')
+        const xDistance = (d.target.x - d.source.x) / calDistance(d.source, d.target) * r
         return d.target.x - xDistance
       })
       .attr('y2', (d) => {
-        const r = nodes.filter(n => n.id === d.target.id).select('circle').attr('r')
-        const yDistance = ((d.target.y - d.source.y) / calDistance(d.source, d.target)) * r
+        const r = nodes
+          .filter(n => n.id === d.target.id)
+          .select('circle')
+          .attr('r')
+        const yDistance = (d.target.y - d.source.y) / calDistance(d.source, d.target) * r
         return d.target.y - yDistance
       })
   }
 }
 
 function isLink(d, linkData, currentId, centerId) {
-  return (d.source.id === centerId && linkData.filter(x => x.get('source') === d.target.id && x.get('target') === currentId).size !== 0)
-    || (d.source.id === currentId && linkData.filter(x => x.get('source') === d.target.id && x.get('target') === centerId).size !== 0)
-    || (d.target.id === currentId && linkData.filter(x => x.get('target') === d.source.id && x.get('source') === centerId).size !== 0)
-    || (d.target.id === centerId && linkData.filter(x => x.get('target') === d.source.id && x.get('source') === currentId).size !== 0)
+  return (
+    (d.source.id === centerId &&
+      linkData.filter(x => x.get('source') === d.target.id && x.get('target') === currentId).size !== 0) ||
+    (d.source.id === currentId &&
+      linkData.filter(x => x.get('source') === d.target.id && x.get('target') === centerId).size !== 0) ||
+    (d.target.id === currentId &&
+      linkData.filter(x => x.get('target') === d.source.id && x.get('source') === centerId).size !== 0) ||
+    (d.target.id === centerId &&
+      linkData.filter(x => x.get('target') === d.source.id && x.get('source') === currentId).size !== 0)
+  )
 }

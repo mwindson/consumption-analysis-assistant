@@ -11,7 +11,7 @@ const mapStateToProps = state => state.cards.toObject()
 @connect(mapStateToProps)
 export default class BrandKnowledgeTab extends React.Component {
   render() {
-    const { cardData } = this.props
+    const { cardData, dispatch } = this.props
     if (!cardData || cardData.isEmpty()) {
       return null
     }
@@ -46,11 +46,12 @@ export default class BrandKnowledgeTab extends React.Component {
     if (cardData.get('persons')) {
       const persons = Map({
         title: '相关人物',
-        list: cardData.get('persons').map(i => Map({
-          url: i.get('image') || 'app/static/image/no_picture.jpg',
-          text: i.get('name'),
-          id: i.get('id'),
-        })),
+        list: cardData.get('persons').map(i =>
+          Map({
+            url: i.get('image') || 'app/static/image/no_picture.jpg',
+            text: i.get('name'),
+            id: i.get('id'),
+          })),
         type: 'Person',
       })
       lists = lists.push(persons)
@@ -58,34 +59,36 @@ export default class BrandKnowledgeTab extends React.Component {
     if (cardData.get('products')) {
       const product = Map({
         title: '相关商品',
-        list: cardData.get('products').map(i => Map({
-          url: i.get('image') || 'app/static/image/no_picture.jpg',
-          text: i.get('name'),
-          id: i.get('id'),
-        })),
+        list: cardData.get('products').map(i =>
+          Map({
+            url: i.get('image') || 'app/static/image/no_picture.jpg',
+            text: i.get('name'),
+            id: i.get('id'),
+          })),
         type: 'Product',
       })
       lists = lists.push(product)
     }
     return [
-      cards.toArray().map((data, i) => (
-        <CommonCard
-          key={i}
-          imgUrl={data.get('imgUrl')}
-          title={data.get('title')}
-          name={data.get('name')}
-          content={data.get('desc')}
-          attr={data.get('attr')}
-          hasExpand
-          truncated={data.get('title') === '微博信息' ? false : textTruncated(data.get('desc')).length > 120}
-        />)),
-      lists.toArray().map((l, i) => (
-        <ListCard
-          key={i}
-          title={l.get('title')}
-          list={l.get('list')}
-          type={l.get('type')}
-        />)),
+      cards
+        .toArray()
+        .map((data, i) => (
+          <CommonCard
+            key={i}
+            imgUrl={data.get('imgUrl')}
+            title={data.get('title')}
+            name={data.get('name')}
+            content={data.get('desc')}
+            attr={data.get('attr')}
+            hasExpand
+            truncated={data.get('title') === '微博信息' ? false : textTruncated(data.get('desc')).length > 120}
+          />
+        )),
+      lists
+        .toArray()
+        .map((l, i) => (
+          <ListCard key={i} title={l.get('title')} list={l.get('list')} type={l.get('type')} dispatch={dispatch} />
+        )),
     ]
   }
 }
