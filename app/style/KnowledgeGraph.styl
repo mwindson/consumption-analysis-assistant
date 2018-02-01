@@ -32,7 +32,7 @@
       z-index 2
 
   .tools
-    width 30px
+    width 40px
     display flex
     flex-direction column
     justify-content flex-end
@@ -41,8 +41,44 @@
     right 0
     bottom 0
 
-  .reset, .zoom-in, .zoom-out
-    margin-top 20px
-    height 25px
-    width 25px
-    cursor pointer
+    .reset, .zoom-in, .zoom-out
+      margin-top 20px
+      height 25px
+      width 25px
+      cursor pointer
+  .mode-button
+    position absolute
+    top 10px
+    left 10px
+    > button
+      background-color rgb(68, 199, 103)
+      border 1px solid rgb(24, 171, 41)
+      display flex
+      align-items center
+      cursor pointer
+      color rgb(255, 255, 255)
+      font-family Arial
+      font-size 12px
+      padding 4px 7px
+      text-decoration none
+      text-shadow rgb(47, 102, 39) 0px -1px 0px
+      transition all 0.5s
+      position relative
+      overflow hidden
+      span
+        cursor pointer
+        display inline-block
+        position relative
+        transition 0.5s
+      svg
+        opacity 0
+        top 0
+        left -20px
+        position absolute
+        transition all 0.5s
+      &:hover
+        span
+          padding-left 13px
+        svg
+          opacity 1
+          left 0

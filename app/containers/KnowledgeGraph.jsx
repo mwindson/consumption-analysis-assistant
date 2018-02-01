@@ -7,7 +7,7 @@ import { replace } from 'react-router-redux'
 import * as A from 'actions'
 import RelationGraph from 'components/graph/RelationGraph'
 import { zoomClick, zoomReset } from 'components/graph/zoomClick'
-import { ResetIcon, ZoomInIcon, ZoomOutIcon } from 'components/Icons'
+import { ResetIcon, ZoomInIcon, ZoomOutIcon, ModeIcon } from 'components/Icons'
 import 'style/KnowledgeGraph.styl'
 import NodeRelation from 'components/NodeRelation'
 
@@ -29,6 +29,7 @@ export default class KnowledgeGraph extends React.Component {
     this.state = {
       show: false,
       relations: null,
+      relationMode: false,
     }
     this.svgElement = null
     this.graphZoom = null
@@ -53,6 +54,7 @@ export default class KnowledgeGraph extends React.Component {
     const { id } = querystring.parse(location.search.substring(1))
     if (!is(nodeData, this.props.nodeData) || !is(linkData, this.props.linkData)) {
       this.graph.draw(nodeData, linkData, id, this.handleNodeClick, this.relationShow, !nodeData.isEmpty())
+      this.graph.updateNodeInteraction(id, nodeData, linkData, this.handleNodeClick, this.relationShow, this.state.relationMode, this.onChangeMode)
     }
   }
 
@@ -60,10 +62,17 @@ export default class KnowledgeGraph extends React.Component {
     window.removeEventListener('resize', this.resize)
   }
 
+  onChangeMode = () => {
+    const { nodeData, linkData, location } = this.props
+    const { id } = querystring.parse(location.search.substring(1))
+    this.graph.updateNodeInteraction(id, nodeData, linkData, this.handleNodeClick, this.relationShow, !this.state.relationMode, this.onChangeMode)
+    this.setState({ relationMode: !this.state.relationMode })
+  }
   resize = () => {
     const { nodeData, linkData, location } = this.props
     const { id } = querystring.parse(location.search.substring(1))
     this.graph.draw(nodeData, linkData, id, this.handleNodeClick, this.relationShow, !nodeData.isEmpty())
+    this.graph.updateNodeInteraction(id, nodeData, linkData, this.handleNodeClick, this.relationShow, this.state.relationMode, this.onChangeMode)
   }
   zoomed = () => {
     const g = d3.select('.graph-g')
@@ -96,7 +105,7 @@ export default class KnowledgeGraph extends React.Component {
   }
 
   render() {
-    const { show, relations } = this.state
+    const { show, relations, relationMode } = this.state
     return (
       <div className="knowledge-graph">
         {this.props.graphLoading ?
@@ -143,6 +152,12 @@ export default class KnowledgeGraph extends React.Component {
           <div className="reset" onClick={() => this.handleButtonClick('reset')}><ResetIcon /></div>
           <div className="zoom-in" onClick={() => this.handleButtonClick('zoom_in')}><ZoomInIcon /></div>
           <div className="zoom-out" onClick={() => this.handleButtonClick('zoom_out')}><ZoomOutIcon /></div>
+        </div>
+        <div className="mode-button">
+          <button onClick={this.onChangeMode}>
+            <ModeIcon />
+            <span>{relationMode ? '关系模式' : '普通模式'}</span>
+          </button>
         </div>
         <NodeRelation show={show} relations={relations} onClose={this.relationClose} />
       </div>

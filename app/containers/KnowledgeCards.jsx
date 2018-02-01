@@ -111,6 +111,13 @@ export default class KnowledgeCards extends React.Component {
               {config[centerType][i].name}
             </div>
           ))}
+          <div
+            className="tab-flag-bar"
+            style={{
+              left: `${(config[centerType].findIndex(item => item.key === chosen) / config[centerType].length) * 100}%`,
+              width: `${100 / config[centerType].length}%`,
+            }}
+          />
         </div>
         <div className="cards">
           {chosen === 'hot' ?

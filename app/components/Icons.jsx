@@ -133,3 +133,12 @@ export const SkipIcon = ({ color = '#1296db', width = 20, height = 20 }) => (
     />
   </svg>
 )
+
+export const ModeIcon = ({ color = '#fff', width = 20, height = 20 }) => (
+  <svg viewBox="0 0 1024 1024" width={width} height={height}>
+    <path
+      d="M576.91 646.491H309.75V440.08h140.588L257.321 247.075 64.303 440.08h140.59v311.268h451.908zM447.087 377.508H714.25v206.411h-140.59l193.019 193.007 193.018-193.007h-140.59V272.652H367.197z"
+      fill={color}
+    />
+  </svg>
+)

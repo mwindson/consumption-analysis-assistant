@@ -10,16 +10,11 @@ module.exports = (env) => {
   console.log('port:', env.port)
   return {
     entry: {
-      main: [
-        'babel-polyfill',
-        'react-hot-loader/patch',
-        `${__dirname}/app/index.js`,
-      ],
+      main: ['babel-polyfill', 'react-hot-loader/patch', `${__dirname}/app/index.js`],
     },
 
     context: __dirname,
-    target:
-      'web',
+    target: 'web',
     devtool: isProduction ? false : 'cheap-module-source-map',
 
     output: {
@@ -60,13 +55,9 @@ module.exports = (env) => {
     resolve: {
       // 解析模块请求的选项
       // （不适用于对 loader 解析）
-      modules: [
-        path.resolve(__dirname, 'app'),
-        'node_modules',
-      ],
+      modules: [path.resolve(__dirname, 'app'), 'node_modules'],
       // 用于查找模块的目录
-      extensions:
-        ['.js', '.json', '.jsx', '.css', '.styl'],
+      extensions: ['.js', '.json', '.jsx', '.css', '.styl'],
       // 使用的扩展名
     },
 
@@ -83,20 +74,23 @@ module.exports = (env) => {
           NODE_ENV: JSON.stringify('production'),
         },
       }),
-    ].concat(isProduction ? [
-      new CleanWebpackPlugin(`dist/${packageInfo.version}/${env.port}`),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false,
-        },
-      })] : []),
+    ].concat(isProduction
+      ? [
+        new CleanWebpackPlugin(`dist/${packageInfo.version}/${env.port}`),
+        new webpack.optimize.UglifyJsPlugin({
+          compress: {
+            warnings: false,
+          },
+        }),
+      ]
+      : []),
 
     devServer: {
       host: '0.0.0.0',
       contentBase: __dirname,
       hot: true,
       port: env.port,
-      // public: '10.214.224.115:8080',
+      // public: '10.214.224.111:9000',
     },
   }
 }

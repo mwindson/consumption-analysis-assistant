@@ -11,9 +11,9 @@ export default function* graphSaga() {
   yield takeEvery(A.FETCH_ORIGIN_DATA, fetchOriginData)
 }
 
-// const host = `http://10.214.208.50:${PORT}`
+const host = `http://10.214.208.50:${PORT}`
 
-const host = `http://10.214.224.126:${PORT}`
+// const host = `http://10.214.224.126:${PORT}`
 
 function* handleFetchCount() {
   try {
