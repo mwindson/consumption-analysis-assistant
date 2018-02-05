@@ -4,6 +4,8 @@ import * as d3 from 'd3'
 import { connect } from 'react-redux'
 import querystring from 'querystring'
 import { replace } from 'react-router-redux'
+import { Portal } from 'react-portal'
+import classNames from 'classnames'
 import * as A from 'actions'
 import RelationGraph from 'components/graph/RelationGraph'
 import { zoomClick, zoomReset } from 'components/graph/zoomClick'
@@ -53,7 +55,7 @@ export default class KnowledgeGraph extends React.Component {
     const { nodeData, linkData, location } = nextProps
     const { id } = querystring.parse(location.search.substring(1))
     if (!is(nodeData, this.props.nodeData) || !is(linkData, this.props.linkData)) {
-      this.graph.draw(nodeData, linkData, id, this.handleNodeClick, this.relationShow, !nodeData.isEmpty())
+      this.graph.draw(nodeData, linkData, id)
       this.graph.updateNodeInteraction(id, nodeData, linkData, this.handleNodeClick, this.relationShow, this.state.relationMode, this.onChangeMode)
     }
   }
@@ -65,13 +67,14 @@ export default class KnowledgeGraph extends React.Component {
   onChangeMode = () => {
     const { nodeData, linkData, location } = this.props
     const { id } = querystring.parse(location.search.substring(1))
+    this.graph.changeMode(!this.state.relationMode, id)
     this.graph.updateNodeInteraction(id, nodeData, linkData, this.handleNodeClick, this.relationShow, !this.state.relationMode, this.onChangeMode)
     this.setState({ relationMode: !this.state.relationMode })
   }
   resize = () => {
     const { nodeData, linkData, location } = this.props
     const { id } = querystring.parse(location.search.substring(1))
-    this.graph.draw(nodeData, linkData, id, this.handleNodeClick, this.relationShow, !nodeData.isEmpty())
+    this.graph.draw(nodeData, linkData, id)
     this.graph.updateNodeInteraction(id, nodeData, linkData, this.handleNodeClick, this.relationShow, this.state.relationMode, this.onChangeMode)
   }
   zoomed = () => {
@@ -153,13 +156,17 @@ export default class KnowledgeGraph extends React.Component {
           <div className="zoom-in" onClick={() => this.handleButtonClick('zoom_in')}><ZoomInIcon /></div>
           <div className="zoom-out" onClick={() => this.handleButtonClick('zoom_out')}><ZoomOutIcon /></div>
         </div>
-        <div className="mode-button">
-          <button onClick={this.onChangeMode}>
-            <ModeIcon />
-            <span>{relationMode ? '关系模式' : '普通模式'}</span>
-          </button>
-        </div>
         <NodeRelation show={show} relations={relations} onClose={this.relationClose} />
+        <Portal node={document && document.getElementById('left')}>
+          <div className={classNames('relation-mode', { show: relationMode })}>
+            <svg className="relation-graph">
+              <g className="relation-mode-group">
+                <g className="relation-lines" />
+                <g className="relation-nodes" />
+              </g>
+            </svg>
+          </div>
+        </Portal>
       </div>
     )
   }

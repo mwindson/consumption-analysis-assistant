@@ -91,7 +91,7 @@ class FloatLayer extends React.Component {
       <div className={classNames('bookmark-open', { hidden: floatLayerOpen })} onClick={this.openPortal}>
         浏览记录
       </div>,
-      <Portal node={document && document.getElementById('left-part')}>
+      <Portal node={document && document.getElementById('left')}>
         <Motion style={{ x: spring(floatLayerOpen ? -280 : 0) }}>
           {({ x }) => (
             <div className="float-layer" style={{ transform: `translate(${x}px,0)` }}>

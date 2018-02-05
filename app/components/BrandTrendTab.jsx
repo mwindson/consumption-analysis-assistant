@@ -2,14 +2,23 @@ import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import { LineChart, Line, Tooltip, XAxis, YAxis, Legend, CartesianGrid } from 'recharts'
+import { ArrowRightIcon } from 'components/Icons'
 import 'style/BrandTrendCards.styl'
 
 const mapStateToProps = state => Object.assign({}, state.cards.toObject())
 
 @connect(mapStateToProps)
 export default class BrandTrendCards extends React.Component {
+  state = {
+    commentFilter: 'all',
+  }
+  onCommentFilter = (event) => {
+    this.setState({ commentFilter: event.target.value })
+  }
+
   render() {
     const { cardData } = this.props
+    const { commentFilter } = this.state
     if (!cardData || cardData.isEmpty()) {
       return (
         <div className="product-card">暂无更多信息</div>
@@ -65,19 +74,24 @@ export default class BrandTrendCards extends React.Component {
         </div>
       </div>,
       <div className="trend-card">
+        <select onChange={this.onCommentFilter}>
+          <option value="positive">正向</option>
+          <option value="negative">负向</option>
+          <option value="all">全部</option>
+        </select>
         <div className="title">评论</div>
-        <div className="comments">
-          <div className="comment-list">
-            {posComments.toArray().map((c, i) => (
-              <div key={i} className="comment">
-                <div className="text">{c.get(0)}</div>
-              </div>
-            ))}
-            {negComments.toArray().map((c, i) => (
-              <div key={i} className="comment">
-                <div className={classNames('text', 'negative')}> {c.get(0)}</div>
-              </div>))}
-          </div>
+        <div className="comment-list">
+          {commentFilter !== 'negative' ? posComments.toArray().map((c, i) => (
+            <div key={i} className="comment">
+              <div className="comment-icon"><ArrowRightIcon /></div>
+              <div className="text">{c.get(0)}</div>
+            </div>
+          )) : null}
+          {commentFilter !== 'positive' ? negComments.toArray().map((c, i) => (
+            <div key={i} className="comment">
+              <div className="comment-icon"><ArrowRightIcon color="#B8C4D5" /></div>
+              <div className={classNames('text', 'negative')}> {c.get(0)}</div>
+            </div>)) : null}
         </div>
       </div>,
     ]

@@ -27,11 +27,11 @@ export default class RelationGraph {
     this.relationMode = false
   }
 
-  draw(nodeData, linkData, centerId, nodeClick, linkClick, changeMode) {
+  draw(nodeData, linkData, centerId) {
     this.initForce(centerId)
     this.initNodes(nodeData)
-    this.updateNodes(nodeData, linkData, centerId, nodeClick, linkClick)
-    this.drawLines(linkData, centerId, linkClick)
+    this.updateNodes(nodeData, linkData, centerId)
+    this.drawLines(linkData, centerId)
     this.restart(centerId)
   }
 
@@ -78,14 +78,12 @@ export default class RelationGraph {
   }
 
   initNodes(nodeData) {
-    // 清空之前的节点和线段
-    // if (this.nodes) this.nodes.remove()
-    // if (this.hoverLinks) this.hoverLinks.remove()
-    // 节点数据绑定
+    // 节点数据更新绑定
     const nodeJoin = this.svg
       .select('.node-group')
       .selectAll('.node')
       .data(nodeData.toJS(), d => d.id)
+    // 绘制新增节点
     const nodeEnter = nodeJoin.enter()
       .append('g')
       .attr('class', 'node')
@@ -94,7 +92,7 @@ export default class RelationGraph {
       .append('circle')
       .attr('id', d => d.type)
       .attr('fill', d => nodeColor[d.type][0])
-      .attr('stroke-width', '3')
+      .attr('stroke-width', 5)
     // 文本动画
     nodeEnter
       .append('g')
@@ -105,7 +103,7 @@ export default class RelationGraph {
     this.nodes = nodeEnter.merge(nodeJoin)
   }
 
-  updateNodes(nodeData, linkData, centerId, nodeClick, linkClick) {
+  updateNodes(nodeData, linkData, centerId) {
     // 隐藏C类
     this.nodes
       .attr('class', 'node hidden')
@@ -113,19 +111,16 @@ export default class RelationGraph {
       .attr('opacity', 0.5)
       .selectAll('circle')
       .attr('stroke', '#E88485')
-      .attr('stroke-width', 5)
       .attr('r', this.radius * 0.8)
     // 更新当前中心点的A类
     this.nodes
       .filter(d => d.id === centerId)
-      .attr('type', 'A')
       .attr('class', 'node show')
+      .attr('type', 'A')
       .attr('opacity', 1)
       .selectAll('circle')
       .attr('r', this.radius)
-      .attr('fill', d => nodeColor[d.type][1])
       .attr('stroke', '#4AF7FF')
-      .attr('stroke-width', 5)
     // 更新当前中心点的B类
     this.nodes
       .filter(d => linkData.filter(x => x.get('source') === centerId && x.get('target') === d.id).size !== 0)
@@ -135,7 +130,6 @@ export default class RelationGraph {
       .selectAll('circle')
       .attr('r', this.radius)
       .attr('stroke', 'white')
-      .attr('stroke-width', 5)
 
     // 显示和删除文字
     const r = this.radius
@@ -161,10 +155,13 @@ export default class RelationGraph {
     this.nodes
       .attr('cursor', 'auto')
       .on('click', null)
+      .on('mouseover', null)
+      .on('mouseout', null)
     this.nodes
       .filter(d => d.id === centerId)
       .attr('cursor', 'pointer')
       .on('click', () => {
+        this.force.stop()
         onChangeMode()
       })
     if (!relationMode) {
@@ -175,12 +172,12 @@ export default class RelationGraph {
         .attr('cursor', 'pointer')
         .on('click', (d) => {
           const { id, type } = d
+          d3.select(d3.event.target).classed('highlight', false)
+          this.hoverLeave()
           this.force.stop()
           // 移除文字动画
           d3.selectAll('animateTransform').remove()
-          if (id !== centerId) {
-            nodeClick(id, type)
-          }
+          nodeClick(id, type)
         })
       this.nodes.call(d3
         .drag()
@@ -189,18 +186,14 @@ export default class RelationGraph {
         .on('end', d => this.dragEnd(d)))
       this.nodes
         .on('mouseover', () => {
-          const datum = d3.select(d3.event.target).datum()
-          const {
-            id, name, x, y,
-          } = datum
+          const { id, name, x, y } = d3.select(d3.event.target).datum()
           this.hoverOn(linkData, centerId, id)
           d3.select(d3.event.target).classed('highlight', true)
           tooltip
             .html(`<p>${name}</p>`)
             .style(
               'transform',
-              `translate(${Math.min(this.width - 250, Math.max(0, x + this.radius))}px,
-          ${Math.min(this.height - 150, Math.max(0, y))}px)`,
+              `translate(${Math.min(this.width - 250, Math.max(0, x + this.radius))}px,${Math.min(this.height - 150, Math.max(0, y))}px)`,
             )
             .transition()
             .duration(500)
@@ -215,7 +208,6 @@ export default class RelationGraph {
             .style('opacity', 0)
         })
     } else {
-      this.links.attr('opacity', 0)
       this.nodes
         .filter(function () {
           return d3.select(this).attr('type') === 'B'
@@ -230,9 +222,9 @@ export default class RelationGraph {
             target: nodeData.find(x => x.get('id') === target).get('name'),
             relation,
           })
-          this.links.attr('opacity', 0)
-          this.links.filter(l => (l.source.id === centerId && l.target.id === d.id) ||
-            (l.target.id === centerId && l.source.id === d.id)).attr('opacity', 1)
+          this.links
+            .attr('opacity', 0)
+          this.links.filter(l => l.source.id === centerId && l.target.id === d.id).attr('opacity', 1)
         })
       this.nodes
         .on('mouseover', null)
@@ -240,7 +232,7 @@ export default class RelationGraph {
     }
   }
 
-  drawLines(linkData, centerId, linkClick) {
+  drawLines(linkData, centerId) {
     const linkJoin = this.svg
       .select('.line-group')
       .selectAll('.line')
@@ -251,15 +243,7 @@ export default class RelationGraph {
     linkEnter
       .append('line')
       .attr('stroke', 'white')
-      .attr('stroke-width', 5)
-      .filter(d => d.relation)
-      .attr('cursor', 'pointer')
-    linkEnter
-      .filter(d => d.relation)
-      .on('click', (d) => {
-        const { source, target, relation } = d
-        linkClick({ source: source.name, target: target.name, relation })
-      })
+      .attr('stroke-width', 3)
     this.links = linkEnter.merge(linkJoin)
     this.links.filter(d => d.source !== centerId)
       .attr('class', 'line hidden')
@@ -310,10 +294,8 @@ export default class RelationGraph {
     } else {
       this.hoverLinks = this.links
         .filter(d => d.source.id === currentId || isLink(d, linkData, currentId, centerId))
-      this.hoverLinks.selectAll('line')
-        .attr('stroke', '#fff')
+      this.hoverLinks
         .attr('opacity', 1)
-        .attr('stroke-width', 3)
       relatedNode = this.nodes
         .filter(d => d.id === currentId || !this.hoverLinks.filter(x => x.source.id === d.id || x.target.id === d.id).empty())
     }
@@ -425,6 +407,50 @@ export default class RelationGraph {
     if (this.hoverLinks && !this.hoverLinks.empty()) {
       this.hoverLinks.attr('opacity', 0)
       this.hoverLinks = null
+    }
+  }
+
+  changeMode(isFixed, centerId) {
+    // 进入静止关系模式
+    const width = d3.select('.left-part').style('width').replace('px', '')
+    const height = d3.select('.left-part').style('height').replace('px', '')
+    if (isFixed) {
+      const svg = d3.select('.relation-graph').attr('width', '100%').attr('height', '99%')
+      const g = d3.select('.relation-mode-group')
+      const zoom = d3.zoom()
+        .scaleExtent([0.5, 8])
+        .on('zoom', () => {
+          g.attr('transform', d3.event.transform)
+        })
+      g
+        .attr('transform', `translate(${width - this.width},${height - this.height}) scale(1)`)
+        .transition()
+        .attr('transform', `translate(0,0) scale(1)`)
+      svg.call(zoom)
+      const relationNodes = this.nodes
+        .filter(function () {
+          return d3.select(this).attr('type') !== 'C'
+        })
+      relationNodes.on('.drag', null)
+      relationNodes.each(function () {
+        svg.select('.relation-nodes').node().insertBefore(this, null)
+      })
+      const relationLinks = this.links
+        .filter(d => d.source.id === centerId)
+        .attr('opacity', 0.5)
+      relationLinks.each(function () {
+        svg.select('.relation-lines').node().insertBefore(this, null)
+      })
+    } else {
+      const g = d3.select('.relation-mode-group')
+      const reltionNodes = d3.selectAll('.relation-nodes>.node')
+      reltionNodes.each(function () {
+        d3.select('.node-group').node().insertBefore(this, null)
+      })
+      const reltionLinks = d3.selectAll('.relation-lines>.line')
+      reltionLinks.each(function () {
+        d3.select('.line-group').node().insertBefore(this, null)
+      })
     }
   }
 }

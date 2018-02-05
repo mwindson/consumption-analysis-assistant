@@ -2,6 +2,14 @@
   padding 30px 30px 30px 50px
   border-bottom solid #DDDDDD 1px
 
+  > select
+    width 113px
+    height 32px
+    font-size 14px
+    float right
+    cursor pointer
+    border 1px solid #ccc
+    padding 0 auto
   .title
     color #125091
     font-size 18px
@@ -43,42 +51,45 @@
         align-items center
         color white
 
-  .comments
+  .comment-list
+    height 500px
     display flex
+    flex-direction column
+    padding 0 20px
+    overflow-y auto
+    width 100%
 
-    .comment-list
-      height 500px
+    .comment
       display flex
-      flex-direction column
-      padding 0 10px
-      overflow-y auto
+      flex 1 0 auto
+      align-items center
       width 100%
+      .comment-icon
+        height 100%
+        flex 0 0 40px
+        display flex
+        align-items center
 
-      .comment
-        border-bottom solid #dddddd 1px
-        padding 20px 0 20px 0
+      &:last-child
+        border-bottom none
 
-        &:last-child
-          border-bottom none
+      .person
+        height auto
+        display flex
+        align-items center
 
-        .person
-          height auto
-          display flex
-          align-items center
+        > img
+          height 48px
+          width 48px
 
-          > img
-            height 48px
-            width 48px
-
-          .intro
-            font-size 18px
-            color #999999
-            margin-left 20px
-
-        .text
+        .intro
+          font-size 18px
+          color #999999
           margin-left 20px
-          font-size 14px
-          color blue
 
-          &.negative
-            color red
+      .text
+        flex 0 1 100%
+        font-size 14px
+        padding 20px 0
+        word-break break-all
+        border-bottom solid #dddddd 1px

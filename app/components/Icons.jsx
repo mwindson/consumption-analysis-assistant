@@ -142,3 +142,8 @@ export const ModeIcon = ({ color = '#fff', width = 20, height = 20 }) => (
     />
   </svg>
 )
+export const ArrowRightIcon = ({ color = '#FE8F9C', width = 20, height = 20 }) => (
+  <svg width={width} height={height} viewBox="0 0 20 20">
+    <path fill={color} d="M20 10L0 20V0z" fillRule="evenodd" />
+  </svg>
+)

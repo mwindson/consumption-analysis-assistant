@@ -137,7 +137,7 @@ export default class HomePage extends React.Component {
     }
     return (
       <div className="main">
-        <div className={classNames('left-part', { searching })} id="left-part">
+        <div className={classNames('left-part', { searching })} id="left">
           <div className="top">
             <div className="logo">
               <LogoIcon />
