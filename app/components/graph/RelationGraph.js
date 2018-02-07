@@ -161,7 +161,10 @@ export default class RelationGraph {
       .filter(d => d.id === centerId)
       .attr('cursor', 'pointer')
       .on('click', () => {
+        this.hoverLeave()
         this.force.stop()
+        d3.select(d3.event.target).classed('highlight', false)
+        tooltip.style('opacity', 0)
         onChangeMode()
       })
     if (!relationMode) {
@@ -415,17 +418,15 @@ export default class RelationGraph {
     const width = d3.select('.left-part').style('width').replace('px', '')
     const height = d3.select('.left-part').style('height').replace('px', '')
     if (isFixed) {
-      const svg = d3.select('.relation-graph').attr('width', '100%').attr('height', '99%')
+      const svg = d3.select('.relation-graph').attr('width', '100%').attr('height', '100%')
       const g = d3.select('.relation-mode-group')
       const zoom = d3.zoom()
         .scaleExtent([0.5, 8])
-        .on('zoom', () => {
+        .on('zoom', function () {
           g.attr('transform', d3.event.transform)
         })
-      g
-        .attr('transform', `translate(${width - this.width},${height - this.height}) scale(1)`)
-        .transition()
-        .attr('transform', `translate(0,0) scale(1)`)
+      zoom.transform(svg, d3.zoomIdentity)
+      d3.select('g.inner').attr('transform', `translate(${width - this.width},${height - this.height})`)
       svg.call(zoom)
       const relationNodes = this.nodes
         .filter(function () {
@@ -442,7 +443,6 @@ export default class RelationGraph {
         svg.select('.relation-lines').node().insertBefore(this, null)
       })
     } else {
-      const g = d3.select('.relation-mode-group')
       const reltionNodes = d3.selectAll('.relation-nodes>.node')
       reltionNodes.each(function () {
         d3.select('.node-group').node().insertBefore(this, null)

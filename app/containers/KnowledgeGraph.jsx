@@ -161,8 +161,10 @@ export default class KnowledgeGraph extends React.Component {
           <div className={classNames('relation-mode', { show: relationMode })}>
             <svg className="relation-graph">
               <g className="relation-mode-group">
-                <g className="relation-lines" />
-                <g className="relation-nodes" />
+                <g className="inner">
+                  <g className="relation-lines" />
+                  <g className="relation-nodes" />
+                </g>
               </g>
             </svg>
           </div>
