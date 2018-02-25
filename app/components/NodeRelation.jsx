@@ -4,7 +4,6 @@ import 'style/NodeRelation.styl'
 
 @popUpHoc
 export default class NodeRelation extends React.Component {
-
   render() {
     const { relations } = this.props
     if (!relations) {
@@ -30,7 +29,7 @@ export default class NodeRelation extends React.Component {
       <div className="node-relation">
         <h3 className="title">
           <span>{relations.source}</span>
-          <span style={{ color: 'black' }}>——></span>
+          <span style={{ color: 'black' }}>{'——>'}</span>
           <span>{relations.target}</span>
         </h3>
         {relations.relation ? (
